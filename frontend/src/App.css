@@ -710,3 +710,9 @@
     padding: 30px 22px;
   }
 }
+.auth-message {
+  text-align: center;
+  color: #c084fc;
+  font-size: 14px;
+  margin: 0;
+}
