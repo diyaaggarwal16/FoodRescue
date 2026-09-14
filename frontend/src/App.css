@@ -453,7 +453,19 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 15px;
+  margin: 16px 0;
+}
+
+.price span {
+  color: #9d91a8;
+  text-decoration: line-through;
+  font-size: 18px;
+}
+
+.price strong {
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
 }
 
 .original-price {
@@ -715,4 +727,59 @@
   color: #c084fc;
   font-size: 14px;
   margin: 0;
+}
+.reservation-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.reservation-modal {
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #1a1026;
+  border: 1px solid #3b2854;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+}
+
+.reservation-modal .secondary-btn {
+  width: 100%;
+  margin-top: 10px;
+}
+.reservation-summary {
+  margin: 20px 0;
+  padding: 20px;
+  background: #241534;
+  border: 1px solid #3b2854;
+  border-radius: 14px;
+}
+
+.reservation-summary h2 {
+  margin-bottom: 15px;
+}
+
+.reservation-summary p {
+  margin: 8px 0;
+  color: #cfc5d9;
+}
+.logout-btn {
+  background: transparent;
+  border: none;
+  color: #c084fc;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.logout-btn:hover {
+  color: #ffffff;
 }
