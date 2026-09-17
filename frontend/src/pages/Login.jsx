@@ -10,58 +10,63 @@ function Login({ onLogin }) {
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (event) => {
-  event.preventDefault()
+    event.preventDefault()
 
-  setLoading(true)
-  setMessage('')
-
-  try {
-    const response = await fetch(
-      'http://localhost:8080/api/auth/login',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email,
-          password
-        })
-      }
-    )
-
-    const text = await response.text()
-
-    let data
+    setLoading(true)
+    setMessage('')
 
     try {
-      data = JSON.parse(text)
-    } catch {
-      data = text
+      const response = await fetch(
+        'http://localhost:8080/api/auth/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email,
+            password
+          })
+        }
+      )
+
+      const text = await response.text()
+
+      let data
+
+      try {
+        data = JSON.parse(text)
+      } catch {
+        data = text
+      }
+
+      if (!response.ok) {
+        const errorMessage =
+          typeof data === 'string'
+            ? data
+            : data.message || 'Login failed'
+
+        throw new Error(errorMessage)
+      }
+
+      localStorage.setItem(
+        'token',
+        data.token
+      )
+
+      onLogin(data)
+
+      setMessage('Login successful')
+
+      setTimeout(() => {
+        navigate('/')
+      }, 1000)
+    } catch (error) {
+      setMessage(error.message || 'Unable to login')
+    } finally {
+      setLoading(false)
     }
-
-    if (!response.ok) {
-      const errorMessage =
-        typeof data === 'string'
-          ? data
-          : data.message || 'Login failed'
-
-      throw new Error(errorMessage)
-    }
-
-    onLogin(data)
-
-setMessage('Login successful')
-
-    setTimeout(() => {
-      navigate('/')
-    }, 1000)
-  } catch (error) {
-    setMessage(error.message || 'Unable to login')
-  } finally {
-    setLoading(false)
   }
-}
 
   return (
     <div className="auth-page">

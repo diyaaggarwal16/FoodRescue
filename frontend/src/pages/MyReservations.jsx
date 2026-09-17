@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { apiFetch } from '../utils/api'
 
 function MyReservations() {
   const [reservations, setReservations] = useState([])
@@ -13,9 +14,9 @@ const customerEmail = user?.email
     return
   }
 
-  fetch(
-    `http://localhost:8080/api/reservations/customer/${customerEmail}`
-  )
+  apiFetch(
+  `/api/reservations/customer/${customerEmail}`
+)
     .then((response) => response.json())
     .then((data) => {
       setReservations(data)

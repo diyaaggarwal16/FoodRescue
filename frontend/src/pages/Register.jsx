@@ -35,21 +35,29 @@ function Register() {
         }
       )
 
-      const data = await response.json()
+      const text = await response.text()
 
-      if (response.ok) {
-        setMessage('Account created successfully')
+let data
 
-        setTimeout(() => {
-          navigate('/login')
-        }, 1500)
-      } else {
-        setMessage(
-          typeof data === 'string'
-            ? data
-            : 'Registration failed'
-        )
-      }
+try {
+  data = JSON.parse(text)
+} catch {
+  data = text
+}
+
+if (response.ok) {
+  setMessage('Account created successfully')
+
+  setTimeout(() => {
+    navigate('/login')
+  }, 1500)
+} else {
+  setMessage(
+    typeof data === 'string'
+      ? data
+      : data.message || 'Registration failed'
+  )
+}
     } catch (error) {
       setMessage('Unable to connect to the server')
     }

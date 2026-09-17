@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react'
-
+import { apiFetch } from '../utils/api'
 function FoodList() {
   const [foodItems, setFoodItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedFood, setSelectedFood] = useState(null)
+  const [showConfirmation, setShowConfirmation] = useState(false)
   const [quantity, setQuantity] = useState(1)
-  const [customerName, setCustomerName] = useState('')
-  const [customerEmail, setCustomerEmail] = useState('')
+  
   const [message, setMessage] = useState('')
   const [reserving, setReserving] = useState(false)
   const [reservationSummary, setReservationSummary] = useState(null)
   
 
   const loadFood = () => {
-    fetch('http://localhost:8080/api/food')
+    apiFetch('/api/food')
       .then((response) => response.json())
       .then((data) => {
         setFoodItems(data)
@@ -31,8 +31,6 @@ function FoodList() {
   const openReservation = (food) => {
     setSelectedFood(food)
     setQuantity(1)
-    setCustomerName('')
-    setCustomerEmail('')
     setMessage('')
   }
 
@@ -53,17 +51,12 @@ function FoodList() {
     setMessage('')
 
     try {
-      const response = await fetch(
-        'http://localhost:8080/api/reservations',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+      const response = await apiFetch(
+  '/api/reservations',
+  {
+    method: 'POST',
           body: JSON.stringify({
             foodListingId: selectedFood.id,
-            customerName,
-            customerEmail,
             quantity: Number(quantity)
           })
         }
@@ -184,29 +177,7 @@ loadFood()
               className="auth-form"
               onSubmit={handleReservation}
             >
-              <div className="input-group">
-                <label>Your Name</label>
-                <input
-                  type="text"
-                  value={customerName}
-                  onChange={(event) =>
-                    setCustomerName(event.target.value)
-                  }
-                  required
-                />
-              </div>
-
-              <div className="input-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  value={customerEmail}
-                  onChange={(event) =>
-                    setCustomerEmail(event.target.value)
-                  }
-                  required
-                />
-              </div>
+              
 
               <div className="input-group">
                 <label>Quantity</label>
@@ -223,12 +194,13 @@ loadFood()
               </div>
 
               <button
-                type="submit"
-                className="auth-btn"
-                disabled={reserving}
-              >
-                {reserving ? 'Reserving...' : 'Confirm Reservation'}
-              </button>
+  type="button"
+  className="auth-btn"
+  onClick={() => setShowConfirmation(true)}
+  disabled={reserving}
+>
+  Confirm Reservation
+</button>
 
               <button
                 type="button"
@@ -247,6 +219,64 @@ loadFood()
           </div>
         </div>
       )}
+      {showConfirmation && selectedFood && (
+  <div className="reservation-overlay">
+    <div className="reservation-modal">
+      <div className="auth-header">
+        <h1>Confirm Reservation</h1>
+        <p>Please verify your reservation details.</p>
+      </div>
+
+      <div className="reservation-summary">
+        <h2>{selectedFood.foodName}</h2>
+
+        <p>
+          Restaurant: {selectedFood.restaurantName}
+        </p>
+
+        <p>
+          Quantity: {quantity}
+        </p>
+
+        <p>
+          Price per item: ₹{selectedFood.rescuePrice}
+        </p>
+
+        <p>
+          Total Price: ₹
+          {Number(quantity) * Number(selectedFood.rescuePrice)}
+        </p>
+
+        <p>
+          Pickup Before: {selectedFood.pickupDeadline}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        className="auth-btn"
+        onClick={() => {
+          setShowConfirmation(false)
+          handleReservation({
+            preventDefault: () => {}
+          })
+        }}
+        disabled={reserving}
+      >
+        {reserving ? 'Reserving...' : 'Confirm Reservation'}
+      </button>
+
+      <button
+        type="button"
+        className="secondary-btn"
+        onClick={() => setShowConfirmation(false)}
+        disabled={reserving}
+      >
+        Go Back
+      </button>
+    </div>
+  </div>
+)}
       {reservationSummary && (
   <div className="reservation-overlay">
     <div className="reservation-modal">

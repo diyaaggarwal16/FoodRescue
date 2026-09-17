@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { apiFetch } from '../utils/api'
 
 function AddFood() {
   const navigate = useNavigate()
@@ -31,11 +32,10 @@ function AddFood() {
     setMessage('')
 
     try {
-      const response = await fetch('http://localhost:8080/api/food', {
+      const response = await apiFetch(
+  '/api/food', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        
         body: JSON.stringify({
           foodName: formData.foodName,
           description: formData.description,
