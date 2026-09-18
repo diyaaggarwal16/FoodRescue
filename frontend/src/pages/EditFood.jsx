@@ -12,6 +12,7 @@ function EditFood() {
     quantity: '',
     originalPrice: '',
     rescuePrice: '',
+    allergens: '',
     pickupDeadline: ''
   })
 
@@ -22,31 +23,31 @@ function EditFood() {
   useEffect(() => {
     const loadFood = async () => {
       try {
-        const response = await apiFetch('/api/food')
-
-        if (!response.ok) {
-          throw new Error('Failed to load food')
-        }
-
-        const foods = await response.json()
-        const food = foods.find(
-          (item) => item.id === Number(id)
+        const response = await apiFetch(
+          `/api/food/${id}`
         )
 
-        if (!food) {
+        if (!response.ok) {
           throw new Error('Food listing not found')
         }
+
+        const food = await response.json()
 
         setFormData({
           foodName: food.foodName || '',
           description: food.description || '',
-          quantity: food.quantity || '',
-          originalPrice: food.originalPrice || '',
-          rescuePrice: food.rescuePrice || '',
-          pickupDeadline: food.pickupDeadline || ''
+          quantity: food.quantity ?? '',
+          originalPrice: food.originalPrice ?? '',
+          rescuePrice: food.rescuePrice ?? '',
+          allergens: food.allergens || '',
+          pickupDeadline: food.pickupDeadline
+            ? String(food.pickupDeadline).slice(0, 16)
+            : ''
         })
       } catch (error) {
-        setMessage(error.message || 'Unable to load food')
+        setMessage(
+          error.message || 'Unable to load food'
+        )
       } finally {
         setLoading(false)
       }
@@ -68,31 +69,41 @@ function EditFood() {
     setMessage('')
 
     try {
-      const response = await apiFetch(`/api/food/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          foodName: formData.foodName,
-          description: formData.description,
-          quantity: Number(formData.quantity),
-          originalPrice: Number(formData.originalPrice),
-          rescuePrice: Number(formData.rescuePrice),
-          pickupDeadline: formData.pickupDeadline
-        })
-      })
+      const response = await apiFetch(
+        `/api/food/${id}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify({
+            foodName: formData.foodName,
+            description: formData.description,
+            quantity: Number(formData.quantity),
+            originalPrice: Number(formData.originalPrice),
+            rescuePrice: Number(formData.rescuePrice),
+            allergens: formData.allergens.trim() || 'None',
+            pickupDeadline: formData.pickupDeadline
+          })
+        }
+      )
 
       const text = await response.text()
 
       if (!response.ok) {
-        throw new Error(text || 'Failed to update food')
+        throw new Error(
+          text || 'Failed to update food'
+        )
       }
 
-      setMessage('Food listing updated successfully')
+      setMessage(
+        'Food listing updated successfully'
+      )
 
       setTimeout(() => {
         navigate('/my-food')
       }, 1000)
     } catch (error) {
-      setMessage(error.message || 'Unable to update food')
+      setMessage(
+        error.message || 'Unable to update food'
+      )
     } finally {
       setSaving(false)
     }
@@ -103,7 +114,7 @@ function EditFood() {
       <div className="auth-page">
         <div className="auth-card">
           <h1>Edit Food</h1>
-          <p>Loading...</p>
+          <p>Loading food details...</p>
         </div>
       </div>
     )
@@ -114,10 +125,15 @@ function EditFood() {
       <div className="auth-card">
         <div className="auth-header">
           <h1>Edit Food Listing</h1>
-          <p>Update your food listing details.</p>
+          <p>
+            Update your food listing details.
+          </p>
         </div>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form
+          className="auth-form"
+          onSubmit={handleSubmit}
+        >
           <div className="input-group">
             <label>Food Name</label>
             <input
@@ -131,8 +147,7 @@ function EditFood() {
 
           <div className="input-group">
             <label>Description</label>
-            <input
-              type="text"
+            <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
@@ -160,6 +175,7 @@ function EditFood() {
               value={formData.originalPrice}
               onChange={handleChange}
               min="0"
+              step="0.01"
               required
             />
           </div>
@@ -172,14 +188,31 @@ function EditFood() {
               value={formData.rescuePrice}
               onChange={handleChange}
               min="0"
+              step="0.01"
               required
             />
           </div>
 
           <div className="input-group">
+            <label>Allergens</label>
+            <input
+              type="text"
+              name="allergens"
+              value={formData.allergens}
+              onChange={handleChange}
+              placeholder="Milk, Nuts, Gluten"
+            />
+
+            <small>
+              Enter allergens separated by commas.
+              Enter None if there are no known allergens.
+            </small>
+          </div>
+
+          <div className="input-group">
             <label>Pickup Deadline</label>
             <input
-              type="time"
+              type="datetime-local"
               name="pickupDeadline"
               value={formData.pickupDeadline}
               onChange={handleChange}
@@ -192,7 +225,9 @@ function EditFood() {
             className="auth-btn"
             disabled={saving}
           >
-            {saving ? 'Updating...' : 'Update Food Listing'}
+            {saving
+              ? 'Updating...'
+              : 'Update Food Listing'}
           </button>
 
           {message && (
@@ -205,8 +240,9 @@ function EditFood() {
         <button
           className="secondary-btn"
           onClick={() => navigate('/my-food')}
+          disabled={saving}
         >
-          Back to My Food
+          Cancel
         </button>
       </div>
     </div>

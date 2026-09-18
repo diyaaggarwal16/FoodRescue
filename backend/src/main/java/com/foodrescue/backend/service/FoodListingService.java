@@ -35,25 +35,66 @@ public class FoodListingService {
     }
 
     public FoodListing updateListing(
-            Long id,
-            FoodListing updatedListing,
-            Long restaurantId
-    ) {
-        FoodListing existingListing = getListing(id);
+        Long id,
+        FoodListing updatedListing,
+        Long restaurantId
+) {
+    FoodListing existingListing = getListing(id);
 
-        if (!existingListing.getRestaurantId().equals(restaurantId)) {
-            throw new RuntimeException("You can only edit your own food listings");
-        }
-
-        existingListing.setFoodName(updatedListing.getFoodName());
-        existingListing.setDescription(updatedListing.getDescription());
-        existingListing.setQuantity(updatedListing.getQuantity());
-        existingListing.setOriginalPrice(updatedListing.getOriginalPrice());
-        existingListing.setRescuePrice(updatedListing.getRescuePrice());
-        existingListing.setPickupDeadline(updatedListing.getPickupDeadline());
-
-        return foodListingRepository.save(existingListing);
+    if (!existingListing.getRestaurantId().equals(restaurantId)) {
+        throw new RuntimeException(
+                "You can only edit your own food listings"
+        );
     }
+
+    int oldQuantity = existingListing.getQuantity();
+    int oldRemaining = existingListing.getRemainingQuantity();
+
+    int soldQuantity = oldQuantity - oldRemaining;
+    int newQuantity = updatedListing.getQuantity();
+
+    if (newQuantity < soldQuantity) {
+        throw new RuntimeException(
+                "Quantity cannot be less than already reserved quantity"
+        );
+    }
+
+    int newRemaining = newQuantity - soldQuantity;
+
+    existingListing.setFoodName(
+            updatedListing.getFoodName()
+    );
+
+    existingListing.setDescription(
+            updatedListing.getDescription()
+    );
+
+    existingListing.setQuantity(newQuantity);
+    existingListing.setRemainingQuantity(newRemaining);
+
+    existingListing.setOriginalPrice(
+            updatedListing.getOriginalPrice()
+    );
+
+    existingListing.setRescuePrice(
+            updatedListing.getRescuePrice()
+    );
+    existingListing.setAllergens(
+            updatedListing.getAllergens()
+    );
+
+    existingListing.setPickupDeadline(
+            updatedListing.getPickupDeadline()
+    );
+
+    if (newRemaining == 0) {
+        existingListing.setStatus("SOLD_OUT");
+    } else {
+        existingListing.setStatus("AVAILABLE");
+    }
+
+    return foodListingRepository.save(existingListing);
+}
 
     public void deleteListing(Long id, Long restaurantId) {
         FoodListing existingListing = getListing(id);

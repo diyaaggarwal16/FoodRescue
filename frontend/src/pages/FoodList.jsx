@@ -1,48 +1,119 @@
 import { useEffect, useState } from 'react'
 import { apiFetch } from '../utils/api'
+
 function FoodList() {
   const [foodItems, setFoodItems] = useState([])
   const [loading, setLoading] = useState(true)
+
   const [selectedFood, setSelectedFood] = useState(null)
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [quantity, setQuantity] = useState(1)
-  
+
   const [message, setMessage] = useState('')
   const [reserving, setReserving] = useState(false)
-  const [reservationSummary, setReservationSummary] = useState(null)
-  
+  const [reservationSummary, setReservationSummary] =
+    useState(null)
 
-  const loadFood = () => {
-    apiFetch('/api/food')
-      .then((response) => response.json())
-      .then((data) => {
-        setFoodItems(data)
-        setLoading(false)
-      })
-      .catch(() => {
-        setLoading(false)
-      })
+  const loadFood = async () => {
+    try {
+      setLoading(true)
+
+      const response = await apiFetch('/api/food')
+
+      if (!response.ok) {
+        throw new Error('Failed to load food listings')
+      }
+
+      const data = await response.json()
+      setFoodItems(data)
+    } catch (error) {
+      setMessage(
+        error.message || 'Unable to load food listings'
+      )
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
     loadFood()
   }, [])
 
+  const formatPickupTime = (value) => {
+    if (!value) {
+      return 'Not specified'
+    }
+
+    const date = new Date(value)
+
+    if (Number.isNaN(date.getTime())) {
+      return value
+    }
+
+    return date.toLocaleString([], {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    })
+  }
+
   const openReservation = (food) => {
     setSelectedFood(food)
     setQuantity(1)
     setMessage('')
+    setShowConfirmation(false)
   }
 
   const closeReservation = () => {
+    if (reserving) {
+      return
+    }
+
     setSelectedFood(null)
+    setShowConfirmation(false)
+    setQuantity(1)
     setMessage('')
+  }
+
+  const handleQuantityChange = (event) => {
+    const value = Number(event.target.value)
+
+    if (value < 1) {
+      setQuantity(1)
+      return
+    }
+
+    if (
+      selectedFood &&
+      value > selectedFood.remainingQuantity
+    ) {
+      setQuantity(selectedFood.remainingQuantity)
+      return
+    }
+
+    setQuantity(value)
   }
 
   const handleReservation = async (event) => {
     event.preventDefault()
 
-    if (quantity > selectedFood.remainingQuantity) {
+    if (!selectedFood) {
+      return
+    }
+
+    const selectedQuantity = Number(quantity)
+
+    if (
+      !selectedQuantity ||
+      selectedQuantity < 1
+    ) {
+      setMessage('Please select a valid quantity')
+      return
+    }
+
+    if (
+      selectedQuantity >
+      selectedFood.remainingQuantity
+    ) {
       setMessage('Not enough food available')
       return
     }
@@ -52,51 +123,53 @@ function FoodList() {
 
     try {
       const response = await apiFetch(
-  '/api/reservations',
-  {
-    method: 'POST',
+        '/api/reservations',
+        {
+          method: 'POST',
           body: JSON.stringify({
             foodListingId: selectedFood.id,
-            quantity: Number(quantity)
+            quantity: selectedQuantity
           })
         }
       )
 
-      const data = await response.json()
+      const text = await response.text()
+
+      let data
+
+      try {
+        data = JSON.parse(text)
+      } catch {
+        data = text
+      }
 
       if (!response.ok) {
-        throw new Error(data)
+        throw new Error(
+          typeof data === 'string'
+            ? data
+            : 'Unable to reserve food'
+        )
       }
+
       setReservationSummary({
-  foodName: selectedFood.foodName,
-  quantity: data.quantity,
-  totalPrice: data.totalPrice,
-  restaurantName: selectedFood.restaurantName,
-  pickupDeadline: selectedFood.pickupDeadline
-})
+        foodName: selectedFood.foodName,
+        quantity: data.quantity,
+        totalPrice: data.totalPrice,
+        restaurantName:
+          selectedFood.restaurantName,
+        pickupDeadline:
+          selectedFood.pickupDeadline
+      })
 
-loadFood()
+      setSelectedFood(null)
+      setShowConfirmation(false)
+      setQuantity(1)
 
-setSelectedFood(null)
-      setMessage(
-  `Reservation successful. Total price: ₹${data.totalPrice}`
-)
-
-loadFood()
-
-setTimeout(() => {
-  setSelectedFood(null)
-  setMessage('')
-}, 1500)
-
-      
-
-
-
-setSelectedFood(null)
-loadFood()
+      await loadFood()
     } catch (error) {
-      setMessage(error.message || 'Unable to reserve food')
+      setMessage(
+        error.message || 'Unable to reserve food'
+      )
     } finally {
       setReserving(false)
     }
@@ -105,11 +178,18 @@ loadFood()
   return (
     <div className="food-page">
       <div className="food-header">
-        <div>
-          <h1>Explore Surplus Food</h1>
-          <p>Find affordable food before it goes to waste.</p>
-        </div>
+        <h1>Explore Surplus Food</h1>
+
+        <p>
+          Find affordable food before it goes to waste.
+        </p>
       </div>
+
+      {message && !selectedFood && (
+        <p className="auth-message">
+          {message}
+        </p>
+      )}
 
       {loading ? (
         <p>Loading food...</p>
@@ -117,13 +197,19 @@ loadFood()
         <div className="food-card">
           <div className="food-content">
             <h2>No food listings available</h2>
-            <p>New surplus food listings will appear here.</p>
+
+            <p>
+              New surplus food listings will appear here.
+            </p>
           </div>
         </div>
       ) : (
         <div className="food-grid">
           {foodItems.map((food) => (
-            <div className="food-card" key={food.id}>
+            <div
+              className="food-card"
+              key={food.id}
+            >
               <div className="food-image">
                 FoodRescue
               </div>
@@ -133,74 +219,124 @@ loadFood()
 
                 <p>{food.description}</p>
 
-                <p>
-                  Restaurant: {food.restaurantName}
+                <p className="restaurant-name">
+                  {food.restaurantName}
                 </p>
 
-                <p>
-                  Quantity: {food.remainingQuantity}
+                <p className="quantity">
+                  Available: {food.remainingQuantity}
                 </p>
 
-                <p>
-                  Pickup before: {food.pickupDeadline}
+                <p className="pickup-time">
+                  Pickup before:{' '}
+                  {formatPickupTime(
+                    food.pickupDeadline
+                  )}
+                </p>
+
+                <p className="pickup-time">
+                  Allergens:{' '}
+                  {food.allergens || 'None'}
                 </p>
 
                 <div className="price">
-                  <span>₹{food.originalPrice}</span>
-                  <strong>₹{food.rescuePrice}</strong>
+                  <span>
+                    ₹{food.originalPrice}
+                  </span>
+
+                  <strong>
+                    ₹{food.rescuePrice}
+                  </strong>
                 </div>
 
                 <button
-  className="reserve-btn"
-  onClick={() => openReservation(food)}
-  disabled={food.remainingQuantity === 0}
->
-  {food.remainingQuantity === 0
-    ? 'Sold Out'
-    : 'Reserve Food'}
-</button>
+                  className="reserve-btn"
+                  onClick={() =>
+                    openReservation(food)
+                  }
+                  disabled={
+                    food.remainingQuantity === 0
+                  }
+                >
+                  {food.remainingQuantity === 0
+                    ? 'Sold Out'
+                    : 'Reserve Food'}
+                </button>
               </div>
             </div>
           ))}
         </div>
       )}
 
-      {selectedFood && (
+      {selectedFood && !showConfirmation && (
         <div className="reservation-overlay">
           <div className="reservation-modal">
             <div className="auth-header">
               <h1>Reserve Food</h1>
-              <p>{selectedFood.foodName}</p>
+
+              <p>
+                {selectedFood.foodName}
+              </p>
+            </div>
+
+            <div className="reservation-summary">
+              <p>
+                Restaurant:{' '}
+                {selectedFood.restaurantName}
+              </p>
+
+              <p>
+                Available:{' '}
+                {selectedFood.remainingQuantity}
+              </p>
+
+              <p>
+                Price per item: ₹
+                {selectedFood.rescuePrice}
+              </p>
+
+              <p>
+                Pickup before:{' '}
+                {formatPickupTime(
+                  selectedFood.pickupDeadline
+                )}
+              </p>
+
+              <p>
+                Allergens:{' '}
+                {selectedFood.allergens || 'None'}
+              </p>
             </div>
 
             <form
               className="auth-form"
-              onSubmit={handleReservation}
+              onSubmit={(event) => {
+                event.preventDefault()
+                setShowConfirmation(true)
+                setMessage('')
+              }}
             >
-              
-
               <div className="input-group">
                 <label>Quantity</label>
+
                 <input
                   type="number"
                   min="1"
-                  max={selectedFood.remainingQuantity}
-                  value={quantity}
-                  onChange={(event) =>
-                    setQuantity(event.target.value)
+                  max={
+                    selectedFood.remainingQuantity
                   }
+                  value={quantity}
+                  onChange={handleQuantityChange}
                   required
                 />
               </div>
 
               <button
-  type="button"
-  className="auth-btn"
-  onClick={() => setShowConfirmation(true)}
-  disabled={reserving}
->
-  Confirm Reservation
-</button>
+                type="submit"
+                className="auth-btn"
+              >
+                Continue
+              </button>
 
               <button
                 type="button"
@@ -219,101 +355,136 @@ loadFood()
           </div>
         </div>
       )}
+
       {showConfirmation && selectedFood && (
-  <div className="reservation-overlay">
-    <div className="reservation-modal">
-      <div className="auth-header">
-        <h1>Confirm Reservation</h1>
-        <p>Please verify your reservation details.</p>
-      </div>
+        <div className="reservation-overlay">
+          <div className="reservation-modal">
+            <div className="auth-header">
+              <h1>Confirm Reservation</h1>
 
-      <div className="reservation-summary">
-        <h2>{selectedFood.foodName}</h2>
+              <p>
+                Please verify your reservation details.
+              </p>
+            </div>
 
-        <p>
-          Restaurant: {selectedFood.restaurantName}
-        </p>
+            <div className="reservation-summary">
+              <h2>
+                {selectedFood.foodName}
+              </h2>
 
-        <p>
-          Quantity: {quantity}
-        </p>
+              <p>
+                Restaurant:{' '}
+                {selectedFood.restaurantName}
+              </p>
 
-        <p>
-          Price per item: ₹{selectedFood.rescuePrice}
-        </p>
+              <p>
+                Quantity: {quantity}
+              </p>
 
-        <p>
-          Total Price: ₹
-          {Number(quantity) * Number(selectedFood.rescuePrice)}
-        </p>
+              <p>
+                Price per item: ₹
+                {selectedFood.rescuePrice}
+              </p>
 
-        <p>
-          Pickup Before: {selectedFood.pickupDeadline}
-        </p>
-      </div>
+              <p>
+                Total Price: ₹
+                {Number(quantity) *
+                  Number(
+                    selectedFood.rescuePrice
+                  )}
+              </p>
 
-      <button
-        type="button"
-        className="auth-btn"
-        onClick={() => {
-          setShowConfirmation(false)
-          handleReservation({
-            preventDefault: () => {}
-          })
-        }}
-        disabled={reserving}
-      >
-        {reserving ? 'Reserving...' : 'Confirm Reservation'}
-      </button>
+              <p>
+                Pickup before:{' '}
+                {formatPickupTime(
+                  selectedFood.pickupDeadline
+                )}
+              </p>
 
-      <button
-        type="button"
-        className="secondary-btn"
-        onClick={() => setShowConfirmation(false)}
-        disabled={reserving}
-      >
-        Go Back
-      </button>
-    </div>
-  </div>
-)}
+              <p>
+                Allergens:{' '}
+                {selectedFood.allergens || 'None'}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              className="auth-btn"
+              onClick={handleReservation}
+              disabled={reserving}
+            >
+              {reserving
+                ? 'Reserving...'
+                : 'Confirm Reservation'}
+            </button>
+
+            <button
+              type="button"
+              className="secondary-btn"
+              onClick={() =>
+                setShowConfirmation(false)
+              }
+              disabled={reserving}
+            >
+              Go Back
+            </button>
+          </div>
+        </div>
+      )}
+
       {reservationSummary && (
-  <div className="reservation-overlay">
-    <div className="reservation-modal">
-      <div className="auth-header">
-        <h1>Reservation Successful</h1>
-        <p>Your food has been reserved successfully.</p>
-      </div>
+        <div className="reservation-overlay">
+          <div className="reservation-modal">
+            <div className="auth-header">
+              <h1>
+                Reservation Successful
+              </h1>
 
-      <div className="reservation-summary">
-        <h2>{reservationSummary.foodName}</h2>
+              <p>
+                Your food has been reserved
+                successfully.
+              </p>
+            </div>
 
-        <p>
-          Restaurant: {reservationSummary.restaurantName}
-        </p>
+            <div className="reservation-summary">
+              <h2>
+                {reservationSummary.foodName}
+              </h2>
 
-        <p>
-          Quantity: {reservationSummary.quantity}
-        </p>
+              <p>
+                Restaurant:{' '}
+                {reservationSummary.restaurantName}
+              </p>
 
-        <p>
-          Total Price: ₹{reservationSummary.totalPrice}
-        </p>
+              <p>
+                Quantity:{' '}
+                {reservationSummary.quantity}
+              </p>
 
-        <p>
-          Pickup Before: {reservationSummary.pickupDeadline}
-        </p>
-      </div>
+              <p>
+                Total Price: ₹
+                {reservationSummary.totalPrice}
+              </p>
 
-      <button
-        className="auth-btn"
-        onClick={() => setReservationSummary(null)}
-      >
-        Done
-      </button>
-    </div>
-  </div>
-)}
+              <p>
+                Pickup before:{' '}
+                {formatPickupTime(
+                  reservationSummary.pickupDeadline
+                )}
+              </p>
+            </div>
+
+            <button
+              className="auth-btn"
+              onClick={() =>
+                setReservationSummary(null)
+              }
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

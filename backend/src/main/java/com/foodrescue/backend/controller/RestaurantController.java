@@ -79,4 +79,46 @@ public class RestaurantController {
                         ResponseEntity.notFound().build()
                 );
     }
+
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateProfile(
+            @RequestBody Restaurant updatedRestaurant,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        String email = jwt.getClaimAsString("email");
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found")
+                );
+
+        if (!"RESTAURANT".equalsIgnoreCase(user.getRole())) {
+            return ResponseEntity
+                    .status(403)
+                    .body("Only restaurant users can update a restaurant profile");
+        }
+
+        Restaurant restaurant = restaurantRepository
+                .findByUserId(user.getId())
+                .orElseThrow(() ->
+                        new RuntimeException("Restaurant profile not found")
+                );
+
+        restaurant.setRestaurantName(
+                updatedRestaurant.getRestaurantName()
+        );
+
+        restaurant.setAddress(
+                updatedRestaurant.getAddress()
+        );
+
+        restaurant.setPhone(
+                updatedRestaurant.getPhone()
+        );
+
+        Restaurant savedRestaurant =
+                restaurantRepository.save(restaurant);
+
+        return ResponseEntity.ok(savedRestaurant);
+    }
 }

@@ -8,24 +8,40 @@ function Navbar({ user, onLogout }) {
       <div className="nav-links">
         <Link to="/">Home</Link>
 
-        <Link to="/food">Explore Food</Link>
+        
 
         {user && user.role === 'CUSTOMER' && (
-          <Link to="/my-reservations">
+          <><Link to="/my-reservations">
             My Reservations
           </Link>
+          <Link to="/food">Explore Food</Link></>
         )}
 
         {user && user.role === 'RESTAURANT' && (
-          <Link to="/add-food">
-            Add Food
-          </Link>
+          <>
+            <Link to="/restaurant-dashboard">
+              Dashboard
+            </Link>
+
+            <Link to="/my-food">
+              My Food
+            </Link>
+
+            <Link to="/add-food">
+              Add Food
+            </Link>
+
+            <Link to="/restaurant-profile">
+              Profile
+            </Link>
+          </>
         )}
 
         {user && user.role === 'NGO' && (
-          <Link to="/ngo">
+          <><Link to="/ngo">
             NGO Dashboard
           </Link>
+          <Link to="/food">Explore Food</Link></>
         )}
 
         {user ? (

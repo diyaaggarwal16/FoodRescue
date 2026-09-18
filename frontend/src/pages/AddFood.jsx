@@ -11,6 +11,7 @@ function AddFood() {
     quantity: '',
     originalPrice: '',
     rescuePrice: '',
+    allergens: '',
     pickupDeadline: ''
   })
 
@@ -35,13 +36,17 @@ function AddFood() {
       )
 
       if (profileResponse.status === 404) {
-        setMessage('Please create your restaurant profile first.')
+        setMessage(
+          'Please create your restaurant profile first.'
+        )
         setLoading(false)
         return
       }
 
       if (!profileResponse.ok) {
-        throw new Error('Failed to load restaurant profile')
+        throw new Error(
+          'Failed to load restaurant profile'
+        )
       }
 
       const response = await apiFetch('/api/food', {
@@ -52,15 +57,22 @@ function AddFood() {
           quantity: Number(formData.quantity),
           originalPrice: Number(formData.originalPrice),
           rescuePrice: Number(formData.rescuePrice),
+          allergens: formData.allergens.trim() || 'None',
           pickupDeadline: formData.pickupDeadline
         })
       })
 
+      const text = await response.text()
+
       if (!response.ok) {
-        throw new Error('Failed to create listing')
+        throw new Error(
+          text || 'Failed to create listing'
+        )
       }
 
-      setMessage('Food listing created successfully')
+      setMessage(
+        'Food listing created successfully'
+      )
 
       setFormData({
         foodName: '',
@@ -68,10 +80,14 @@ function AddFood() {
         quantity: '',
         originalPrice: '',
         rescuePrice: '',
+        allergens: '',
         pickupDeadline: ''
       })
     } catch (error) {
-      setMessage('Unable to create food listing')
+      setMessage(
+        error.message ||
+        'Unable to create food listing'
+      )
     } finally {
       setLoading(false)
     }
@@ -82,12 +98,18 @@ function AddFood() {
       <div className="auth-card">
         <div className="auth-header">
           <h1>Add Food Listing</h1>
-          <p>List your surplus food for rescue.</p>
+          <p>
+            List your surplus food for rescue.
+          </p>
         </div>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form
+          className="auth-form"
+          onSubmit={handleSubmit}
+        >
           <div className="input-group">
             <label>Food Name</label>
+
             <input
               type="text"
               name="foodName"
@@ -100,8 +122,8 @@ function AddFood() {
 
           <div className="input-group">
             <label>Description</label>
-            <input
-              type="text"
+
+            <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
@@ -112,6 +134,7 @@ function AddFood() {
 
           <div className="input-group">
             <label>Quantity</label>
+
             <input
               type="number"
               name="quantity"
@@ -125,6 +148,7 @@ function AddFood() {
 
           <div className="input-group">
             <label>Original Price</label>
+
             <input
               type="number"
               name="originalPrice"
@@ -132,12 +156,14 @@ function AddFood() {
               onChange={handleChange}
               placeholder="200"
               min="0"
+              step="0.01"
               required
             />
           </div>
 
           <div className="input-group">
             <label>Rescue Price</label>
+
             <input
               type="number"
               name="rescuePrice"
@@ -145,14 +171,33 @@ function AddFood() {
               onChange={handleChange}
               placeholder="80"
               min="0"
+              step="0.01"
               required
             />
           </div>
 
           <div className="input-group">
-            <label>Pickup Deadline</label>
+            <label>Allergens</label>
+
             <input
-              type="time"
+              type="text"
+              name="allergens"
+              value={formData.allergens}
+              onChange={handleChange}
+              placeholder="Milk, Nuts, Gluten"
+            />
+
+            <small>
+              Enter allergens separated by commas.
+              Enter None if there are no known allergens.
+            </small>
+          </div>
+
+          <div className="input-group">
+            <label>Pickup Deadline</label>
+
+            <input
+              type="datetime-local"
               name="pickupDeadline"
               value={formData.pickupDeadline}
               onChange={handleChange}
@@ -165,7 +210,9 @@ function AddFood() {
             className="auth-btn"
             disabled={loading}
           >
-            {loading ? 'Creating...' : 'Create Food Listing'}
+            {loading
+              ? 'Creating...'
+              : 'Create Food Listing'}
           </button>
 
           {message && (

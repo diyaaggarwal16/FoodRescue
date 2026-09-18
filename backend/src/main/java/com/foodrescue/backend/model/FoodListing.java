@@ -24,6 +24,8 @@ public class FoodListing {
 
     private String pickupDeadline;
 
+    private String allergens;
+
     private String restaurantName;
 
     private Long restaurantId;
@@ -93,21 +95,29 @@ public class FoodListing {
         this.pickupDeadline = pickupDeadline;
     }
 
+    public String getAllergens() {
+        return allergens;
+    }
+
+    public void setAllergens(String allergens) {
+        this.allergens = allergens;
+    }
+
     public String getRestaurantName() {
         return restaurantName;
     }
-    
 
     public void setRestaurantName(String restaurantName) {
         this.restaurantName = restaurantName;
     }
-    public Long getRestaurantId() {
-    return restaurantId;
-}
 
-public void setRestaurantId(Long restaurantId) {
-    this.restaurantId = restaurantId;
-}
+    public Long getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(Long restaurantId) {
+        this.restaurantId = restaurantId;
+    }
 
     public String getStatus() {
         return status;

@@ -1,248 +1,246 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { apiFetch } from '../utils/api'
 
 function RestaurantDashboard() {
-  const [foodName, setFoodName] = useState('')
-  const [description, setDescription] = useState('')
-  const [quantity, setQuantity] = useState('')
-  const [originalPrice, setOriginalPrice] = useState('')
-  const [rescuePrice, setRescuePrice] = useState('')
-  const [pickupDeadline, setPickupDeadline] = useState('')
+  const navigate = useNavigate()
 
+  const [restaurant, setRestaurant] = useState(null)
   const [foodItems, setFoodItems] = useState([])
-  const [loadingFood, setLoadingFood] = useState(true)
+  const [loading, setLoading] = useState(true)
+  const [message, setMessage] = useState('')
 
-  const loadRestaurantFood = async () => {
-    const restaurantId = localStorage.getItem('userId')
+  useEffect(() => {
+    loadDashboard()
+  }, [])
 
-    if (!restaurantId) {
-      setLoadingFood(false)
-      return
-    }
-
+  const loadDashboard = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/food/restaurant/${restaurantId}`
+      setLoading(true)
+      setMessage('')
+
+      const profileResponse = await apiFetch(
+        '/api/restaurants/my-profile'
       )
 
-      const data = await response.json()
-
-      if (response.ok) {
-        setFoodItems(data)
+      if (profileResponse.status === 404) {
+        setRestaurant(null)
+        setFoodItems([])
+        return
       }
+
+      const profileData = await profileResponse.json()
+
+      if (!profileResponse.ok) {
+        throw new Error('Failed to load restaurant profile')
+      }
+
+      setRestaurant(profileData)
+
+      const foodResponse = await apiFetch(
+        `/api/food/restaurant/${profileData.id}`
+      )
+
+      if (!foodResponse.ok) {
+        throw new Error('Failed to load food listings')
+      }
+
+      const foodData = await foodResponse.json()
+      setFoodItems(foodData)
     } catch (error) {
-      console.error(error)
+      setMessage(
+        error.message || 'Unable to load dashboard'
+      )
     } finally {
-      setLoadingFood(false)
+      setLoading(false)
     }
   }
 
-  useEffect(() => {
-    loadRestaurantFood()
-  }, [])
+  const totalListings = foodItems.length
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
+  const availableListings = foodItems.filter(
+    (food) => food.status === 'AVAILABLE'
+  ).length
 
-    const restaurantId = localStorage.getItem('userId')
-    const restaurantName = localStorage.getItem('fullName')
+  const soldOutListings = foodItems.filter(
+    (food) => food.status === 'SOLD_OUT'
+  ).length
 
-    try {
-      const response = await fetch(
-        'http://localhost:8080/api/food',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            foodName,
-            description,
-            quantity: Number(quantity),
-            originalPrice: Number(originalPrice),
-            rescuePrice: Number(rescuePrice),
-            pickupDeadline,
-            restaurantId: restaurantId
-              ? Number(restaurantId)
-              : null,
-            restaurantName: restaurantName || ''
-          })
-        }
-      )
+  const totalQuantity = foodItems.reduce(
+    (total, food) =>
+      total + Number(food.quantity || 0),
+    0
+  )
 
-      if (response.ok) {
-        alert('Food listing added successfully!')
+  const remainingQuantity = foodItems.reduce(
+    (total, food) =>
+      total + Number(food.remainingQuantity || 0),
+    0
+  )
 
-        setFoodName('')
-        setDescription('')
-        setQuantity('')
-        setOriginalPrice('')
-        setRescuePrice('')
-        setPickupDeadline('')
+  if (loading) {
+    return (
+      <div className="dashboard-page">
+        <div className="dashboard-header">
+          <h1>Restaurant Dashboard</h1>
+          <p>Loading your restaurant dashboard...</p>
+        </div>
+      </div>
+    )
+  }
 
-        loadRestaurantFood()
-      } else {
-        const errorData = await response.text()
-        alert(errorData || 'Failed to add food listing')
-      }
-    } catch (error) {
-      console.error(error)
-      alert('Unable to connect to the server')
-    }
+  if (!restaurant) {
+    return (
+      <div className="dashboard-page">
+        <div className="dashboard-header">
+          <h1>Restaurant Dashboard</h1>
+          <p>
+            Create your restaurant profile to get started.
+          </p>
+        </div>
+
+        <div className="dashboard-card">
+          <h2>Restaurant Profile Required</h2>
+
+          <p>
+            You need to create your restaurant profile before
+            adding food listings.
+          </p>
+
+          <button
+            className="auth-btn"
+            onClick={() => navigate('/restaurant-profile')}
+          >
+            Create Restaurant Profile
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="dashboard-page">
       <div className="dashboard-header">
         <h1>Restaurant Dashboard</h1>
+
         <p>
-          Manage your food listings and help reduce food waste.
+          Welcome, {restaurant.restaurantName}
         </p>
       </div>
 
-      <div className="dashboard-card">
-        <h2>Add Food Listing</h2>
+      {message && (
+        <div className="dashboard-card">
+          <p>{message}</p>
+        </div>
+      )}
 
-        <form
-          className="auth-form"
-          onSubmit={handleSubmit}
-        >
-          <div className="input-group">
-            <label>Food Name</label>
-            <input
-              type="text"
-              value={foodName}
-              onChange={(event) =>
-                setFoodName(event.target.value)
-              }
-              placeholder="Enter food name"
-              required
-            />
-          </div>
+      <div className="dashboard-stats">
+        <div className="dashboard-stat-card">
+          <h3>Total Listings</h3>
+          <strong>{totalListings}</strong>
+        </div>
 
-          <div className="input-group">
-            <label>Description</label>
-            <textarea
-              value={description}
-              onChange={(event) =>
-                setDescription(event.target.value)
-              }
-              placeholder="Enter food description"
-              required
-            />
-          </div>
+        <div className="dashboard-stat-card">
+          <h3>Available</h3>
+          <strong>{availableListings}</strong>
+        </div>
 
-          <div className="input-group">
-            <label>Quantity</label>
-            <input
-              type="number"
-              min="1"
-              value={quantity}
-              onChange={(event) =>
-                setQuantity(event.target.value)
-              }
-              placeholder="Enter quantity"
-              required
-            />
-          </div>
+        <div className="dashboard-stat-card">
+          <h3>Sold Out</h3>
+          <strong>{soldOutListings}</strong>
+        </div>
 
-          <div className="input-group">
-            <label>Original Price</label>
-            <input
-              type="number"
-              min="0"
-              step="0.01"
-              value={originalPrice}
-              onChange={(event) =>
-                setOriginalPrice(event.target.value)
-              }
-              placeholder="Enter original price"
-              required
-            />
-          </div>
-
-          <div className="input-group">
-            <label>Rescue Price</label>
-            <input
-              type="number"
-              min="0"
-              step="0.01"
-              value={rescuePrice}
-              onChange={(event) =>
-                setRescuePrice(event.target.value)
-              }
-              placeholder="Enter rescue price"
-              required
-            />
-          </div>
-
-          <div className="input-group">
-            <label>Pickup Deadline</label>
-            <input
-              type="datetime-local"
-              value={pickupDeadline}
-              onChange={(event) =>
-                setPickupDeadline(event.target.value)
-              }
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="auth-btn"
-          >
-            Add Food Listing
-          </button>
-        </form>
+        <div className="dashboard-stat-card">
+          <h3>Food Remaining</h3>
+          <strong>{remainingQuantity}</strong>
+        </div>
       </div>
 
       <div className="dashboard-card">
-        <h2>My Food Listings</h2>
+        <h2>Quick Actions</h2>
 
-        {loadingFood ? (
-          <p>Loading food listings...</p>
-        ) : foodItems.length === 0 ? (
-          <p>No food listings added yet.</p>
+        <div className="dashboard-actions">
+          <button
+            className="auth-btn"
+            onClick={() => navigate('/add-food')}
+          >
+            Add Food
+          </button>
+
+          <button
+            className="secondary-btn"
+            onClick={() => navigate('/my-food')}
+          >
+            Manage My Food
+          </button>
+
+          <button
+            className="secondary-btn"
+            onClick={() => navigate('/restaurant-profile')}
+          >
+            View Profile
+          </button>
+        </div>
+      </div>
+
+      <div className="dashboard-card">
+        <div className="dashboard-section-header">
+          <div>
+            <h2>Recent Food Listings</h2>
+            <p>
+              Total food quantity listed: {totalQuantity}
+            </p>
+          </div>
+
+          <button
+            className="secondary-btn"
+            onClick={() => navigate('/my-food')}
+          >
+            View All
+          </button>
+        </div>
+
+        {foodItems.length === 0 ? (
+          <div className="empty-dashboard">
+            <h3>No Food Listings Yet</h3>
+
+            <p>
+              Start rescuing surplus food by adding your
+              first food listing.
+            </p>
+
+            <button
+              className="auth-btn"
+              onClick={() => navigate('/add-food')}
+            >
+              Add Your First Food
+            </button>
+          </div>
         ) : (
           <div className="food-listings">
-            {foodItems.map((food) => (
+            {foodItems.slice(0, 5).map((food) => (
               <div
                 className="food-listing-item"
                 key={food.id}
               >
-                <h3>{food.foodName}</h3>
+                <div>
+                  <h3>{food.foodName}</h3>
 
-                <p>{food.description}</p>
+                  <p>
+                    Remaining: {food.remainingQuantity} /{' '}
+                    {food.quantity}
+                  </p>
+                </div>
 
-                <p>
-                  <strong>Total Quantity:</strong>{' '}
-                  {food.quantity}
-                </p>
+                <div>
+                  <p>
+                    Rescue Price: ₹{food.rescuePrice}
+                  </p>
 
-                <p>
-                  <strong>Remaining:</strong>{' '}
-                  {food.remainingQuantity}
-                </p>
-
-                <p>
-                  <strong>Original Price:</strong>{' '}
-                  ₹{food.originalPrice}
-                </p>
-
-                <p>
-                  <strong>Rescue Price:</strong>{' '}
-                  ₹{food.rescuePrice}
-                </p>
-
-                <p>
-                  <strong>Pickup Deadline:</strong>{' '}
-                  {food.pickupDeadline}
-                </p>
-
-                <p>
-                  <strong>Status:</strong>{' '}
-                  {food.status}
-                </p>
+                  <p>
+                    Status: {food.status}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
