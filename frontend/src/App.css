@@ -1710,3 +1710,196 @@
     text-align: left;
   }
 }
+.dashboard-section .auth-form {
+  max-width: 760px;
+  margin-top: 22px;
+  padding: 24px;
+  border: 1px solid rgba(177, 139, 220, 0.18);
+  border-radius: 14px;
+  background: rgba(24, 18, 32, 0.72);
+  box-sizing: border-box;
+}
+
+.dashboard-section .auth-form .form-group {
+  margin-bottom: 18px;
+}
+
+.dashboard-section .auth-form .form-group:last-of-type {
+  margin-bottom: 22px;
+}
+
+.dashboard-section .auth-form label {
+  display: block;
+  margin-bottom: 8px;
+  color: #e9def2;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dashboard-section .auth-form input[type="text"],
+.dashboard-section .auth-form input[type="number"],
+.dashboard-section .auth-form input[type="datetime-local"],
+.dashboard-section .auth-form select {
+  width: 100%;
+  height: 44px;
+  padding: 0 13px;
+  border: 1px solid rgba(177, 139, 220, 0.22);
+  border-radius: 8px;
+  background: #181220;
+  color: #eee4f7;
+  box-sizing: border-box;
+  outline: none;
+  font-size: 14px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.dashboard-section .auth-form input::placeholder {
+  color: rgba(235, 225, 245, 0.38);
+}
+
+.dashboard-section .auth-form input[type="text"]:focus,
+.dashboard-section .auth-form input[type="number"]:focus,
+.dashboard-section .auth-form input[type="datetime-local"]:focus,
+.dashboard-section .auth-form select:focus {
+  border-color: rgba(177, 139, 220, 0.52);
+  background: #1c1526;
+}
+
+.dashboard-section .auth-form input[type="datetime-local"] {
+  color-scheme: dark;
+}
+
+.dashboard-section .auth-form select {
+  cursor: pointer;
+}
+
+.dashboard-section .auth-form input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0 8px 0 0;
+  accent-color: #9b5de5;
+  vertical-align: middle;
+}
+
+.dashboard-section .auth-form .form-group:last-of-type label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  color: #cfc2d9;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.dashboard-section .auth-form .auth-btn {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 4px;
+}
+
+.dashboard-section .ngo-meal-grid {
+  margin-top: 20px;
+}
+
+.dashboard-section .ngo-meal-card {
+  border: 1px solid rgba(177, 139, 220, 0.18);
+  background: rgba(24, 18, 32, 0.78);
+  border-radius: 14px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.dashboard-section .ngo-meal-card:hover {
+  border-color: rgba(177, 139, 220, 0.32);
+  transform: translateY(-2px);
+}
+
+.dashboard-section .ngo-meal-card h3 {
+  color: #f0e7f6;
+}
+
+.dashboard-section .ngo-meal-card p {
+  color: rgba(235, 225, 245, 0.62);
+}
+
+.dashboard-section .ngo-meal-details > div {
+  border: 1px solid rgba(177, 139, 220, 0.12);
+  background: rgba(42, 28, 58, 0.42);
+  border-radius: 9px;
+}
+
+.dashboard-section .ngo-meal-details span {
+  color: rgba(210, 195, 225, 0.5);
+}
+
+.dashboard-section .ngo-meal-details strong {
+  color: #eee4f7;
+}
+
+@media (max-width: 700px) {
+  .dashboard-section .auth-form {
+    padding: 18px;
+  }
+
+  .dashboard-section .auth-form input[type="text"],
+  .dashboard-section .auth-form input[type="number"],
+  .dashboard-section .auth-form input[type="datetime-local"],
+  .dashboard-section .auth-form select {
+    height: 42px;
+  }
+}
+.ngo-fulfill-box {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid rgba(177, 139, 220, 0.16);
+  border-radius: 10px;
+  background: rgba(24, 18, 32, 0.62);
+}
+
+.ngo-fulfill-box label {
+  display: block;
+  margin-bottom: 8px;
+  color: #e9def2;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ngo-fulfill-box select,
+.ngo-fulfill-box input[type="number"] {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(177, 139, 220, 0.2);
+  border-radius: 7px;
+  background: #181220;
+  color: #eee4f7;
+  box-sizing: border-box;
+  outline: none;
+  font-size: 14px;
+}
+
+.ngo-fulfill-box select:focus,
+.ngo-fulfill-box input[type="number"]:focus {
+  border-color: rgba(177, 139, 220, 0.45);
+}
+
+.ngo-fulfill-box .auth-btn {
+  width: 100%;
+  min-height: 42px;
+}
+
+.ngo-fulfill-info {
+  margin: 4px 0 12px;
+  color: rgba(235, 225, 245, 0.55);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.ngo-empty-state {
+  margin-top: 14px;
+  color: rgba(235, 225, 245, 0.5);
+  font-size: 13px;
+}
+
+.ngo-meal-card > .auth-btn {
+  margin-top: 14px;
+}

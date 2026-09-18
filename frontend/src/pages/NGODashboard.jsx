@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react'
 import { apiFetch } from '../utils/api'
+import NGOStats from '../components/ngo/NGOStats'
+import CreateFoodNeed from '../components/ngo/CreateFoodNeed'
+import FoodNeedList from '../components/ngo/FoodNeedList'
+import AvailableMealCard from '../components/ngo/AvailableMealCard'
+import ClaimedMealCard from '../components/ngo/ClaimedMealCard'
 
 function NGODashboard() {
   const [profile, setProfile] = useState(null)
   const [availableMeals, setAvailableMeals] = useState([])
   const [claimedMeals, setClaimedMeals] = useState([])
+  const [foodNeeds, setFoodNeeds] = useState([])
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
 
@@ -17,7 +23,9 @@ function NGODashboard() {
       )
 
       if (profileResponse.ok) {
-        const profileData = await profileResponse.json()
+        const profileData =
+          await profileResponse.json()
+
         setProfile(profileData)
       }
 
@@ -42,9 +50,23 @@ function NGODashboard() {
 
         setClaimedMeals(claimedData)
       }
+
+      const needsResponse = await apiFetch(
+        '/api/food-needs/my'
+      )
+
+      if (needsResponse.ok) {
+        const needsData =
+          await needsResponse.json()
+
+        setFoodNeeds(needsData)
+      }
     } catch (error) {
       console.error(error)
-      setMessage('Unable to load NGO dashboard')
+
+      setMessage(
+        'Unable to load NGO dashboard'
+      )
     } finally {
       setLoading(false)
     }
@@ -68,15 +90,112 @@ function NGODashboard() {
       const data = await response.text()
 
       if (!response.ok) {
-        setMessage(data || 'Unable to claim meal')
+        setMessage(
+          data || 'Unable to claim meal'
+        )
+
         return
       }
 
-      setMessage('Meal claimed successfully')
+      setMessage(
+        'Meal claimed successfully'
+      )
+
       await loadDashboard()
     } catch (error) {
       console.error(error)
-      setMessage('Unable to claim meal')
+
+      setMessage(
+        'Unable to claim meal'
+      )
+    }
+  }
+
+  const createFoodNeed = async (foodNeed) => {
+    try {
+      setMessage('')
+
+      const response = await apiFetch(
+        '/api/food-needs',
+        {
+          method: 'POST',
+          body: JSON.stringify(foodNeed)
+        }
+      )
+
+      const data = await response.text()
+
+      if (!response.ok) {
+        setMessage(
+          data ||
+            'Unable to create food need'
+        )
+
+        return
+      }
+
+      setMessage(
+        'Food need created successfully'
+      )
+
+      await loadDashboard()
+    } catch (error) {
+      console.error(error)
+
+      setMessage(
+        'Unable to create food need'
+      )
+    }
+  }
+
+  const fulfillNeed = async (
+    foodNeedId,
+    donatedMealId,
+    quantity
+  ) => {
+    try {
+      setMessage('')
+
+      if (
+        !quantity ||
+        Number(quantity) <= 0
+      ) {
+        setMessage(
+          'Please enter a valid quantity'
+        )
+
+        return
+      }
+
+      const response = await apiFetch(
+        `/api/food-need-fulfillments?foodNeedId=${foodNeedId}&donatedMealId=${donatedMealId}&quantity=${Number(quantity)}`,
+        {
+          method: 'POST'
+        }
+      )
+
+      const data = await response.text()
+
+      if (!response.ok) {
+        setMessage(
+          data ||
+            'Unable to fulfill food need'
+        )
+
+        return
+      }
+
+      setMessage(
+        'Food need fulfilled successfully'
+      )
+
+      await loadDashboard()
+    } catch (error) {
+      console.error(error)
+
+      setMessage(
+        'Unable to fulfill food need'
+      )
     }
   }
 
@@ -90,15 +209,18 @@ function NGODashboard() {
   }
 
   const isVerified =
-    profile?.verificationStatus === 'VERIFIED'
+    profile?.verificationStatus ===
+    'VERIFIED'
 
   return (
     <div className="page-container">
       <div className="page-header">
         <div>
           <h1>NGO Dashboard</h1>
+
           <p>
-            Manage donated meals and your claimed meals.
+            Manage donated meals and food
+            needs.
           </p>
         </div>
       </div>
@@ -112,38 +234,48 @@ function NGODashboard() {
       {!profile ? (
         <div className="dashboard-card">
           <h2>NGO Profile Required</h2>
+
           <p>
-            Please create your NGO profile before claiming
-            donated meals.
+            Please create your NGO profile
+            before using NGO services.
           </p>
         </div>
       ) : (
         <>
-          <div className="dashboard-stats">
-            <div className="stat-card">
-              <span>Verification</span>
-              <strong>
-                {profile.verificationStatus || 'PENDING'}
-              </strong>
-            </div>
+          <NGOStats
+            verificationStatus={
+              profile.verificationStatus
+            }
+            availableMealsCount={
+              availableMeals.length
+            }
+            claimedMealsCount={
+              claimedMeals.length
+            }
+            foodNeedsCount={
+              foodNeeds.length
+            }
+          />
 
-            <div className="stat-card">
-              <span>Available Meals</span>
-              <strong>{availableMeals.length}</strong>
-            </div>
+          <CreateFoodNeed
+            isVerified={isVerified}
+            onCreate={createFoodNeed}
+          />
 
-            <div className="stat-card">
-              <span>My Claimed Meals</span>
-              <strong>{claimedMeals.length}</strong>
-            </div>
-          </div>
+          <FoodNeedList
+            foodNeeds={foodNeeds}
+          />
 
           <section className="dashboard-section">
             <div className="section-header">
               <div>
-                <h2>Available Donated Meals</h2>
+                <h2>
+                  Available Donated Meals
+                </h2>
+
                 <p>
-                  Meals available for verified NGOs to claim.
+                  Meals available for
+                  verified NGOs to claim.
                 </p>
               </div>
             </div>
@@ -151,8 +283,9 @@ function NGODashboard() {
             {!isVerified && (
               <div className="dashboard-card">
                 <p>
-                  Your NGO must be verified before you can
-                  claim donated meals.
+                  Your NGO must be verified
+                  before you can claim
+                  donated meals.
                 </p>
               </div>
             )}
@@ -160,148 +293,60 @@ function NGODashboard() {
             {availableMeals.length === 0 ? (
               <div className="dashboard-card">
                 <p>
-                  No donated meals are currently available.
+                  No donated meals are
+                  currently available.
                 </p>
               </div>
             ) : (
               <div className="ngo-meal-grid">
-                {availableMeals.map((meal) => (
-                  <div
-                    className="ngo-meal-card"
-                    key={meal.id}
-                  >
-                    <div className="ngo-meal-top">
-                      <div>
-                        <h3>{meal.foodName}</h3>
-                        <p>
-                          {meal.restaurantName}
-                        </p>
-                      </div>
-
-                      <span className="food-status">
-                        AVAILABLE
-                      </span>
-                    </div>
-
-                    <div className="ngo-meal-details">
-                      <div>
-                        <span>Quantity</span>
-                        <strong>
-                          {meal.quantity}
-                        </strong>
-                      </div>
-
-                      <div>
-                        <span>Pickup</span>
-                        <strong>
-                          {meal.pickupDeadline}
-                        </strong>
-                      </div>
-                    </div>
-
-                    {meal.allergens && (
-                      <div className="ngo-meal-allergens">
-                        <span>Allergens</span>
-                        <strong>
-                          {meal.allergens}
-                        </strong>
-                      </div>
-                    )}
-
-                    <button
-                      className="add-food-btn"
-                      onClick={() =>
-                        claimMeal(meal.id)
-                      }
-                      disabled={!isVerified}
-                    >
-                      Claim Meal
-                    </button>
-                  </div>
-                ))}
+                {availableMeals.map(
+                  (meal) => (
+                    <AvailableMealCard
+                      key={meal.id}
+                      meal={meal}
+                      foodNeeds={foodNeeds}
+                      isVerified={isVerified}
+                      onClaim={claimMeal}
+                      onFulfill={fulfillNeed}
+                    />
+                  )
+                )}
               </div>
             )}
           </section>
 
           <section className="dashboard-section">
-  <div className="section-header">
-    <div>
-      <h2>My Claimed Meals</h2>
-      <p>
-        Donated meals already claimed by your NGO.
-      </p>
-    </div>
-  </div>
+            <div className="section-header">
+              <div>
+                <h2>My Claimed Meals</h2>
 
-  {claimedMeals.length === 0 ? (
-    <div className="dashboard-card">
-      <p>
-        You have not claimed any meals yet.
-      </p>
-    </div>
-  ) : (
-    <div className="ngo-meal-grid">
-      {claimedMeals.map((meal) => (
-        <div
-          className="ngo-meal-card"
-          key={meal.id}
-        >
-          <div className="ngo-meal-top">
-            <div>
-              <h3>{meal.foodName}</h3>
-              <p>{meal.restaurantName}</p>
+                <p>
+                  Donated meals already
+                  claimed by your NGO.
+                </p>
+              </div>
             </div>
 
-            <span className="food-status">
-              {meal.status}
-            </span>
-          </div>
-
-          <div className="ngo-meal-details">
-            <div>
-              <span>Quantity</span>
-              <strong>
-                {meal.quantity}
-              </strong>
-            </div>
-
-            <div>
-              <span>Pickup</span>
-              <strong>
-                {meal.pickupDeadline || 'Not provided'}
-              </strong>
-            </div>
-          </div>
-
-          {meal.allergens && (
-            <div className="ngo-meal-allergens">
-              <span>Allergens</span>
-              <strong>
-                {meal.allergens}
-              </strong>
-            </div>
-          )}
-          {meal.status === 'READY_FOR_PICKUP' &&
-  meal.pickupOtp && (
-    <div className="pickup-otp-card">
-      <span>Pickup OTP</span>
-
-      <strong>
-        {meal.pickupOtp}
-      </strong>
-
-      <p>
-        Show this OTP to the restaurant during pickup.
-      </p>
-    </div>
-  )}
-        </div>
-      ))}
-      
-    </div>
-  )}
-  
-</section>
+            {claimedMeals.length === 0 ? (
+              <div className="dashboard-card">
+                <p>
+                  You have not claimed any
+                  meals yet.
+                </p>
+              </div>
+            ) : (
+              <div className="ngo-meal-grid">
+                {claimedMeals.map(
+                  (meal) => (
+                    <ClaimedMealCard
+                      key={meal.id}
+                      meal={meal}
+                    />
+                  )
+                )}
+              </div>
+            )}
+          </section>
         </>
       )}
     </div>
