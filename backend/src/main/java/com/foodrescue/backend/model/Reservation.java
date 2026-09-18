@@ -1,5 +1,8 @@
 package com.foodrescue.backend.model;
 
+import java.time.LocalDateTime;
+
+
 import jakarta.persistence.*;
 
 @Entity
@@ -21,6 +24,10 @@ public class Reservation {
     private Double totalPrice;
 
     private String status;
+
+    private String fulfillmentType;
+    private String pickupOtp;
+private LocalDateTime pickupOtpExpiresAt;
 
     public Reservation() {
     }
@@ -76,4 +83,29 @@ public class Reservation {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public String getFulfillmentType() {
+        return fulfillmentType;
+    }
+
+    public void setFulfillmentType(String fulfillmentType) {
+        this.fulfillmentType = fulfillmentType;
+    }
+    public String getPickupOtp() {
+    return pickupOtp;
+}
+
+public void setPickupOtp(String pickupOtp) {
+    this.pickupOtp = pickupOtp;
+}
+
+public LocalDateTime getPickupOtpExpiresAt() {
+    return pickupOtpExpiresAt;
+}
+
+public void setPickupOtpExpiresAt(
+        LocalDateTime pickupOtpExpiresAt
+) {
+    this.pickupOtpExpiresAt = pickupOtpExpiresAt;
+}
 }

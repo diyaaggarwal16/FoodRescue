@@ -38,11 +38,16 @@ function Navbar({ user, onLogout }) {
         )}
 
         {user && user.role === 'NGO' && (
-          <><Link to="/ngo">
-            NGO Dashboard
-          </Link>
-          <Link to="/food">Explore Food</Link></>
-        )}
+  <>
+    <Link to="/ngo">
+      NGO Dashboard
+    </Link>
+
+    <Link to="/ngo-profile">
+      Profile
+    </Link>
+  </>
+)}
 
         {user ? (
           <button

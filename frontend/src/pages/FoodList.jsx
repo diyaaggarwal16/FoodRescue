@@ -8,6 +8,8 @@ function FoodList() {
   const [selectedFood, setSelectedFood] = useState(null)
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [quantity, setQuantity] = useState(1)
+  const [fulfillmentType, setFulfillmentType] =
+  useState('SELF_PICKUP')
 
   const [message, setMessage] = useState('')
   const [reserving, setReserving] = useState(false)
@@ -57,11 +59,12 @@ function FoodList() {
   }
 
   const openReservation = (food) => {
-    setSelectedFood(food)
-    setQuantity(1)
-    setMessage('')
-    setShowConfirmation(false)
-  }
+  setSelectedFood(food)
+  setQuantity(1)
+  setFulfillmentType('SELF_PICKUP')
+  setMessage('')
+  setShowConfirmation(false)
+}
 
   const closeReservation = () => {
     if (reserving) {
@@ -127,9 +130,10 @@ function FoodList() {
         {
           method: 'POST',
           body: JSON.stringify({
-            foodListingId: selectedFood.id,
-            quantity: selectedQuantity
-          })
+  foodListingId: selectedFood.id,
+  quantity: selectedQuantity,
+  fulfillmentType: fulfillmentType
+})
         }
       )
 
@@ -330,6 +334,24 @@ function FoodList() {
                   required
                 />
               </div>
+              <div className="input-group">
+  <label>What would you like to do?</label>
+
+  <select
+    value={fulfillmentType}
+    onChange={(event) =>
+      setFulfillmentType(event.target.value)
+    }
+  >
+    <option value="SELF_PICKUP">
+      Pick up for myself
+    </option>
+
+    <option value="PAY_FORWARD">
+      Pay it forward to an NGO
+    </option>
+  </select>
+</div>
 
               <button
                 type="submit"
@@ -405,6 +427,12 @@ function FoodList() {
                 Allergens:{' '}
                 {selectedFood.allergens || 'None'}
               </p>
+              <p>
+  Fulfillment:{' '}
+  {fulfillmentType === 'SELF_PICKUP'
+    ? 'Pick up for myself'
+    : 'Pay it forward to an NGO'}
+</p>
             </div>
 
             <button

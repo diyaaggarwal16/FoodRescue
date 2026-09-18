@@ -12,6 +12,8 @@ import RestaurantDashboard from './pages/RestaurantDashboard'
 import RestaurantProfile from './pages/RestaurantProfile'
 import MyFood from './pages/MyFood'
 import EditFood from './pages/EditFood'
+import NGODashboard from './pages/NGODashboard'
+import NGOProfile from './pages/NGOProfile'
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -62,6 +64,14 @@ function App() {
 <Route path="/restaurant-profile" element={<RestaurantProfile />} />
 <Route path="/my-food" element={<MyFood />} />
 <Route path="/edit-food/:id" element={<EditFood />} />
+<Route
+  path="/ngo"
+  element={<NGODashboard />}
+/>
+<Route
+  path="/ngo-profile"
+  element={<NGOProfile />}
+/>
       </Routes>
     </BrowserRouter>
   )
