@@ -48,6 +48,11 @@ function Navbar({ user, onLogout }) {
     </Link>
   </>
 )}
+{user && user.role === 'ADMIN' && (
+  <Link to="/admin">
+    Admin Dashboard
+  </Link>
+)}
 
         {user ? (
           <button
