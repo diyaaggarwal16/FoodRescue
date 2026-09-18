@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class ReservationController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<?> createReservation(
             @RequestBody Reservation reservation,
             @AuthenticationPrincipal Jwt jwt

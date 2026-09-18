@@ -1,8 +1,9 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { apiFetch } from '../utils/api'
 
-function AddFood() {
+function EditFood() {
+  const { id } = useParams()
   const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
@@ -14,8 +15,45 @@ function AddFood() {
     pickupDeadline: ''
   })
 
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
-  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const loadFood = async () => {
+      try {
+        const response = await apiFetch('/api/food')
+
+        if (!response.ok) {
+          throw new Error('Failed to load food')
+        }
+
+        const foods = await response.json()
+        const food = foods.find(
+          (item) => item.id === Number(id)
+        )
+
+        if (!food) {
+          throw new Error('Food listing not found')
+        }
+
+        setFormData({
+          foodName: food.foodName || '',
+          description: food.description || '',
+          quantity: food.quantity || '',
+          originalPrice: food.originalPrice || '',
+          rescuePrice: food.rescuePrice || '',
+          pickupDeadline: food.pickupDeadline || ''
+        })
+      } catch (error) {
+        setMessage(error.message || 'Unable to load food')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadFood()
+  }, [id])
 
   const handleChange = (event) => {
     setFormData({
@@ -26,26 +64,12 @@ function AddFood() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    setLoading(true)
+    setSaving(true)
     setMessage('')
 
     try {
-      const profileResponse = await apiFetch(
-        '/api/restaurants/my-profile'
-      )
-
-      if (profileResponse.status === 404) {
-        setMessage('Please create your restaurant profile first.')
-        setLoading(false)
-        return
-      }
-
-      if (!profileResponse.ok) {
-        throw new Error('Failed to load restaurant profile')
-      }
-
-      const response = await apiFetch('/api/food', {
-        method: 'POST',
+      const response = await apiFetch(`/api/food/${id}`, {
+        method: 'PUT',
         body: JSON.stringify({
           foodName: formData.foodName,
           description: formData.description,
@@ -56,33 +80,41 @@ function AddFood() {
         })
       })
 
+      const text = await response.text()
+
       if (!response.ok) {
-        throw new Error('Failed to create listing')
+        throw new Error(text || 'Failed to update food')
       }
 
-      setMessage('Food listing created successfully')
+      setMessage('Food listing updated successfully')
 
-      setFormData({
-        foodName: '',
-        description: '',
-        quantity: '',
-        originalPrice: '',
-        rescuePrice: '',
-        pickupDeadline: ''
-      })
+      setTimeout(() => {
+        navigate('/my-food')
+      }, 1000)
     } catch (error) {
-      setMessage('Unable to create food listing')
+      setMessage(error.message || 'Unable to update food')
     } finally {
-      setLoading(false)
+      setSaving(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="auth-page">
+        <div className="auth-card">
+          <h1>Edit Food</h1>
+          <p>Loading...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-header">
-          <h1>Add Food Listing</h1>
-          <p>List your surplus food for rescue.</p>
+          <h1>Edit Food Listing</h1>
+          <p>Update your food listing details.</p>
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
@@ -93,7 +125,6 @@ function AddFood() {
               name="foodName"
               value={formData.foodName}
               onChange={handleChange}
-              placeholder="Veg Sandwich"
               required
             />
           </div>
@@ -105,7 +136,6 @@ function AddFood() {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              placeholder="Fresh vegetable sandwich"
               required
             />
           </div>
@@ -117,7 +147,6 @@ function AddFood() {
               name="quantity"
               value={formData.quantity}
               onChange={handleChange}
-              placeholder="30"
               min="1"
               required
             />
@@ -130,7 +159,6 @@ function AddFood() {
               name="originalPrice"
               value={formData.originalPrice}
               onChange={handleChange}
-              placeholder="200"
               min="0"
               required
             />
@@ -143,7 +171,6 @@ function AddFood() {
               name="rescuePrice"
               value={formData.rescuePrice}
               onChange={handleChange}
-              placeholder="80"
               min="0"
               required
             />
@@ -163,9 +190,9 @@ function AddFood() {
           <button
             type="submit"
             className="auth-btn"
-            disabled={loading}
+            disabled={saving}
           >
-            {loading ? 'Creating...' : 'Create Food Listing'}
+            {saving ? 'Updating...' : 'Update Food Listing'}
           </button>
 
           {message && (
@@ -177,13 +204,13 @@ function AddFood() {
 
         <button
           className="secondary-btn"
-          onClick={() => navigate('/food')}
+          onClick={() => navigate('/my-food')}
         >
-          View Food Listings
+          Back to My Food
         </button>
       </div>
     </div>
   )
 }
 
-export default AddFood
+export default EditFood

@@ -8,6 +8,10 @@ import Register from './pages/Register'
 import FoodList from './pages/FoodList'
 import AddFood from './pages/AddFood'
 import MyReservations from './pages/MyReservations'
+import RestaurantDashboard from './pages/RestaurantDashboard'
+import RestaurantProfile from './pages/RestaurantProfile'
+import MyFood from './pages/MyFood'
+import EditFood from './pages/EditFood'
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -51,6 +55,13 @@ function App() {
           path="/my-reservations"
           element={<MyReservations />}
         />
+        <Route
+  path="/restaurant-dashboard"
+  element={<RestaurantDashboard />}
+/>
+<Route path="/restaurant-profile" element={<RestaurantProfile />} />
+<Route path="/my-food" element={<MyFood />} />
+<Route path="/edit-food/:id" element={<EditFood />} />
       </Routes>
     </BrowserRouter>
   )
