@@ -1,6 +1,7 @@
 package com.foodrescue.backend.controller;
 
 import com.foodrescue.backend.dto.AuthResponse;
+import com.foodrescue.backend.dto.RegistrationRequest;
 import com.foodrescue.backend.model.User;
 import com.foodrescue.backend.service.JwtService;
 import com.foodrescue.backend.service.UserService;
@@ -25,13 +26,63 @@ public class AuthController {
         this.jwtService = jwtService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(
-            @RequestBody User user
+    @PostMapping("/register/customer")
+    public ResponseEntity<?> registerCustomer(
+            @RequestBody RegistrationRequest request
     ) {
         try {
             User registeredUser =
-                    userService.registerUser(user);
+                    userService.registerCustomer(request);
+
+            AuthResponse response = new AuthResponse(
+                    registeredUser.getId(),
+                    registeredUser.getFullName(),
+                    registeredUser.getEmail(),
+                    registeredUser.getRole(),
+                    null
+            );
+
+            return ResponseEntity.ok(response);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/register/restaurant")
+    public ResponseEntity<?> registerRestaurant(
+            @RequestBody RegistrationRequest request
+    ) {
+        try {
+            User registeredUser =
+                    userService.registerRestaurant(request);
+
+            AuthResponse response = new AuthResponse(
+                    registeredUser.getId(),
+                    registeredUser.getFullName(),
+                    registeredUser.getEmail(),
+                    registeredUser.getRole(),
+                    null
+            );
+
+            return ResponseEntity.ok(response);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/register/ngo")
+    public ResponseEntity<?> registerNGO(
+            @RequestBody RegistrationRequest request
+    ) {
+        try {
+            User registeredUser =
+                    userService.registerNGO(request);
 
             AuthResponse response = new AuthResponse(
                     registeredUser.getId(),
@@ -55,17 +106,24 @@ public class AuthController {
             @RequestBody Map<String, String> loginData
     ) {
         try {
-            String email = loginData.get("email");
-            String password = loginData.get("password");
+            String email =
+                    loginData.get("email");
+
+            String password =
+                    loginData.get("password");
 
             User user =
-                    userService.loginUser(email, password);
+                    userService.loginUser(
+                            email,
+                            password
+                    );
 
-            String token = jwtService.generateToken(
-                    user.getId(),
-                    user.getEmail(),
-                    user.getRole()
-            );
+            String token =
+                    jwtService.generateToken(
+                            user.getId(),
+                            user.getEmail(),
+                            user.getRole()
+                    );
 
             AuthResponse response = new AuthResponse(
                     user.getId(),

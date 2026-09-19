@@ -144,3 +144,464 @@
   font-size: 14px;
   margin: 0;
 }
+
+/* ========================================
+   REGISTRATION ACCOUNT SELECTION
+   ======================================== */
+
+.registration-choice-card {
+  width: min(760px, calc(100% - 32px));
+  max-width: 760px;
+}
+
+.registration-options {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 34px;
+}
+
+.registration-option {
+  position: relative;
+  width: 100%;
+  min-height: 118px;
+  padding: 24px 30px;
+
+  border: 1px solid rgba(184, 132, 255, 0.28);
+  border-radius: 18px;
+
+  background: rgba(31, 20, 49, 0.55);
+
+  color: #f5edff;
+  text-align: left;
+
+  cursor: pointer;
+  overflow: hidden;
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+/* Soft inner purple glow */
+
+.registration-option::before {
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at 15% 50%,
+      rgba(164, 91, 255, 0.18),
+      transparent 45%
+    );
+
+  opacity: 0;
+  transition: opacity 0.25s ease;
+
+  pointer-events: none;
+}
+
+/* Top subtle shine */
+
+.registration-option::after {
+  content: '';
+
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(211, 170, 255, 0.45),
+    transparent
+  );
+
+  opacity: 0.35;
+}
+
+/* Hover */
+
+.registration-option:hover {
+  transform: translateY(-3px);
+
+  background: rgba(48, 29, 72, 0.78);
+
+  border-color: rgba(184, 112, 255, 0.9);
+
+  box-shadow:
+    0 12px 35px rgba(102, 45, 170, 0.25),
+    0 0 28px rgba(172, 91, 255, 0.16);
+}
+
+.registration-option:hover::before {
+  opacity: 1;
+}
+
+/* Active */
+
+.registration-option:active {
+  transform: translateY(-1px);
+}
+
+/* Keyboard focus */
+
+.registration-option:focus-visible {
+  outline: none;
+
+  border-color: #bd75ff;
+
+  box-shadow:
+    0 0 0 3px rgba(189, 117, 255, 0.15),
+    0 0 30px rgba(189, 117, 255, 0.2);
+}
+
+/* Heading */
+
+.registration-option h2 {
+  position: relative;
+  z-index: 1;
+
+  margin: 0 0 8px;
+
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  color: #f7efff;
+}
+
+/* Description */
+
+.registration-option p {
+  position: relative;
+  z-index: 1;
+
+  max-width: 640px;
+
+  margin: 0;
+
+  font-size: 15px;
+  line-height: 1.55;
+
+  color: #d4c9df;
+}
+
+/* ========================================
+   CUSTOMER
+   ======================================== */
+
+.registration-option:nth-child(1) {
+  border-color: rgba(178, 108, 255, 0.32);
+}
+
+.registration-option:nth-child(1):hover {
+  border-color: #b56cff;
+
+  box-shadow:
+    0 12px 35px rgba(126, 55, 220, 0.25),
+    0 0 30px rgba(181, 108, 255, 0.18);
+}
+
+/* ========================================
+   RESTAURANT
+   ======================================== */
+
+.registration-option:nth-child(2) {
+  border-color: rgba(185, 145, 235, 0.27);
+}
+
+.registration-option:nth-child(2):hover {
+  border-color: #c59aff;
+
+  box-shadow:
+    0 12px 35px rgba(140, 85, 210, 0.23),
+    0 0 30px rgba(197, 154, 255, 0.14);
+}
+
+/* ========================================
+   NGO
+   ======================================== */
+
+.registration-option:nth-child(3) {
+  border-color: rgba(122, 205, 176, 0.22);
+}
+
+.registration-option:nth-child(3):hover {
+  border-color: rgba(122, 218, 184, 0.65);
+
+  box-shadow:
+    0 12px 35px rgba(53, 145, 112, 0.18),
+    0 0 28px rgba(122, 218, 184, 0.1);
+}
+
+/* ========================================
+   LOGIN LINK
+   ======================================== */
+
+.registration-choice-card .auth-switch {
+  margin-top: 30px;
+}
+
+/* ========================================
+   MOBILE
+   ======================================== */
+
+@media (max-width: 600px) {
+  .registration-choice-card {
+    width: calc(100% - 24px);
+  }
+
+  .registration-options {
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .registration-option {
+    min-height: 105px;
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .registration-option h2 {
+    font-size: 20px;
+  }
+
+  .registration-option p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+/* ========================================
+   REGISTRATION ICONS + ARROWS
+   ======================================== */
+
+.registration-option {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.registration-icon {
+  flex: 0 0 68px;
+
+  width: 68px;
+  height: 68px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 18px;
+
+  background: rgba(145, 72, 220, 0.25);
+
+  font-size: 30px;
+
+  box-shadow:
+    inset 0 0 20px rgba(175, 95, 255, 0.08);
+}
+
+.restaurant-icon {
+  background: rgba(196, 132, 70, 0.2);
+}
+
+.ngo-icon {
+  background: rgba(70, 170, 135, 0.2);
+}
+
+.registration-content {
+  flex: 1;
+
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.registration-title {
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  color: #f7efff;
+}
+
+.registration-description {
+  font-size: 15px;
+  line-height: 1.5;
+
+  color: #d4c9df;
+}
+
+.registration-arrow {
+  flex: 0 0 54px;
+
+  width: 54px;
+  height: 54px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(154, 93, 220, 0.28);
+
+  color: #eee2ff;
+
+  font-size: 31px;
+  font-weight: 400;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.registration-option:hover .registration-arrow {
+  transform: translateX(5px);
+
+  background: rgba(164, 83, 235, 0.65);
+
+  box-shadow:
+    0 0 20px rgba(172, 91, 255, 0.25);
+}
+
+.registration-option:hover .registration-icon {
+  background: rgba(145, 72, 220, 0.4);
+
+  box-shadow:
+    0 0 24px rgba(173, 91, 255, 0.15);
+}
+
+/* Restaurant hover */
+
+.registration-option:nth-child(2):hover .registration-icon {
+  background: rgba(196, 132, 70, 0.35);
+}
+
+/* NGO hover */
+
+.registration-option:nth-child(3):hover .registration-icon {
+  background: rgba(70, 170, 135, 0.32);
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .registration-option {
+    gap: 15px;
+    padding: 18px;
+  }
+
+  .registration-icon {
+    flex: 0 0 52px;
+
+    width: 52px;
+    height: 52px;
+
+    border-radius: 14px;
+
+    font-size: 24px;
+  }
+
+  .registration-title {
+    font-size: 19px;
+  }
+
+  .registration-description {
+    font-size: 13px;
+  }
+
+  .registration-arrow {
+    flex: 0 0 42px;
+
+    width: 42px;
+    height: 42px;
+
+    font-size: 25px;
+  }
+}
+.session-expired-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.58);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 9999;
+}
+
+.session-expired-modal {
+  width: min(420px, 100%);
+  background: #07010a;
+  border: 1px solid #050008;
+  border-radius: 18px;
+  padding: 32px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+  animation: sessionModalAppear 0.2s ease-out;
+}
+
+.session-expired-modal h2 {
+  margin: 0 0 10px;
+  color: #b00354;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.session-expired-modal p {
+  margin: 0 auto 24px;
+  max-width: 320px;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.session-expired-modal button {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 18px;
+  background: #992cc7;
+  color: #d383da;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.session-expired-modal button:hover {
+  background: #4c075c;
+  transform: translateY(-1px);
+}
+
+.session-expired-modal button:active {
+  transform: translateY(0);
+}
+
+@keyframes sessionModalAppear {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

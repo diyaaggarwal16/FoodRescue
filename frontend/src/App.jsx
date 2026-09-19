@@ -1,10 +1,23 @@
-import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate
+} from 'react-router-dom'
+import { logoutUser } from './utils/api'
+
 import './App.css'
+
+import ProtectedRoute from './components/ProtectedRoute'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import CustomerRegister from './pages/CustomerRegister'
+import RestaurantRegister from './pages/RestaurantRegister'
+import NGORegister from './pages/NGORegister'
+import ForgotPassword from './pages/ForgotPassword'
 
 import FoodList from './pages/dashboards/customer/FoodList'
 import MyReservations from './pages/dashboards/customer/MyReservations'
@@ -25,109 +38,256 @@ import AdminFoodNeeds from './pages/dashboards/admin/AdminFoodNeeds'
 import AdminUsers from './pages/dashboards/admin/AdminUsers'
 import AdminFoodListings from './pages/dashboards/admin/AdminFoodListings'
 
-function App() {
+function AppContent() {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem('user')
 
-    return storedUser ? JSON.parse(storedUser) : null
+    if (!storedUser) {
+      return null
+    }
+
+    try {
+      return JSON.parse(storedUser)
+    } catch {
+      localStorage.removeItem('user')
+      localStorage.removeItem('token')
+
+      return null
+    }
   })
 
+  const [sessionExpired, setSessionExpired] =
+    useState(false)
+
   const handleLogin = (loggedInUser) => {
-    localStorage.setItem('user', JSON.stringify(loggedInUser))
+    localStorage.setItem(
+      'user',
+      JSON.stringify(loggedInUser)
+    )
+
     setUser(loggedInUser)
+    setSessionExpired(false)
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('user')
+    logoutUser()
+
     setUser(null)
+
+    navigate('/login')
+  }
+
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      setUser(null)
+      setSessionExpired(true)
+    }
+
+    window.addEventListener(
+      'auth:session-expired',
+      handleSessionExpired
+    )
+
+    return () => {
+      window.removeEventListener(
+        'auth:session-expired',
+        handleSessionExpired
+      )
+    }
+  }, [])
+
+  const handleSessionExpiredLogin = () => {
+    setSessionExpired(false)
+
+    navigate('/login', {
+      replace: true
+    })
   }
 
   return (
-    <BrowserRouter>
-      <Navbar user={user} onLogout={handleLogout} />
+    <>
+      <Navbar
+        user={user}
+        onLogout={handleLogout}
+      />
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={<Home />}
+        />
 
         <Route
           path="/login"
-          element={<Login onLogin={handleLogin} />}
-        />
-
-        <Route path="/register" element={<Register />} />
-
-        <Route path="/food" element={<FoodList />} />
-
-        <Route
-          path="/add-food"
-          element={<AddFood />}
+          element={
+            <Login
+              onLogin={handleLogin}
+            />
+          }
         />
 
         <Route
-          path="/my-reservations"
-          element={<MyReservations />}
+          path="/register"
+          element={<Register />}
         />
 
         <Route
-          path="/restaurant-dashboard"
-          element={<RestaurantDashboard />}
+          path="/register/customer"
+          element={<CustomerRegister />}
         />
 
         <Route
-          path="/restaurant-profile"
-          element={<RestaurantProfile />}
+          path="/register/restaurant"
+          element={<RestaurantRegister />}
         />
 
         <Route
-          path="/my-food"
-          element={<MyFood />}
+          path="/register/ngo"
+          element={<NGORegister />}
         />
 
         <Route
-          path="/edit-food/:id"
-          element={<EditFood />}
+          path="/forgot-password"
+          element={<ForgotPassword />}
         />
 
         <Route
-          path="/ngo"
-          element={<NGODashboard />}
-        />
+          element={
+            <ProtectedRoute
+              allowedRoles={['CUSTOMER']}
+            />
+          }
+        >
+          <Route
+            path="/food"
+            element={<FoodList />}
+          />
+
+          <Route
+            path="/my-reservations"
+            element={<MyReservations />}
+          />
+        </Route>
 
         <Route
-          path="/ngo-profile"
-          element={<NGOProfile />}
-        />
+          element={
+            <ProtectedRoute
+              allowedRoles={['RESTAURANT']}
+            />
+          }
+        >
+          <Route
+            path="/add-food"
+            element={<AddFood />}
+          />
+
+          <Route
+            path="/restaurant-dashboard"
+            element={<RestaurantDashboard />}
+          />
+
+          <Route
+            path="/restaurant-profile"
+            element={<RestaurantProfile />}
+          />
+
+          <Route
+            path="/my-food"
+            element={<MyFood />}
+          />
+
+          <Route
+            path="/edit-food/:id"
+            element={<EditFood />}
+          />
+        </Route>
 
         <Route
-          path="/admin"
-          element={<AdminDashboard />}
-        />
+          element={
+            <ProtectedRoute
+              allowedRoles={['NGO']}
+            />
+          }
+        >
+          <Route
+            path="/ngo"
+            element={<NGODashboard />}
+          />
+
+          <Route
+            path="/ngo-profile"
+            element={<NGOProfile />}
+          />
+        </Route>
 
         <Route
-          path="/admin/reservations"
-          element={<AdminReservations />}
-        />
+          element={
+            <ProtectedRoute
+              allowedRoles={['ADMIN']}
+            />
+          }
+        >
+          <Route
+            path="/admin"
+            element={<AdminDashboard />}
+          />
 
-        <Route
-          path="/admin/donations"
-          element={<AdminDonations />}
-        />
+          <Route
+            path="/admin/reservations"
+            element={<AdminReservations />}
+          />
 
-        <Route
-          path="/admin/food-needs"
-          element={<AdminFoodNeeds />}
-        />
+          <Route
+            path="/admin/donations"
+            element={<AdminDonations />}
+          />
 
-        <Route
-          path="/admin/users"
-          element={<AdminUsers />}
-        />
+          <Route
+            path="/admin/food-needs"
+            element={<AdminFoodNeeds />}
+          />
 
-        <Route
-          path="/admin/food-listings"
-          element={<AdminFoodListings />}
-        />
+          <Route
+            path="/admin/users"
+            element={<AdminUsers />}
+          />
+
+          <Route
+            path="/admin/food-listings"
+            element={<AdminFoodListings />}
+          />
+        </Route>
       </Routes>
+
+      {sessionExpired && (
+        <div className="session-expired-overlay">
+          <div className="session-expired-modal">
+            <h2>Session Expired</h2>
+
+            <p>
+              Your session has expired.
+              Please login again to continue.
+            </p>
+
+            <button
+              type="button"
+              onClick={handleSessionExpiredLogin}
+            >
+              Login Again
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   )
 }

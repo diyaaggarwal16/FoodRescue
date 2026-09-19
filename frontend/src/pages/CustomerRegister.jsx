@@ -1,30 +1,39 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { startTokenExpiryTimer } from '../utils/api'
 
-function Login({ onLogin }) {
+function CustomerRegister() {
   const navigate = useNavigate()
 
+  const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    setLoading(true)
     setMessage('')
+
+    if (password !== confirmPassword) {
+      setMessage('Passwords do not match')
+      return
+    }
+
+    setLoading(true)
 
     try {
       const response = await fetch(
-        'http://localhost:8080/api/auth/login',
+        'http://localhost:8080/api/auth/register/customer',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
+            fullName,
             email,
             password
           })
@@ -42,31 +51,25 @@ function Login({ onLogin }) {
       }
 
       if (!response.ok) {
-        const errorMessage =
+        setMessage(
           typeof data === 'string'
             ? data
-            : data.message || 'Login failed'
+            : data.message || 'Registration failed'
+        )
 
-        throw new Error(errorMessage)
+        return
       }
 
-      localStorage.setItem(
-        'token',
-        data.token
+      setMessage(
+        'Customer account created successfully'
       )
 
-      startTokenExpiryTimer()
-
-      onLogin(data)
-
-      setMessage('Login successful')
-
       setTimeout(() => {
-        navigate('/')
-      }, 1000)
-    } catch (error) {
+        navigate('/login')
+      }, 1500)
+    } catch {
       setMessage(
-        error.message || 'Unable to login'
+        'Unable to connect to the server'
       )
     } finally {
       setLoading(false)
@@ -77,9 +80,10 @@ function Login({ onLogin }) {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-header">
-          <h1>Welcome Back</h1>
+          <h1>Customer Registration</h1>
+
           <p>
-            Login to continue your FoodRescue journey.
+            Create your FoodRescue customer account.
           </p>
         </div>
 
@@ -87,6 +91,20 @@ function Login({ onLogin }) {
           className="auth-form"
           onSubmit={handleSubmit}
         >
+          <div className="input-group">
+            <label>Full Name</label>
+
+            <input
+              type="text"
+              placeholder="Enter your full name"
+              value={fullName}
+              onChange={(event) =>
+                setFullName(event.target.value)
+              }
+              required
+            />
+          </div>
+
           <div className="input-group">
             <label>Email Address</label>
 
@@ -106,7 +124,7 @@ function Login({ onLogin }) {
 
             <input
               type="password"
-              placeholder="Enter your password"
+              placeholder="Create a password"
               value={password}
               onChange={(event) =>
                 setPassword(event.target.value)
@@ -115,33 +133,41 @@ function Login({ onLogin }) {
             />
           </div>
 
+          <div className="input-group">
+            <label>Confirm Password</label>
+
+            <input
+              type="password"
+              placeholder="Confirm your password"
+              value={confirmPassword}
+              onChange={(event) =>
+                setConfirmPassword(event.target.value)
+              }
+              required
+            />
+          </div>
+
+          {message && (
+            <p className="auth-message">
+              {message}
+            </p>
+          )}
+
           <button
             type="submit"
             className="auth-btn"
             disabled={loading}
           >
             {loading
-              ? 'Logging in...'
-              : 'Login'}
+              ? 'Creating Account...'
+              : 'Create Customer Account'}
           </button>
-         
-<p className="auth-switch">
-          Forgot
-          <Link to="/forgot-password">
-            {' '}Password?
-          </Link>
-        </p>
-          {message && (
-            <p className="auth-message">
-              {message}
-            </p>
-          )}
         </form>
 
         <p className="auth-switch">
-          Don't have an account?
+          Want a different account type?
           <Link to="/register">
-            {' '}Create one
+            {' '}Choose another
           </Link>
         </p>
       </div>
@@ -149,4 +175,4 @@ function Login({ onLogin }) {
   )
 }
 
-export default Login
+export default CustomerRegister

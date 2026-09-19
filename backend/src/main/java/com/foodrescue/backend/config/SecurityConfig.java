@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,14 +48,18 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtEncoder jwtEncoder(SecretKey jwtSecretKey) {
+    public JwtEncoder jwtEncoder(
+            SecretKey jwtSecretKey
+    ) {
         return NimbusJwtEncoder
                 .withSecretKey(jwtSecretKey)
                 .build();
     }
 
     @Bean
-    public JwtDecoder jwtDecoder(SecretKey jwtSecretKey) {
+    public JwtDecoder jwtDecoder(
+            SecretKey jwtSecretKey
+    ) {
         return NimbusJwtDecoder
                 .withSecretKey(jwtSecretKey)
                 .build();
@@ -68,7 +72,8 @@ public class SecurityConfig {
 
         converter.setJwtGrantedAuthoritiesConverter(
                 (Jwt jwt) -> {
-                    String role = jwt.getClaimAsString("role");
+                    String role =
+                            jwt.getClaimAsString("role");
 
                     if (role == null || role.isBlank()) {
                         return List.of();
@@ -134,9 +139,14 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/auth/register",
-                                "/api/auth/login"
-                        ).permitAll()
+        "/api/auth/register/customer",
+        "/api/auth/register/restaurant",
+        "/api/auth/register/ngo",
+        "/api/auth/login",
+        "/api/auth/password-reset/request",
+        "/api/auth/password-reset/verify",
+        "/api/auth/password-reset/reset"
+).permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(
