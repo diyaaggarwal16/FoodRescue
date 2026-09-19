@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { apiFetch } from '../utils/api'
+import { apiFetch } from '../../../utils/api'
 
 function AddFood() {
   const navigate = useNavigate()
@@ -222,12 +222,7 @@ function AddFood() {
           )}
         </form>
 
-        <button
-          className="secondary-btn"
-          onClick={() => navigate('/food')}
-        >
-          View Food Listings
-        </button>
+          
       </div>
     </div>
   )

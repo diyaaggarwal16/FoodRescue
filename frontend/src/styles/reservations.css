@@ -1,0 +1,57 @@
+.reservation-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.reservation-modal {
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--surface-modal);
+  border: 1px solid var(--border-modal);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+}
+
+.reservation-modal .secondary-btn {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.reservation-summary {
+  margin: 20px 0;
+  padding: 20px;
+  background: var(--surface-modal-summary);
+  border: 1px solid var(--border-modal);
+  border-radius: 14px;
+}
+
+.reservation-summary h2 {
+  margin-bottom: 15px;
+}
+
+.reservation-summary p {
+  margin: 8px 0;
+  color: var(--text-muted);
+}
+
+.logout-btn {
+  background: transparent;
+  border: none;
+  color: var(--purple-300);
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.logout-btn:hover {
+  color: #ffffff;
+}

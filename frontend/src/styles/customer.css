@@ -1,0 +1,140 @@
+.reservation-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.reservation-card-header h2 {
+  margin: 0;
+}
+
+.reservation-type {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.reservation-type span {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.reservation-type strong {
+  font-size: 15px;
+}
+
+.food-status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.reservation-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.reservation-card-header h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+
+.reservation-card-header p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.65;
+}
+
+.food-grid .food-card {
+  background: #241936;
+  border: 1px solid rgba(170, 130, 220, 0.18);
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease,
+              border-color 0.2s ease;
+}
+
+.food-grid .food-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(170, 130, 220, 0.35);
+}
+
+.food-grid .food-content {
+  padding: 22px;
+}
+
+.food-grid .food-content > p {
+  color: rgba(245, 240, 255, 0.78);
+  line-height: 1.45;
+}
+
+.food-status {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.22);
+  color: #63d99a;
+}
+
+.reservation-type {
+  margin-top: 18px;
+  padding: 13px 15px;
+  border-radius: 9px;
+  background: rgba(124, 58, 237, 0.08);
+  border: 1px solid rgba(168, 85, 247, 0.14);
+}
+
+.reservation-type span {
+  display: block;
+  margin-bottom: 4px;
+  color: rgba(220, 205, 240, 0.6);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.reservation-type strong {
+  color: #ddd0ec;
+  font-size: 14px;
+}
+
+.food-grid .price {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.food-grid .price strong {
+  font-size: 16px;
+}
+
+@media (max-width: 900px) {
+  .food-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .food-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reservation-card-header {
+    flex-direction: column;
+  }
+
+  .food-status {
+    align-self: flex-start;
+  }
+}

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { apiFetch } from '../utils/api'
-import NGOStats from '../components/ngo/NGOStats'
-import CreateFoodNeed from '../components/ngo/CreateFoodNeed'
-import FoodNeedList from '../components/ngo/FoodNeedList'
-import AvailableMealCard from '../components/ngo/AvailableMealCard'
-import ClaimedMealCard from '../components/ngo/ClaimedMealCard'
+import { apiFetch } from '../../../utils/api'
+import NGOStats from '../../../components/ngo/NGOStats'
+import CreateFoodNeed from '../../../components/ngo/CreateFoodNeed'
+import FoodNeedList from '../../../components/ngo/FoodNeedList'
+import AvailableMealCard from '../../../components/ngo/AvailableMealCard'
+import ClaimedMealCard from '../../../components/ngo/ClaimedMealCard'
 
 function NGODashboard() {
   const [profile, setProfile] = useState(null)
@@ -354,3 +354,4 @@ function NGODashboard() {
 }
 
 export default NGODashboard
+

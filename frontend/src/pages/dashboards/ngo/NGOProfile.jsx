@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { apiFetch } from '../utils/api'
+import { apiFetch } from '../../../utils/api'
 
 function NGOProfile() {
   const navigate = useNavigate()
@@ -273,14 +273,7 @@ function NGOProfile() {
                 Edit Profile
               </button>
 
-              <button
-                className="secondary-btn"
-                onClick={() =>
-                  navigate('/ngo')
-                }
-              >
-                NGO Dashboard
-              </button>
+              
             </div>
           </div>
         )}

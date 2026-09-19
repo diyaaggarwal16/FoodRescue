@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { apiFetch } from '../utils/api'
+import { apiFetch } from '../../../utils/api'
 
 function RestaurantProfile() {
   const navigate = useNavigate()
@@ -184,19 +184,7 @@ function RestaurantProfile() {
             Edit Profile
           </button>
 
-          <button
-            className="secondary-btn"
-            onClick={() => navigate('/my-food')}
-          >
-            Manage My Food
-          </button>
-
-          <button
-            className="secondary-btn"
-            onClick={() => navigate('/add-food')}
-          >
-            Add Food
-          </button>
+          
 
           {message && (
             <p className="auth-message">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { apiFetch } from '../utils/api'
+import { apiFetch } from '../../../utils/api'
 
 function FoodList() {
   const [foodItems, setFoodItems] = useState([])
@@ -518,3 +518,4 @@ function FoodList() {
 }
 
 export default FoodList
+

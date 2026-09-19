@@ -1,0 +1,634 @@
+/* Responsive rules extracted from the existing stylesheet. */
+
+@media (max-width: 768px) {
+.navbar {
+  padding: 0 20px;
+  flex-direction: column;
+  height: auto;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  gap: 15px;
+}
+
+.nav-links {
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.container {
+  min-height: calc(100vh - 120px);
+  padding: 60px 20px;
+}
+
+.container h1 {
+  font-size: 45px;
+}
+
+.container p {
+  font-size: 17px;
+}
+}
+
+@media (max-width: 900px) {
+.hero h1 {
+  font-size: 50px;
+}
+
+.stats,
+.food-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+}
+
+@media (max-width: 600px) {
+.hero h1 {
+  font-size: 38px;
+}
+
+.hero-buttons {
+  flex-direction: column;
+  align-items: center;
+}
+
+.stats,
+.food-grid,
+.dashboard-stats,
+.food-price-row,
+.my-food-actions {
+  grid-template-columns: 1fr;
+}
+
+.food-page,
+.my-food-empty {
+  padding: 50px 20px;
+}
+
+.food-header h1 {
+  font-size: 36px;
+}
+
+.dashboard-page {
+  padding: 30px 15px 50px;
+}
+
+.dashboard-header h1 {
+  font-size: 30px;
+}
+
+.dashboard-card {
+  padding: 22px;
+}
+
+.dashboard-actions {
+  flex-direction: column;
+}
+
+.dashboard-actions button,
+.dashboard-section-header .secondary-btn,
+.dashboard-card .auth-btn,
+.dashboard-card .secondary-btn,
+.add-food-btn,
+.delete-food-btn {
+  width: 100%;
+}
+
+.dashboard-section-header {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.my-food-topbar {
+  align-items: stretch;
+  flex-direction: column;
+}
+
+.my-food-card {
+  padding: 20px;
+}
+}
+
+@media (max-width: 500px) {
+.auth-card {
+  padding: 30px 22px;
+}
+}
+
+@media (max-width: 800px) {
+.dashboard-stats {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.food-listing-item {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.food-listing-item > div:last-child {
+  text-align: left;
+}
+}
+
+@media (max-width: 850px) {
+.my-food-grid {
+  grid-template-columns: 1fr;
+}
+}
+
+@media (max-width: 900px) {
+  .food-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .food-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reservation-card-header {
+    flex-direction: column;
+  }
+
+  .food-status {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 800px) {
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .ngo-meal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-container {
+    width: min(100% - 28px, 1180px);
+    padding-top: 28px;
+  }
+
+  .page-header h1 {
+    font-size: 28px;
+  }
+
+  .ngo-meal-details {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .pickup-verification {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pickup-verification input {
+    width: auto;
+  }
+
+  .pickup-section .food-listing-item > div:last-child {
+    text-align: left;
+  }
+}
+
+@media (max-width: 700px) {
+  .dashboard-section .auth-form {
+    padding: 18px;
+  }
+
+  .dashboard-section .auth-form input[type="text"],
+  .dashboard-section .auth-form input[type="number"],
+  .dashboard-section .auth-form input[type="datetime-local"],
+  .dashboard-section .auth-form select {
+    height: 42px;
+  }
+}
+
+@media (max-width: 700px) {
+  .admin-list-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-list-item .auth-btn {
+    width: 100%;
+  }
+
+  .admin-monitoring {
+    flex-direction: column;
+  }
+
+  .admin-monitoring .auth-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .admin-dashboard .dashboard-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-dashboard .admin-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-dashboard .dashboard-container {
+    padding: 28px 16px 50px;
+  }
+
+  .admin-dashboard h1 {
+    font-size: 27px;
+  }
+
+  .admin-dashboard .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-dashboard .dashboard-section {
+    padding: 18px;
+  }
+
+  .admin-dashboard .admin-list-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-dashboard .admin-list-item .auth-btn {
+    width: 100%;
+  }
+
+  .admin-dashboard .admin-monitoring {
+    flex-direction: column;
+  }
+
+  .admin-dashboard .admin-monitoring .auth-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 1100px) {
+  .admin-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .management-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .admin-sidebar {
+    width: 205px;
+  }
+
+  .admin-main {
+    width: calc(100% - 205px);
+    margin-left: 205px;
+    padding: 25px;
+  }
+
+  .management-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-sidebar {
+    position: relative;
+    width: 100%;
+    min-height: auto;
+  }
+
+  .admin-layout {
+    display: block;
+  }
+
+  .admin-main {
+    width: 100%;
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .management-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-welcome {
+    min-height: auto;
+  }
+
+  .welcome-decoration {
+    display: none;
+  }
+}
+
+@media (max-width: 1000px) {
+  .food-listing-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .food-listing-details {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .food-listing-footer {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .admin-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .food-listing-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 800px) {
+  .admin-sidebar {
+    width: 220px;
+  }
+
+  .admin-main {
+    width: calc(100% - 220px);
+    margin-left: 220px;
+    padding: 0 22px 45px;
+  }
+
+  .admin-topbar h1 {
+    font-size: 28px;
+  }
+
+  .admin-welcome {
+    padding: 25px;
+  }
+
+  .admin-welcome h2 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-sidebar {
+    width: 100%;
+    position: relative;
+    min-height: auto;
+  }
+
+  .admin-layout {
+    display: block;
+  }
+
+  .admin-main {
+    width: 100%;
+    margin-left: 0;
+    padding: 0 15px 35px;
+  }
+
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-topbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px 0;
+  }
+
+  .admin-welcome {
+    min-height: auto;
+  }
+
+  .admin-panel {
+    padding: 18px;
+  }
+
+  .food-listing-details {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .food-listing-details > div {
+    padding: 0 !important;
+    border-right: 0;
+  }
+
+  .food-listing-footer {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1200px) {
+  .reservation-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .reservation-card {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  .reservation-customer {
+    grid-column: 1 / -1;
+    padding-right: 0;
+  }
+
+  .reservation-info,
+  .reservation-status-column {
+    border-left: 0;
+    border-top: 1px solid #302654;
+    padding: 18px 0 0;
+  }
+}
+
+@media (max-width: 750px) {
+  .admin-page {
+    padding: 25px 17px 40px;
+  }
+
+  .admin-page-header {
+    flex-direction: column;
+  }
+
+  .admin-page-header h1 {
+    font-size: 28px;
+  }
+
+  .reservation-hero {
+    padding: 25px;
+  }
+
+  .reservation-hero-icon {
+    width: 58px;
+    height: 58px;
+  }
+
+  .reservation-hero h2 {
+    font-size: 23px;
+  }
+
+  .reservation-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .reservation-panel {
+    padding: 18px;
+  }
+
+  .reservation-panel-header {
+    flex-direction: column;
+  }
+
+  .reservation-card {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .reservation-customer {
+    grid-column: auto;
+  }
+
+  .reservation-info,
+  .reservation-status-column {
+    min-height: auto;
+    border-left: 0;
+    border-top: 1px solid #302654;
+    padding: 17px 0 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .donation-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .donation-card {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .donation-card-main {
+    grid-column: 1 / -1;
+    padding-right: 0;
+  }
+
+  .donation-info {
+    border-left: 0;
+    border-top: 1px solid #302653;
+    padding: 15px 0 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .admin-sidebar {
+    width: 220px;
+  }
+
+  .admin-main {
+    width: calc(100% - 220px);
+    margin-left: 220px;
+    padding: 25px 18px;
+  }
+
+  .admin-page-header {
+    flex-direction: column;
+  }
+
+  .donation-hero {
+    padding: 25px;
+  }
+
+  .donation-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .donation-panel {
+    padding: 18px;
+  }
+
+  .donation-panel-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .donation-card {
+    grid-template-columns: 1fr;
+  }
+
+  .donation-card-main {
+    grid-column: auto;
+  }
+
+  .donation-info {
+    border-left: 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .need-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .need-card {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .need-card-main {
+    grid-column: 1 / -1;
+    padding-right: 0;
+  }
+
+  .need-info {
+    border-left: 0;
+    border-top: 1px solid #302653;
+    padding: 15px 0 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .need-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .need-hero {
+    padding: 25px;
+  }
+
+  .need-panel {
+    padding: 18px;
+  }
+
+  .need-panel-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .need-card {
+    grid-template-columns: 1fr;
+  }
+
+  .need-card-main {
+    grid-column: auto;
+  }
+
+  .need-info {
+    border-left: 0;
+  }
+}
