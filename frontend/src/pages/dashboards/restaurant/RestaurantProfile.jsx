@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { apiFetch } from '../../../utils/api'
 
 function RestaurantProfile() {
-  const navigate = useNavigate()
-
   const [formData, setFormData] = useState({
     restaurantName: '',
     address: '',
     phone: ''
   })
+
+  const [verificationStatus, setVerificationStatus] =
+    useState('PENDING')
 
   const [profileExists, setProfileExists] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -35,7 +35,9 @@ function RestaurantProfile() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error('Failed to load restaurant profile')
+        throw new Error(
+          'Failed to load restaurant profile'
+        )
       }
 
       setFormData({
@@ -44,9 +46,15 @@ function RestaurantProfile() {
         phone: data.phone || ''
       })
 
+      setVerificationStatus(
+        data.verificationStatus || 'PENDING'
+      )
+
       setProfileExists(true)
     } catch (error) {
-      setMessage(error.message || 'Unable to load profile')
+      setMessage(
+        error.message || 'Unable to load profile'
+      )
     } finally {
       setLoading(false)
     }
@@ -59,49 +67,9 @@ function RestaurantProfile() {
     })
   }
 
-  const handleCreate = async (event) => {
-    event.preventDefault()
-    setSaving(true)
-    setMessage('')
-
-    try {
-      const response = await apiFetch(
-        '/api/restaurants/profile',
-        {
-          method: 'POST',
-          body: JSON.stringify(formData)
-        }
-      )
-
-      const text = await response.text()
-
-      if (!response.ok) {
-        throw new Error(
-          text || 'Failed to create restaurant profile'
-        )
-      }
-
-      const data = JSON.parse(text)
-
-      setFormData({
-        restaurantName: data.restaurantName || '',
-        address: data.address || '',
-        phone: data.phone || ''
-      })
-
-      setProfileExists(true)
-      setMessage('Restaurant profile created successfully')
-    } catch (error) {
-      setMessage(
-        error.message || 'Unable to create restaurant profile'
-      )
-    } finally {
-      setSaving(false)
-    }
-  }
-
   const handleUpdate = async (event) => {
     event.preventDefault()
+
     setSaving(true)
     setMessage('')
 
@@ -130,8 +98,15 @@ function RestaurantProfile() {
         phone: data.phone || ''
       })
 
+      setVerificationStatus(
+        data.verificationStatus || verificationStatus
+      )
+
       setEditing(false)
-      setMessage('Restaurant profile updated successfully')
+
+      setMessage(
+        'Restaurant profile updated successfully'
+      )
     } catch (error) {
       setMessage(
         error.message || 'Unable to update restaurant profile'
@@ -139,6 +114,21 @@ function RestaurantProfile() {
     } finally {
       setSaving(false)
     }
+  }
+
+  const getVerificationClass = () => {
+    const status =
+      verificationStatus.toUpperCase()
+
+    if (status === 'VERIFIED') {
+      return 'verification-status verified'
+    }
+
+    if (status === 'REJECTED') {
+      return 'verification-status rejected'
+    }
+
+    return 'verification-status pending'
   }
 
   if (loading) {
@@ -175,16 +165,26 @@ function RestaurantProfile() {
               <label>Phone</label>
               <p>{formData.phone}</p>
             </div>
+
+            <div className="input-group">
+              <label>Verification Status</label>
+
+              <span className={getVerificationClass()}>
+                {verificationStatus}
+              </span>
+            </div>
           </div>
 
           <button
+            type="button"
             className="auth-btn"
-            onClick={() => setEditing(true)}
+            onClick={() => {
+              setMessage('')
+              setEditing(true)
+            }}
           >
             Edit Profile
           </button>
-
-          
 
           {message && (
             <p className="auth-message">
@@ -200,26 +200,16 @@ function RestaurantProfile() {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-header">
-          <h1>
-            {profileExists
-              ? 'Edit Restaurant Profile'
-              : 'Create Restaurant Profile'}
-          </h1>
+          <h1>Edit Restaurant Profile</h1>
 
           <p>
-            {profileExists
-              ? 'Update your restaurant details.'
-              : 'Set up your restaurant details.'}
+            Update your restaurant details.
           </p>
         </div>
 
         <form
           className="auth-form"
-          onSubmit={
-            profileExists
-              ? handleUpdate
-              : handleCreate
-          }
+          onSubmit={handleUpdate}
         >
           <div className="input-group">
             <label>Restaurant Name</label>
@@ -260,6 +250,14 @@ function RestaurantProfile() {
             />
           </div>
 
+          <div className="input-group">
+            <label>Verification Status</label>
+
+            <span className={getVerificationClass()}>
+              {verificationStatus}
+            </span>
+          </div>
+
           <button
             type="submit"
             className="auth-btn"
@@ -267,21 +265,20 @@ function RestaurantProfile() {
           >
             {saving
               ? 'Saving...'
-              : profileExists
-                ? 'Save Changes'
-                : 'Create Restaurant Profile'}
+              : 'Save Changes'}
           </button>
 
-          {profileExists && (
-            <button
-              type="button"
-              className="secondary-btn"
-              onClick={() => setEditing(false)}
-              disabled={saving}
-            >
-              Cancel
-            </button>
-          )}
+          <button
+            type="button"
+            className="secondary-btn"
+            onClick={() => {
+              setMessage('')
+              setEditing(false)
+            }}
+            disabled={saving}
+          >
+            Cancel
+          </button>
 
           {message && (
             <p className="auth-message">

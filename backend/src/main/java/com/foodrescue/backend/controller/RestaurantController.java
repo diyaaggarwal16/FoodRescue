@@ -30,53 +30,103 @@ public class RestaurantController {
             @RequestBody Restaurant restaurant,
             @AuthenticationPrincipal Jwt jwt
     ) {
-        String email = jwt.getClaimAsString("email");
+        String email =
+                jwt.getClaimAsString("email");
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new RuntimeException("User not found")
-                );
+        User user =
+                userRepository.findByEmail(email)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "User not found"
+                                )
+                        );
 
-        if (!"RESTAURANT".equalsIgnoreCase(user.getRole())) {
+        if (!"RESTAURANT".equalsIgnoreCase(
+                user.getRole()
+        )) {
             return ResponseEntity
                     .status(403)
-                    .body("Only restaurant users can create a restaurant profile");
+                    .body(
+                            "Only restaurant users can create a restaurant profile"
+                    );
         }
 
-        if (restaurantRepository.findByUserId(user.getId()).isPresent()) {
+        if (restaurantRepository
+                .findByUserId(user.getId())
+                .isPresent()) {
+
             return ResponseEntity
                     .badRequest()
-                    .body("Restaurant profile already exists");
+                    .body(
+                            "Restaurant profile already exists"
+                    );
         }
 
-        restaurant.setUserId(user.getId());
+        Restaurant newRestaurant =
+                new Restaurant();
 
-        if (restaurant.getVerificationStatus() == null) {
-            restaurant.setVerificationStatus("PENDING");
-        }
+        newRestaurant.setUserId(
+                user.getId()
+        );
+
+        newRestaurant.setRestaurantName(
+                restaurant.getRestaurantName()
+        );
+
+        newRestaurant.setAddress(
+                restaurant.getAddress()
+        );
+
+        newRestaurant.setPhone(
+                restaurant.getPhone()
+        );
+
+        newRestaurant.setVerificationStatus(
+                "PENDING"
+        );
 
         Restaurant savedRestaurant =
-                restaurantRepository.save(restaurant);
+                restaurantRepository.save(
+                        newRestaurant
+                );
 
-        return ResponseEntity.ok(savedRestaurant);
+        return ResponseEntity.ok(
+                savedRestaurant
+        );
     }
 
     @GetMapping("/my-profile")
     public ResponseEntity<?> getMyProfile(
             @AuthenticationPrincipal Jwt jwt
     ) {
-        String email = jwt.getClaimAsString("email");
+        String email =
+                jwt.getClaimAsString("email");
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new RuntimeException("User not found")
-                );
+        User user =
+                userRepository.findByEmail(email)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "User not found"
+                                )
+                        );
+
+        if (!"RESTAURANT".equalsIgnoreCase(
+                user.getRole()
+        )) {
+            return ResponseEntity
+                    .status(403)
+                    .body(
+                            "Only restaurant users can access a restaurant profile"
+                    );
+        }
 
         return restaurantRepository
                 .findByUserId(user.getId())
                 .map(ResponseEntity::ok)
                 .orElseGet(() ->
-                        ResponseEntity.notFound().build()
+                        ResponseEntity
+                                .notFound()
+                                .build()
                 );
     }
 
@@ -85,24 +135,35 @@ public class RestaurantController {
             @RequestBody Restaurant updatedRestaurant,
             @AuthenticationPrincipal Jwt jwt
     ) {
-        String email = jwt.getClaimAsString("email");
+        String email =
+                jwt.getClaimAsString("email");
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new RuntimeException("User not found")
-                );
+        User user =
+                userRepository.findByEmail(email)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "User not found"
+                                )
+                        );
 
-        if (!"RESTAURANT".equalsIgnoreCase(user.getRole())) {
+        if (!"RESTAURANT".equalsIgnoreCase(
+                user.getRole()
+        )) {
             return ResponseEntity
                     .status(403)
-                    .body("Only restaurant users can update a restaurant profile");
+                    .body(
+                            "Only restaurant users can update a restaurant profile"
+                    );
         }
 
-        Restaurant restaurant = restaurantRepository
-                .findByUserId(user.getId())
-                .orElseThrow(() ->
-                        new RuntimeException("Restaurant profile not found")
-                );
+        Restaurant restaurant =
+                restaurantRepository
+                        .findByUserId(user.getId())
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Restaurant profile not found"
+                                )
+                        );
 
         restaurant.setRestaurantName(
                 updatedRestaurant.getRestaurantName()
@@ -117,8 +178,12 @@ public class RestaurantController {
         );
 
         Restaurant savedRestaurant =
-                restaurantRepository.save(restaurant);
+                restaurantRepository.save(
+                        restaurant
+                );
 
-        return ResponseEntity.ok(savedRestaurant);
+        return ResponseEntity.ok(
+                savedRestaurant
+        );
     }
 }

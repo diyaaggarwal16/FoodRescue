@@ -23,15 +23,7 @@ function Home() {
             it becomes waste.
           </p>
 
-          <div className="hero-buttons">
-            <button className="primary-btn">
-              Explore Food
-            </button>
-
-            <button className="secondary-btn">
-              Join as a Restaurant
-            </button>
-          </div>
+          
         </div>
       </section>
 

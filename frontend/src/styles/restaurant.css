@@ -567,3 +567,140 @@
   grid-template-columns: 1fr;
 }
 }
+/* =========================================
+   Restaurant Profile
+   ========================================= */
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.profile-details .input-group {
+  margin: 0;
+  padding: 17px 18px;
+  border: 1px solid rgba(196, 181, 253, 0.16);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.profile-details .input-group:hover {
+  border-color: rgba(196, 181, 253, 0.28);
+  background: rgba(255, 255, 255, 0.055);
+  transform: translateY(-1px);
+}
+
+.profile-details .input-group label {
+  display: block;
+  margin-bottom: 7px;
+  color: #a99bc5;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.profile-details .input-group p {
+  margin: 0;
+  color: #f5f1ff;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* Verification badge */
+
+.verification-status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.verification-status.pending {
+  background: rgba(255, 237, 213, 0.98);
+  color: #c2410c;
+  border: 1px solid rgba(251, 146, 60, 0.35);
+}
+
+.verification-status.verified {
+  background: rgba(220, 252, 231, 0.98);
+  color: #15803d;
+  border: 1px solid rgba(74, 222, 128, 0.35);
+}
+
+.verification-status.rejected {
+  background: rgba(254, 226, 226, 0.98);
+  color: #b91c1c;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+
+/* Profile action button */
+
+.profile-details + .auth-btn {
+  width: 100%;
+  margin-top: 24px;
+}
+
+/* Edit mode */
+
+.auth-form .verification-status {
+  margin-top: 2px;
+}
+
+.auth-form .secondary-btn {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Profile card spacing */
+
+.auth-card:has(.profile-details) {
+  padding: 38px;
+}
+
+.auth-card:has(.profile-details) .auth-header {
+  margin-bottom: 0;
+}
+
+.auth-card:has(.profile-details) .auth-header h1 {
+  margin-bottom: 8px;
+}
+
+.auth-card:has(.profile-details) .auth-header p {
+  margin: 0;
+  color: #b7aacd;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .auth-card:has(.profile-details) {
+    padding: 24px 18px;
+  }
+
+  .profile-details {
+    gap: 11px;
+    margin-top: 22px;
+  }
+
+  .profile-details .input-group {
+    padding: 15px;
+    border-radius: 14px;
+  }
+
+  .profile-details .input-group p {
+    font-size: 16px;
+  }
+}
