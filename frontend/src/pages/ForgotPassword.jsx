@@ -175,39 +175,51 @@ function ForgotPassword() {
         </div>
 
         <div className="registration-progress">
-          <span
+          <div
             className={
               step >= 1
                 ? 'progress-step active'
                 : 'progress-step'
             }
           >
-            
-          </span>
+            <span>1</span>
+          </div>
 
-          <span className="progress-line" />
+          <div
+            className={
+              step >= 2
+                ? 'progress-line active'
+                : 'progress-line'
+            }
+          />
 
-          <span
+          <div
             className={
               step >= 2
                 ? 'progress-step active'
                 : 'progress-step'
             }
           >
-            
-          </span>
+            <span>2</span>
+          </div>
 
-          <span className="progress-line" />
+          <div
+            className={
+              step >= 3
+                ? 'progress-line active'
+                : 'progress-line'
+            }
+          />
 
-          <span
+          <div
             className={
               step >= 3
                 ? 'progress-step active'
                 : 'progress-step'
             }
           >
-            
-          </span>
+            <span>3</span>
+          </div>
         </div>
 
         {step === 1 && (

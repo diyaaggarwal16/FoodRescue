@@ -21,6 +21,7 @@ import ForgotPassword from './pages/ForgotPassword'
 
 import FoodList from './pages/dashboards/customer/FoodList'
 import MyReservations from './pages/dashboards/customer/MyReservations'
+import CustomerDashboard from './pages/dashboards/customer/CustomerDashboard'
 
 import AddFood from './pages/dashboards/restaurant/AddFood'
 import EditFood from './pages/dashboards/restaurant/EditFood'
@@ -53,13 +54,11 @@ function AppContent() {
     } catch {
       localStorage.removeItem('user')
       localStorage.removeItem('token')
-
       return null
     }
   })
 
-  const [sessionExpired, setSessionExpired] =
-    useState(false)
+  const [sessionExpired, setSessionExpired] = useState(false)
 
   const handleLogin = (loggedInUser) => {
     localStorage.setItem(
@@ -73,9 +72,7 @@ function AppContent() {
 
   const handleLogout = () => {
     logoutUser()
-
     setUser(null)
-
     navigate('/login')
   }
 
@@ -160,6 +157,11 @@ function AppContent() {
             />
           }
         >
+          <Route
+            path="/customer/dashboard"
+            element={<CustomerDashboard />}
+          />
+
           <Route
             path="/food"
             element={<FoodList />}
