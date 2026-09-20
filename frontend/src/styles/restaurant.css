@@ -704,3 +704,97 @@
     font-size: 16px;
   }
 }
+.restaurant-profile-card {
+  width: min(620px, 100%);
+}
+
+.restaurant-profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.restaurant-profile-header h1 {
+  margin: 0 0 6px;
+}
+
+.restaurant-profile-header p {
+  margin: 0;
+  color: #b7aacd;
+  font-size: 15px;
+}
+
+.restaurant-profile-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  color: #eee7ff;
+  background: rgba(139, 92, 246, 0.18);
+  border: 1px solid rgba(196, 181, 253, 0.12);
+}
+
+.restaurant-profile-icon svg {
+  width: 27px;
+  height: 27px;
+}
+
+.restaurant-profile-divider {
+  height: 1px;
+  margin: 26px 0 22px;
+  background: rgba(196, 181, 253, 0.14);
+}
+
+.profile-info-item,
+.profile-verification-item {
+  position: relative;
+}
+
+.profile-verification-item {
+  padding-bottom: 18px;
+}
+
+.verification-message {
+  margin: 10px 0 0 !important;
+  color: #a99bc5 !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+}
+
+.profile-edit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  margin-top: 24px;
+}
+
+.profile-edit-btn svg {
+  width: 19px;
+  height: 19px;
+}
+
+.profile-edit-btn:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+  .restaurant-profile-header {
+    align-items: flex-start;
+  }
+
+  .restaurant-profile-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .restaurant-profile-icon svg {
+    width: 23px;
+    height: 23px;
+  }
+} 

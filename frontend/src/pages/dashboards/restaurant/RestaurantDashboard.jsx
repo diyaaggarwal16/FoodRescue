@@ -6,6 +6,7 @@ function RestaurantDashboard() {
   const navigate = useNavigate()
 
   const [restaurant, setRestaurant] = useState(null)
+  const [dashboardStats, setDashboardStats] = useState(null)
   const [foodItems, setFoodItems] = useState([])
   const [reservations, setReservations] = useState([])
   const [donatedMeals, setDonatedMeals] = useState([])
@@ -28,6 +29,7 @@ function RestaurantDashboard() {
 
       if (profileResponse.status === 404) {
         setRestaurant(null)
+        setDashboardStats(null)
         setFoodItems([])
         setReservations([])
         setDonatedMeals([])
@@ -44,6 +46,21 @@ function RestaurantDashboard() {
       }
 
       setRestaurant(profileData)
+
+      const dashboardResponse = await apiFetch(
+        '/api/restaurants/dashboard'
+      )
+
+      if (!dashboardResponse.ok) {
+        throw new Error(
+          'Failed to load dashboard statistics'
+        )
+      }
+
+      const dashboardData =
+        await dashboardResponse.json()
+
+      setDashboardStats(dashboardData)
 
       const foodResponse = await apiFetch(
         `/api/food/restaurant/${profileData.id}`
@@ -70,6 +87,8 @@ function RestaurantDashboard() {
           await reservationResponse.json()
 
         setReservations(reservationData)
+      } else {
+        setReservations([])
       }
 
       const donatedResponse =
@@ -82,6 +101,8 @@ function RestaurantDashboard() {
           await donatedResponse.json()
 
         setDonatedMeals(donatedData)
+      } else {
+        setDonatedMeals([])
       }
     } catch (error) {
       setMessage(
@@ -121,7 +142,7 @@ function RestaurantDashboard() {
       )
 
       await loadDashboard()
-    } catch (error) {
+    } catch {
       setMessage(
         'Unable to mark reservation ready'
       )
@@ -156,7 +177,7 @@ function RestaurantDashboard() {
       )
 
       await loadDashboard()
-    } catch (error) {
+    } catch {
       setMessage(
         'Unable to mark donated meal ready'
       )
@@ -170,7 +191,9 @@ function RestaurantDashboard() {
       setMessage('')
 
       const otp =
-        otpValues[`reservation-${reservationId}`]
+        otpValues[
+          `reservation-${reservationId}`
+        ]
 
       if (!otp || otp.length !== 6) {
         setMessage(
@@ -212,7 +235,7 @@ function RestaurantDashboard() {
       })
 
       await loadDashboard()
-    } catch (error) {
+    } catch {
       setMessage(
         'Unable to verify pickup OTP'
       )
@@ -266,50 +289,19 @@ function RestaurantDashboard() {
       })
 
       await loadDashboard()
-    } catch (error) {
+    } catch {
       setMessage(
         'Unable to verify pickup OTP'
       )
     }
   }
 
-  const totalListings = foodItems.length
-
-  const availableListings =
-    foodItems.filter(
-      (food) =>
-        food.status === 'AVAILABLE'
-    ).length
-
-  const soldOutListings =
-    foodItems.filter(
-      (food) =>
-        food.status === 'SOLD_OUT'
-    ).length
-
-  const totalQuantity =
-    foodItems.reduce(
-      (total, food) =>
-        total +
-        Number(food.quantity || 0),
-      0
-    )
-
-  const remainingQuantity =
-    foodItems.reduce(
-      (total, food) =>
-        total +
-        Number(
-          food.remainingQuantity || 0
-        ),
-      0
-    )
-
   if (loading) {
     return (
       <div className="dashboard-page">
         <div className="dashboard-header">
           <h1>Restaurant Dashboard</h1>
+
           <p>
             Loading your restaurant dashboard...
           </p>
@@ -323,6 +315,7 @@ function RestaurantDashboard() {
       <div className="dashboard-page">
         <div className="dashboard-header">
           <h1>Restaurant Dashboard</h1>
+
           <p>
             Create your restaurant profile
             to get started.
@@ -352,6 +345,8 @@ function RestaurantDashboard() {
     )
   }
 
+  const stats = dashboardStats || {}
+
   return (
     <div className="dashboard-page">
       <div className="dashboard-header">
@@ -371,27 +366,69 @@ function RestaurantDashboard() {
       <div className="dashboard-stats">
         <div className="dashboard-stat-card">
           <h3>Total Listings</h3>
-          <strong>{totalListings}</strong>
-        </div>
 
-        <div className="dashboard-stat-card">
-          <h3>Available</h3>
           <strong>
-            {availableListings}
+            {stats.totalFoodListings || 0}
           </strong>
         </div>
 
         <div className="dashboard-stat-card">
-          <h3>Sold Out</h3>
+          <h3>Available</h3>
+
           <strong>
-            {soldOutListings}
+            {stats.availableFoodListings || 0}
+          </strong>
+        </div>
+
+        <div className="dashboard-stat-card">
+          <h3>Total Quantity</h3>
+
+          <strong>
+            {stats.totalQuantity || 0}
           </strong>
         </div>
 
         <div className="dashboard-stat-card">
           <h3>Food Remaining</h3>
+
           <strong>
-            {remainingQuantity}
+            {stats.remainingQuantity || 0}
+          </strong>
+        </div>
+
+        <div className="dashboard-stat-card">
+          <h3>Reservations</h3>
+
+          <strong>
+            {stats.totalReservations || 0}
+          </strong>
+        </div>
+
+        <div className="dashboard-stat-card">
+          <h3>Reserved Quantity</h3>
+
+          <strong>
+            {stats.reservedQuantity || 0}
+          </strong>
+        </div>
+
+        <div className="dashboard-stat-card">
+          <h3>Total Revenue</h3>
+
+          <strong>
+            ₹{Number(
+              stats.totalRevenue || 0
+            ).toFixed(2)}
+          </strong>
+        </div>
+
+        <div className="dashboard-stat-card">
+          <h3>Verification</h3>
+
+          <strong>
+            {stats.verificationStatus ||
+              restaurant.verificationStatus ||
+              'PENDING'}
           </strong>
         </div>
       </div>
@@ -433,6 +470,7 @@ function RestaurantDashboard() {
         <div className="dashboard-section-header">
           <div>
             <h2>Pickup Management</h2>
+
             <p>
               Prepare orders and verify customer
               or NGO pickups.
@@ -444,6 +482,7 @@ function RestaurantDashboard() {
         donatedMeals.length === 0 ? (
           <div className="empty-dashboard">
             <h3>No Pending Pickups</h3>
+
             <p>
               Customer and NGO pickups will
               appear here.
@@ -525,9 +564,9 @@ function RestaurantDashboard() {
                                           /\D/g,
                                           ''
                                         )
-                                    }))
+                                    })
+                                  )
                                 }
-                                
                               />
 
                               <button
@@ -649,9 +688,10 @@ function RestaurantDashboard() {
         <div className="dashboard-section-header">
           <div>
             <h2>Recent Food Listings</h2>
+
             <p>
               Total food quantity listed:{' '}
-              {totalQuantity}
+              {stats.totalQuantity || 0}
             </p>
           </div>
 

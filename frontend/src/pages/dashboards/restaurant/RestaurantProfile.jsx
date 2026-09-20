@@ -131,6 +131,21 @@ function RestaurantProfile() {
     return 'verification-status pending'
   }
 
+  const getVerificationMessage = () => {
+    const status =
+      verificationStatus.toUpperCase()
+
+    if (status === 'VERIFIED') {
+      return 'Your restaurant profile has been verified.'
+    }
+
+    if (status === 'REJECTED') {
+      return 'Your profile was rejected. Please review your details.'
+    }
+
+    return 'Your profile is under review. You will be notified once it is verified.'
+  }
+
   if (loading) {
     return (
       <div className="auth-page">
@@ -144,45 +159,89 @@ function RestaurantProfile() {
   if (profileExists && !editing) {
     return (
       <div className="auth-page">
-        <div className="auth-card">
-          <div className="auth-header">
-            <h1>Restaurant Profile</h1>
-            <p>Your restaurant details</p>
+        <div className="auth-card restaurant-profile-card">
+
+          <div className="restaurant-profile-header">
+            <div className="restaurant-profile-icon">
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 10h16M6 10v9h12v-9M5 10l1-6h12l1 6M9 14h6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+
+            <div>
+              <h1>Restaurant Profile</h1>
+
+              <p>
+                Your restaurant details
+              </p>
+            </div>
           </div>
 
+          <div className="restaurant-profile-divider" />
+
           <div className="profile-details">
-            <div className="input-group">
+
+            <div className="input-group profile-info-item">
               <label>Restaurant Name</label>
               <p>{formData.restaurantName}</p>
             </div>
 
-            <div className="input-group">
+            <div className="input-group profile-info-item">
               <label>Address</label>
               <p>{formData.address}</p>
             </div>
 
-            <div className="input-group">
+            <div className="input-group profile-info-item">
               <label>Phone</label>
               <p>{formData.phone}</p>
             </div>
 
-            <div className="input-group">
+            <div className="input-group profile-verification-item">
               <label>Verification Status</label>
 
               <span className={getVerificationClass()}>
                 {verificationStatus}
               </span>
+
+              <p className="verification-message">
+                {getVerificationMessage()}
+              </p>
             </div>
+
           </div>
 
           <button
             type="button"
-            className="auth-btn"
+            className="auth-btn profile-edit-btn"
             onClick={() => {
               setMessage('')
               setEditing(true)
             }}
           >
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+
             Edit Profile
           </button>
 
@@ -199,13 +258,34 @@ function RestaurantProfile() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <div className="auth-header">
-          <h1>Edit Restaurant Profile</h1>
 
-          <p>
-            Update your restaurant details.
-          </p>
+        <div className="restaurant-profile-header">
+          <div className="restaurant-profile-icon">
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                d="M4 10h16M6 10v9h12v-9M5 10l1-6h12l1 6M9 14h6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+
+          <div>
+            <h1>Edit Restaurant Profile</h1>
+
+            <p>
+              Update your restaurant details.
+            </p>
+          </div>
         </div>
+
+        <div className="restaurant-profile-divider" />
 
         <form
           className="auth-form"
@@ -256,11 +336,15 @@ function RestaurantProfile() {
             <span className={getVerificationClass()}>
               {verificationStatus}
             </span>
+
+            <p className="verification-message">
+              {getVerificationMessage()}
+            </p>
           </div>
 
           <button
             type="submit"
-            className="auth-btn"
+            className="auth-btn profile-edit-btn"
             disabled={saving}
           >
             {saving
@@ -286,6 +370,7 @@ function RestaurantProfile() {
             </p>
           )}
         </form>
+
       </div>
     </div>
   )
