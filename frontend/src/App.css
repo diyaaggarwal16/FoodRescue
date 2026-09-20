@@ -2,9 +2,7 @@
 @import './styles/global.css';
 @import './styles/navbar.css';
 @import './styles/home.css';
-@import './styles/food.css';
 @import './styles/auth.css';
-@import './styles/reservations.css';
 @import './styles/restaurant.css';
 @import './styles/customer.css';
 @import './styles/ngo.css';

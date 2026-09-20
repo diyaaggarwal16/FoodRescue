@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 
 import { apiFetch } from '../../../utils/api'
 
-import '../../../styles/customer.css'
-
 function FoodList() {
   const [foodItems, setFoodItems] = useState([])
   const [loading, setLoading] = useState(true)
@@ -449,66 +447,11 @@ function FoodList() {
               </p>
             </div>
 
-            <div className="customer-header-status">
-
-              <span className="customer-live-dot"></span>
-
-              <div>
-                <strong>
-                  {foodItems.filter(
-                    (food) =>
-                      Number(
-                        food.remainingQuantity || 0
-                      ) > 0
-                  ).length}{' '}
-                  Available
-                </strong>
-
-                <small>
-                  Live listings
-                </small>
-              </div>
-
-            </div>
+            
 
           </div>
 
-          <section className="customer-marketplace-hero">
-
-            <div>
-              <span>
-                FOODRESCUE MARKETPLACE
-              </span>
-
-              <h2>
-                Find good food.
-                <br />
-                <em>
-                  Rescue it before it is wasted.
-                </em>
-              </h2>
-
-              <p>
-                Browse surplus food, check pickup
-                details and reserve your meal in
-                a few simple steps.
-              </p>
-            </div>
-
-            <div className="marketplace-hero-stat">
-
-              <strong>
-                {foodItems.length}
-              </strong>
-
-              <span>
-                TOTAL LISTINGS
-              </span>
-
-            </div>
-
-          </section>
-
+          
           <section className="customer-marketplace-toolbar">
 
             <div>

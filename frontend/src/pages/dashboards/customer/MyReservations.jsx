@@ -3,20 +3,11 @@ import { Link } from 'react-router-dom'
 
 import { apiFetch } from '../../../utils/api'
 
-import '../../../styles/customer.css'
-
 function MyReservations() {
-  const [reservations, setReservations] =
-    useState([])
-
-  const [loading, setLoading] =
-    useState(true)
-
-  const [message, setMessage] =
-    useState('')
-
-  const [filter, setFilter] =
-    useState('ALL')
+  const [reservations, setReservations] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [message, setMessage] = useState('')
+  const [filter, setFilter] = useState('ALL')
 
   const user = JSON.parse(
     localStorage.getItem('user') || '{}'
@@ -40,26 +31,18 @@ function MyReservations() {
       setLoading(true)
       setMessage('')
 
-      const response =
-        await apiFetch(
-          `/api/reservations/customer/${encodeURIComponent(
-            email
-          )}`
-        )
+      const response = await apiFetch(
+        `/api/reservations/customer/${encodeURIComponent(email)}`
+      )
 
       if (!response.ok) {
-        throw new Error(
-          await response.text()
-        )
+        throw new Error(await response.text())
       }
 
-      const data =
-        await response.json()
+      const data = await response.json()
 
       setReservations(
-        Array.isArray(data)
-          ? data
-          : []
+        Array.isArray(data) ? data : []
       )
     } catch (error) {
       setMessage(
@@ -95,47 +78,44 @@ function MyReservations() {
     })
   }
 
-  const filteredReservations =
-    useMemo(() => {
-      if (filter === 'ALL') {
-        return reservations
-      }
+  const isReady = (reservation) =>
+    String(reservation.status || '')
+      .toUpperCase() === 'READY_FOR_PICKUP'
 
-      return reservations.filter(
-        (reservation) =>
-          String(
-            reservation.status || ''
-          ).toUpperCase() === filter
-      )
-    }, [reservations, filter])
+  const filteredReservations = useMemo(() => {
+    if (filter === 'ALL') {
+      return reservations
+    }
+
+    if (filter === 'READY') {
+      return reservations.filter(isReady)
+    }
+
+    return reservations.filter(
+      (reservation) =>
+        String(reservation.status || '')
+          .toUpperCase() === filter
+    )
+  }, [reservations, filter])
 
   const reservedCount =
     reservations.length
 
   const readyCount =
-    reservations.filter(
-      (reservation) =>
-        String(
-          reservation.status || ''
-        ).toUpperCase() === 'READY'
-    ).length
+    reservations.filter(isReady).length
 
   const completedCount =
     reservations.filter(
       (reservation) =>
-        String(
-          reservation.status || ''
-        ).toUpperCase() ===
-        'COMPLETED'
+        String(reservation.status || '')
+          .toUpperCase() === 'COMPLETED'
     ).length
 
   const totalSpent =
     reservations.reduce(
       (total, reservation) =>
         total +
-        Number(
-          reservation.totalPrice || 0
-        ),
+        Number(reservation.totalPrice || 0),
       0
     )
 
@@ -413,43 +393,6 @@ function MyReservations() {
 
           </section>
 
-          <section className="customer-marketplace-hero reservation-page-hero">
-
-            <div>
-
-              <span>
-                YOUR FOOD JOURNEY
-              </span>
-
-              <h2>
-                Every reservation
-                <br />
-                <em>
-                  helps reduce waste.
-                </em>
-              </h2>
-
-              <p>
-                Keep your pickup information and
-                reservation history in one place.
-              </p>
-
-            </div>
-
-            <div className="marketplace-hero-stat">
-
-              <strong>
-                {reservations.length}
-              </strong>
-
-              <span>
-                MEALS RESERVED
-              </span>
-
-            </div>
-
-          </section>
-
           <section className="customer-section">
 
             <div className="customer-section-header">
@@ -537,8 +480,7 @@ function MyReservations() {
 
               </div>
 
-            ) : filteredReservations.length ===
-              0 ? (
+            ) : filteredReservations.length === 0 ? (
 
               <div className="customer-empty-card">
 
@@ -603,17 +545,15 @@ function MyReservations() {
 
                         <div
                           className={
-                            String(
-                              reservation.status ||
-                                'RESERVED'
-                            ).toLowerCase() ===
-                            'ready'
+                            isReady(reservation)
                               ? 'customer-status-badge ready'
                               : 'customer-status-badge'
                           }
                         >
-                          {reservation.status ||
-                            'RESERVED'}
+                          {isReady(reservation)
+                            ? 'READY FOR PICKUP'
+                            : reservation.status ||
+                              'RESERVED'}
                         </div>
 
                       </div>
@@ -710,6 +650,53 @@ function MyReservations() {
                         </div>
 
                       </div>
+
+                      {isReady(reservation) &&
+                        reservation.pickupOtp && (
+                          <div
+                            style={{
+                              marginTop: '18px',
+                              padding: '18px 20px',
+                              borderRadius: '12px',
+                              border: '1px solid rgba(192, 132, 252, 0.2)',
+                              background: 'rgba(109, 40, 217, 0.08)'
+                            }}
+                          >
+                            <span
+                              style={{
+                                display: 'block',
+                                color: '#9787a4',
+                                fontSize: '10px',
+                                letterSpacing: '0.08em',
+                                marginBottom: '7px'
+                              }}
+                            >
+                              PICKUP OTP
+                            </span>
+
+                            <strong
+                              style={{
+                                display: 'block',
+                                color: '#f4edfa',
+                                fontSize: '28px',
+                                letterSpacing: '0.18em'
+                              }}
+                            >
+                              {reservation.pickupOtp}
+                            </strong>
+
+                            <small
+                              style={{
+                                display: 'block',
+                                color: '#80708d',
+                                marginTop: '6px'
+                              }}
+                            >
+                              Show this OTP at the restaurant
+                              during pickup.
+                            </small>
+                          </div>
+                        )}
 
                     </article>
 

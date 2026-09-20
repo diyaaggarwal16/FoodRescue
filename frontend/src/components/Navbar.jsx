@@ -11,7 +11,10 @@ function Navbar({ user, onLogout }) {
         
 
         {user && user.role === 'CUSTOMER' && (
-          <><Link to="/my-reservations">
+          <>
+          <Link to="/customer/dashboard">
+              Dashboard
+            </Link><Link to="/my-reservations">
             My Reservations
           </Link>
           <Link to="/food">Explore Food</Link></>

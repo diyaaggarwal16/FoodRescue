@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { apiFetch } from '../../../utils/api'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { apiFetch, logoutUser } from '../../../utils/api'
+import '../../../styles/restaurant.css'
 
 function RestaurantDashboard() {
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [restaurant, setRestaurant] = useState(null)
   const [dashboardStats, setDashboardStats] = useState(null)
@@ -23,9 +25,7 @@ function RestaurantDashboard() {
       setLoading(true)
       setMessage('')
 
-      const profileResponse = await apiFetch(
-        '/api/restaurants/my-profile'
-      )
+      const profileResponse = await apiFetch('/api/restaurants/my-profile')
 
       if (profileResponse.status === 404) {
         setRestaurant(null)
@@ -36,729 +36,627 @@ function RestaurantDashboard() {
         return
       }
 
-      const profileData =
-        await profileResponse.json()
+      const profileData = await profileResponse.json()
 
       if (!profileResponse.ok) {
-        throw new Error(
-          'Failed to load restaurant profile'
-        )
+        throw new Error('Failed to load restaurant profile')
       }
 
       setRestaurant(profileData)
 
-      const dashboardResponse = await apiFetch(
-        '/api/restaurants/dashboard'
-      )
+      const dashboardResponse = await apiFetch('/api/restaurants/dashboard')
 
       if (!dashboardResponse.ok) {
-        throw new Error(
-          'Failed to load dashboard statistics'
-        )
+        throw new Error('Failed to load dashboard statistics')
       }
 
-      const dashboardData =
-        await dashboardResponse.json()
-
+      const dashboardData = await dashboardResponse.json()
       setDashboardStats(dashboardData)
 
-      const foodResponse = await apiFetch(
-        `/api/food/restaurant/${profileData.id}`
-      )
+      const foodResponse = await apiFetch(`/api/food/restaurant/${profileData.id}`)
 
       if (!foodResponse.ok) {
-        throw new Error(
-          'Failed to load food listings'
-        )
+        throw new Error('Failed to load food listings')
       }
 
-      const foodData =
-        await foodResponse.json()
-
+      const foodData = await foodResponse.json()
       setFoodItems(foodData)
 
-      const reservationResponse =
-        await apiFetch(
-          `/api/reservations/restaurant/${profileData.id}`
-        )
+      const reservationResponse = await apiFetch(
+        `/api/reservations/restaurant/${profileData.id}`
+      )
 
       if (reservationResponse.ok) {
-        const reservationData =
-          await reservationResponse.json()
-
+        const reservationData = await reservationResponse.json()
         setReservations(reservationData)
       } else {
         setReservations([])
       }
 
-      const donatedResponse =
-        await apiFetch(
-          `/api/donated-meals/restaurant/${profileData.id}`
-        )
+      const donatedResponse = await apiFetch(
+        `/api/donated-meals/restaurant/${profileData.id}`
+      )
 
       if (donatedResponse.ok) {
-        const donatedData =
-          await donatedResponse.json()
-
+        const donatedData = await donatedResponse.json()
         setDonatedMeals(donatedData)
       } else {
         setDonatedMeals([])
       }
     } catch (error) {
-      setMessage(
-        error.message ||
-          'Unable to load dashboard'
-      )
+      setMessage(error.message || 'Unable to load dashboard')
     } finally {
       setLoading(false)
     }
   }
 
-  const markReservationReady = async (
-    reservationId
-  ) => {
+  const markReservationReady = async (reservationId) => {
     try {
       setMessage('')
-
       const response = await apiFetch(
         `/api/reservations/${reservationId}/ready`,
-        {
-          method: 'PUT'
-        }
+        { method: 'PUT' }
       )
-
       const data = await response.text()
-
       if (!response.ok) {
-        setMessage(
-          data ||
-            'Unable to mark reservation ready'
-        )
+        setMessage(data || 'Unable to mark reservation ready')
         return
       }
-
-      setMessage(
-        'Reservation is ready for pickup'
-      )
-
+      setMessage('Reservation is ready for pickup')
       await loadDashboard()
     } catch {
-      setMessage(
-        'Unable to mark reservation ready'
-      )
+      setMessage('Unable to mark reservation ready')
     }
   }
 
-  const markDonatedMealReady = async (
-    mealId
-  ) => {
+  const markDonatedMealReady = async (mealId) => {
     try {
       setMessage('')
-
       const response = await apiFetch(
         `/api/donated-meals/${mealId}/ready`,
-        {
-          method: 'PUT'
-        }
+        { method: 'PUT' }
       )
-
       const data = await response.text()
-
       if (!response.ok) {
-        setMessage(
-          data ||
-            'Unable to mark donated meal ready'
-        )
+        setMessage(data || 'Unable to mark donated meal ready')
         return
       }
-
-      setMessage(
-        'Donated meal is ready for pickup'
-      )
-
+      setMessage('Donated meal is ready for pickup')
       await loadDashboard()
     } catch {
-      setMessage(
-        'Unable to mark donated meal ready'
-      )
+      setMessage('Unable to mark donated meal ready')
     }
   }
 
-  const verifyReservationOtp = async (
-    reservationId
-  ) => {
+  const verifyReservationOtp = async (reservationId) => {
     try {
       setMessage('')
-
-      const otp =
-        otpValues[
-          `reservation-${reservationId}`
-        ]
-
+      const otp = otpValues[`reservation-${reservationId}`]
       if (!otp || otp.length !== 6) {
-        setMessage(
-          'Please enter the 6-digit OTP'
-        )
+        setMessage('Please enter the 6-digit OTP')
         return
       }
-
       const response = await apiFetch(
         `/api/reservations/${reservationId}/verify-otp`,
-        {
-          method: 'PUT',
-          body: JSON.stringify(otp)
-        }
+        { method: 'PUT', body: JSON.stringify(otp) }
       )
-
       const data = await response.text()
-
       if (!response.ok) {
-        setMessage(
-          data ||
-            'Unable to verify pickup OTP'
-        )
+        setMessage(data || 'Unable to verify pickup OTP')
         return
       }
-
-      setMessage(
-        'Customer pickup verified successfully'
-      )
-
+      setMessage('Customer pickup verified successfully')
       setOtpValues((current) => {
         const updated = { ...current }
-
-        delete updated[
-          `reservation-${reservationId}`
-        ]
-
+        delete updated[`reservation-${reservationId}`]
         return updated
       })
-
       await loadDashboard()
     } catch {
-      setMessage(
-        'Unable to verify pickup OTP'
-      )
+      setMessage('Unable to verify pickup OTP')
     }
   }
 
-  const verifyDonatedMealOtp = async (
-    mealId
-  ) => {
+  const verifyDonatedMealOtp = async (mealId) => {
     try {
       setMessage('')
-
-      const otp =
-        otpValues[`meal-${mealId}`]
-
+      const otp = otpValues[`meal-${mealId}`]
       if (!otp || otp.length !== 6) {
-        setMessage(
-          'Please enter the 6-digit OTP'
-        )
+        setMessage('Please enter the 6-digit OTP')
         return
       }
-
       const response = await apiFetch(
         `/api/donated-meals/${mealId}/verify-otp`,
-        {
-          method: 'PUT',
-          body: JSON.stringify(otp)
-        }
+        { method: 'PUT', body: JSON.stringify(otp) }
       )
-
       const data = await response.text()
-
       if (!response.ok) {
-        setMessage(
-          data ||
-            'Unable to verify pickup OTP'
-        )
+        setMessage(data || 'Unable to verify pickup OTP')
         return
       }
-
-      setMessage(
-        'NGO pickup verified successfully'
-      )
-
+      setMessage('NGO pickup verified successfully')
       setOtpValues((current) => {
         const updated = { ...current }
-
         delete updated[`meal-${mealId}`]
-
         return updated
       })
-
       await loadDashboard()
     } catch {
-      setMessage(
-        'Unable to verify pickup OTP'
-      )
+      setMessage('Unable to verify pickup OTP')
     }
+  }
+
+  const handleLogout = () => {
+    logoutUser()
+    navigate('/')
+  }
+
+  const isActive = (path) => location.pathname === path
+
+  const getStatusClass = (status) => {
+    const s = (status || '').toLowerCase()
+    if (s === 'reserved') return 'reserved'
+    if (s === 'ready_for_pickup') return 'ready'
+    if (s === 'claimed') return 'claimed'
+    if (s === 'completed' || s === 'picked_up') return 'completed'
+    return 'reserved'
+  }
+
+  const getFoodStatusClass = (status) => {
+    const s = (status || '').toLowerCase()
+    if (s === 'available') return 'available'
+    if (s === 'sold_out') return 'sold_out'
+    if (s === 'expired') return 'expired'
+    return 'available'
   }
 
   if (loading) {
     return (
-      <div className="dashboard-page">
-        <div className="dashboard-header">
-          <h1>Restaurant Dashboard</h1>
-
-          <p>
-            Loading your restaurant dashboard...
-          </p>
-        </div>
-      </div>
-    )
-  }
-
-  if (!restaurant) {
-    return (
-      <div className="dashboard-page">
-        <div className="dashboard-header">
-          <h1>Restaurant Dashboard</h1>
-
-          <p>
-            Create your restaurant profile
-            to get started.
-          </p>
-        </div>
-
-        <div className="dashboard-card">
-          <h2>
-            Restaurant Profile Required
-          </h2>
-
-          <p>
-            You need to create your restaurant
-            profile before adding food listings.
-          </p>
-
-          <button
-            className="auth-btn"
-            onClick={() =>
-              navigate('/restaurant-profile')
-            }
-          >
-            Create Restaurant Profile
-          </button>
+      <div className="rest-loading">
+        <div className="rest-loading-inner">
+          <div className="rest-spinner" />
+          <span>Loading dashboard...</span>
         </div>
       </div>
     )
   }
 
   const stats = dashboardStats || {}
+  const restaurantName = restaurant?.restaurantName || 'Restaurant'
 
-  return (
-    <div className="dashboard-page">
-      <div className="dashboard-header">
-        <h1>Restaurant Dashboard</h1>
-
-        <p>
-          Welcome, {restaurant.restaurantName}
-        </p>
-      </div>
-
-      {message && (
-        <div className="dashboard-card">
-          <p>{message}</p>
-        </div>
-      )}
-
-      <div className="dashboard-stats">
-        <div className="dashboard-stat-card">
-          <h3>Total Listings</h3>
-
-          <strong>
-            {stats.totalFoodListings || 0}
-          </strong>
-        </div>
-
-        <div className="dashboard-stat-card">
-          <h3>Available</h3>
-
-          <strong>
-            {stats.availableFoodListings || 0}
-          </strong>
-        </div>
-
-        <div className="dashboard-stat-card">
-          <h3>Total Quantity</h3>
-
-          <strong>
-            {stats.totalQuantity || 0}
-          </strong>
-        </div>
-
-        <div className="dashboard-stat-card">
-          <h3>Food Remaining</h3>
-
-          <strong>
-            {stats.remainingQuantity || 0}
-          </strong>
-        </div>
-
-        <div className="dashboard-stat-card">
-          <h3>Reservations</h3>
-
-          <strong>
-            {stats.totalReservations || 0}
-          </strong>
-        </div>
-
-        <div className="dashboard-stat-card">
-          <h3>Reserved Quantity</h3>
-
-          <strong>
-            {stats.reservedQuantity || 0}
-          </strong>
-        </div>
-
-        <div className="dashboard-stat-card">
-          <h3>Total Revenue</h3>
-
-          <strong>
-            ₹{Number(
-              stats.totalRevenue || 0
-            ).toFixed(2)}
-          </strong>
-        </div>
-
-        <div className="dashboard-stat-card">
-          <h3>Verification</h3>
-
-          <strong>
-            {stats.verificationStatus ||
-              restaurant.verificationStatus ||
-              'PENDING'}
-          </strong>
+  const sidebar = (
+    <aside className="rest-sidebar">
+      <div className="rest-brand">
+        <div className="rest-brand-icon">🍽</div>
+        <div>
+          <strong>FoodRescue</strong>
+          <span>Restaurant Panel</span>
         </div>
       </div>
 
-      <div className="dashboard-card">
-        <h2>Quick Actions</h2>
+      <div className="rest-nav-title">Main Menu</div>
 
-        <div className="dashboard-actions">
-          <button
-            className="auth-btn"
-            onClick={() =>
-              navigate('/add-food')
-            }
-          >
-            Add Food
-          </button>
+      <nav className="rest-nav">
+        <button
+          className={`rest-nav-item${isActive('/restaurant-dashboard') ? ' active' : ''}`}
+          onClick={() => navigate('/restaurant-dashboard')}
+        >
+          <span className="rest-nav-icon">⌂</span>
+          Dashboard
+        </button>
 
-          <button
-            className="secondary-btn"
-            onClick={() =>
-              navigate('/my-food')
-            }
-          >
-            Manage My Food
-          </button>
+        <button
+          className={`rest-nav-item${isActive('/add-food') ? ' active' : ''}`}
+          onClick={() => navigate('/add-food')}
+        >
+          <span className="rest-nav-icon">+</span>
+          Add Food
+        </button>
 
-          <button
-            className="secondary-btn"
-            onClick={() =>
-              navigate('/restaurant-profile')
-            }
-          >
-            View Profile
-          </button>
-        </div>
-      </div>
+        <button
+          className={`rest-nav-item${isActive('/my-food') ? ' active' : ''}`}
+          onClick={() => navigate('/my-food')}
+        >
+          <span className="rest-nav-icon">▤</span>
+          My Listings
+        </button>
 
-      <div className="dashboard-card">
-        <div className="dashboard-section-header">
+        <button
+          className={`rest-nav-item${isActive('/restaurant-profile') ? ' active' : ''}`}
+          onClick={() => navigate('/restaurant-profile')}
+        >
+          <span className="rest-nav-icon">☆</span>
+          Profile
+        </button>
+      </nav>
+
+      <div className="rest-sidebar-bottom">
+        <div className="rest-profile">
+          <div className="rest-avatar">
+            {restaurantName.charAt(0).toUpperCase()}
+          </div>
           <div>
-            <h2>Pickup Management</h2>
-
-            <p>
-              Prepare orders and verify customer
-              or NGO pickups.
-            </p>
+            <strong>{restaurantName}</strong>
+            <span>Restaurant</span>
           </div>
         </div>
 
-        {reservations.length === 0 &&
-        donatedMeals.length === 0 ? (
-          <div className="empty-dashboard">
-            <h3>No Pending Pickups</h3>
-
-            <p>
-              Customer and NGO pickups will
-              appear here.
-            </p>
-          </div>
-        ) : (
-          <>
-            {reservations.length > 0 && (
-              <div className="pickup-section">
-                <h3>Customer Pickups</h3>
-
-                <div className="food-listings">
-                  {reservations.map(
-                    (reservation) => (
-                      <div
-                        className="food-listing-item"
-                        key={reservation.id}
-                      >
-                        <div>
-                          <h3>
-                            {reservation.foodName}
-                          </h3>
-
-                          <p>
-                            Customer:{' '}
-                            {reservation.customerName ||
-                              'Customer'}
-                          </p>
-
-                          <p>
-                            Quantity:{' '}
-                            {reservation.quantity}
-                          </p>
-
-                          <p>
-                            Fulfillment:{' '}
-                            {reservation.fulfillmentType}
-                          </p>
-                        </div>
-
-                        <div>
-                          <p>
-                            Status:{' '}
-                            {reservation.status}
-                          </p>
-
-                          {reservation.status ===
-                            'RESERVED' && (
-                            <button
-                              className="auth-btn"
-                              onClick={() =>
-                                markReservationReady(
-                                  reservation.id
-                                )
-                              }
-                            >
-                              Mark Ready
-                            </button>
-                          )}
-
-                          {reservation.status ===
-                            'READY_FOR_PICKUP' && (
-                            <div className="pickup-verification">
-                              <input
-                                type="text"
-                                maxLength="6"
-                                placeholder="Enter OTP"
-                                value={
-                                  otpValues[
-                                    `reservation-${reservation.id}`
-                                  ] || ''
-                                }
-                                onChange={(event) =>
-                                  setOtpValues(
-                                    (current) => ({
-                                      ...current,
-                                      [`reservation-${reservation.id}`]:
-                                        event.target.value.replace(
-                                          /\D/g,
-                                          ''
-                                        )
-                                    })
-                                  )
-                                }
-                              />
-
-                              <button
-                                className="auth-btn"
-                                onClick={() =>
-                                  verifyReservationOtp(
-                                    reservation.id
-                                  )
-                                }
-                              >
-                                Verify Pickup
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
-            )}
-
-            {donatedMeals.length > 0 && (
-              <div className="pickup-section">
-                <h3>NGO Pickups</h3>
-
-                <div className="food-listings">
-                  {donatedMeals.map(
-                    (meal) => (
-                      <div
-                        className="food-listing-item"
-                        key={meal.id}
-                      >
-                        <div>
-                          <h3>
-                            {meal.foodName}
-                          </h3>
-
-                          <p>
-                            Quantity:{' '}
-                            {meal.quantity}
-                          </p>
-
-                          <p>
-                            NGO pickup
-                          </p>
-                        </div>
-
-                        <div>
-                          <p>
-                            Status:{' '}
-                            {meal.status}
-                          </p>
-
-                          {meal.status ===
-                            'CLAIMED' && (
-                            <button
-                              className="auth-btn"
-                              onClick={() =>
-                                markDonatedMealReady(
-                                  meal.id
-                                )
-                              }
-                            >
-                              Mark Ready
-                            </button>
-                          )}
-
-                          {meal.status ===
-                            'READY_FOR_PICKUP' && (
-                            <div className="pickup-verification">
-                              <input
-                                type="text"
-                                maxLength="6"
-                                placeholder="Enter OTP"
-                                value={
-                                  otpValues[
-                                    `meal-${meal.id}`
-                                  ] || ''
-                                }
-                                onChange={(event) =>
-                                  setOtpValues(
-                                    (current) => ({
-                                      ...current,
-                                      [`meal-${meal.id}`]:
-                                        event.target.value.replace(
-                                          /\D/g,
-                                          ''
-                                        )
-                                    })
-                                  )
-                                }
-                              />
-
-                              <button
-                                className="auth-btn"
-                                onClick={() =>
-                                  verifyDonatedMealOtp(
-                                    meal.id
-                                  )
-                                }
-                              >
-                                Verify Pickup
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
-            )}
-          </>
-        )}
+        <button className="rest-logout" onClick={handleLogout}>
+          <span>↪</span>
+          Logout
+        </button>
       </div>
+    </aside>
+  )
 
-      <div className="dashboard-card">
-        <div className="dashboard-section-header">
-          <div>
-            <h2>Recent Food Listings</h2>
+  if (!restaurant) {
+    return (
+      <div className="rest-layout">
+        {sidebar}
+        <main className="rest-main">
+          <header className="rest-topbar">
+            <div>
+              <h1>Restaurant Dashboard</h1>
+              <p>Complete your profile to get started</p>
+            </div>
+          </header>
 
-            <p>
-              Total food quantity listed:{' '}
-              {stats.totalQuantity || 0}
-            </p>
-          </div>
-
-          <button
-            className="secondary-btn"
-            onClick={() =>
-              navigate('/my-food')
-            }
-          >
-            View All
-          </button>
-        </div>
-
-        {foodItems.length === 0 ? (
-          <div className="empty-dashboard">
-            <h3>No Food Listings Yet</h3>
-
-            <p>
-              Start rescuing surplus food by
-              adding your first food listing.
-            </p>
-
+          <div className="rest-panel" style={{ maxWidth: 560 }}>
+            <div className="rest-panel-header">
+              <div>
+                <h2>Profile Required</h2>
+                <p>Create your restaurant profile to unlock all features</p>
+              </div>
+            </div>
             <button
-              className="auth-btn"
-              onClick={() =>
-                navigate('/add-food')
-              }
+              className="rest-btn-primary"
+              onClick={() => navigate('/restaurant-profile')}
             >
-              Add Your First Food
+              Create Restaurant Profile
             </button>
           </div>
-        ) : (
-          <div className="food-listings">
-            {foodItems
-              .slice(0, 5)
-              .map((food) => (
-                <div
-                  className="food-listing-item"
-                  key={food.id}
-                >
-                  <div>
-                    <h3>
-                      {food.foodName}
-                    </h3>
-
-                    <p>
-                      Remaining:{' '}
-                      {food.remainingQuantity}{' '}
-                      / {food.quantity}
-                    </p>
-                  </div>
-
-                  <div>
-                    <p>
-                      Rescue Price: ₹
-                      {food.rescuePrice}
-                    </p>
-
-                    <p>
-                      Status: {food.status}
-                    </p>
-                  </div>
-                </div>
-              ))}
-          </div>
-        )}
+        </main>
       </div>
+    )
+  }
+
+  const verificationStatus = stats.verificationStatus || restaurant.verificationStatus || 'PENDING'
+  const pendingPickups = reservations.filter(
+    (r) => r.status === 'RESERVED' || r.status === 'READY_FOR_PICKUP'
+  ).length + donatedMeals.filter(
+    (m) => m.status === 'CLAIMED' || m.status === 'READY_FOR_PICKUP'
+  ).length
+
+  return (
+    <div className="rest-layout">
+      {sidebar}
+
+      <main className="rest-main">
+        <header className="rest-topbar">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Welcome back, {restaurantName}</p>
+          </div>
+          <div className="rest-online">
+            <span className="rest-online-dot" />
+            {verificationStatus === 'VERIFIED' ? 'Verified' : verificationStatus}
+          </div>
+        </header>
+
+        {message && (
+          <div className="rest-message">{message}</div>
+        )}
+
+        {/* Welcome Banner */}
+        <section className="rest-welcome">
+          <div>
+            <span className="rest-eyebrow">FoodRescue Restaurant</span>
+            <h2>Manage your surplus<br />food with ease.</h2>
+            <p>List, track and rescue food — all in one place.</p>
+          </div>
+        </section>
+
+        {/* Stats */}
+        <section className="rest-stats">
+          <div className="rest-stat-card">
+            <div>
+              <span>Total Listings</span>
+              <strong>{stats.totalFoodListings || 0}</strong>
+            </div>
+            <div className="rest-stat-icon orange">🍱</div>
+          </div>
+
+          <div className="rest-stat-card">
+            <div>
+              <span>Available</span>
+              <strong>{stats.availableFoodListings || 0}</strong>
+            </div>
+            <div className="rest-stat-icon green">✓</div>
+          </div>
+
+          <div className="rest-stat-card">
+            <div>
+              <span>Reservations</span>
+              <strong>{stats.totalReservations || 0}</strong>
+            </div>
+            <div className="rest-stat-icon amber">📋</div>
+          </div>
+
+          <div className="rest-stat-card">
+            <div>
+              <span>Pending Pickups</span>
+              <strong>{pendingPickups}</strong>
+            </div>
+            <div className="rest-stat-icon red">⏳</div>
+          </div>
+
+          <div className="rest-stat-card">
+            <div>
+              <span>Total Quantity</span>
+              <strong>{stats.totalQuantity || 0}</strong>
+            </div>
+            <div className="rest-stat-icon blue">📦</div>
+          </div>
+
+          <div className="rest-stat-card">
+            <div>
+              <span>Remaining</span>
+              <strong>{stats.remainingQuantity || 0}</strong>
+            </div>
+            <div className="rest-stat-icon amber">🔢</div>
+          </div>
+
+          <div className="rest-stat-card">
+            <div>
+              <span>Reserved Qty</span>
+              <strong>{stats.reservedQuantity || 0}</strong>
+            </div>
+            <div className="rest-stat-icon orange">🏷</div>
+          </div>
+
+          <div className="rest-stat-card">
+            <div>
+              <span>Total Revenue</span>
+              <strong>₹{Number(stats.totalRevenue || 0).toFixed(0)}</strong>
+            </div>
+            <div className="rest-stat-icon green">₹</div>
+          </div>
+        </section>
+
+        {/* Quick Actions */}
+        <section className="rest-panel" style={{ marginBottom: 20 }}>
+          <div className="rest-panel-header">
+            <div>
+              <h2>Quick Actions</h2>
+              <p>Navigate to key sections</p>
+            </div>
+          </div>
+          <div className="rest-actions-grid">
+            <button
+              className="rest-action-card"
+              onClick={() => navigate('/add-food')}
+            >
+              <div className="rest-action-icon">+</div>
+              <strong>Add Food</strong>
+              <span>List surplus food</span>
+            </button>
+
+            <button
+              className="rest-action-card"
+              onClick={() => navigate('/my-food')}
+            >
+              <div className="rest-action-icon">▤</div>
+              <strong>Manage Listings</strong>
+              <span>Edit or delete food</span>
+            </button>
+
+            <button
+              className="rest-action-card"
+              onClick={() => navigate('/restaurant-profile')}
+            >
+              <div className="rest-action-icon">☆</div>
+              <strong>View Profile</strong>
+              <span>Update restaurant info</span>
+            </button>
+          </div>
+        </section>
+
+        {/* Pickup Management + Recent Listings */}
+        <section className="rest-content-grid">
+
+          {/* Pickup Management */}
+          <div className="rest-panel">
+            <div className="rest-panel-header">
+              <div>
+                <h2>Pickup Management</h2>
+                <p>Manage customer and NGO pickups</p>
+              </div>
+              {pendingPickups > 0 && (
+                <span className="rest-panel-badge">{pendingPickups}</span>
+              )}
+            </div>
+
+            {reservations.length === 0 && donatedMeals.length === 0 ? (
+              <div className="rest-empty">
+                <div className="rest-empty-icon">✓</div>
+                <strong>No pending pickups</strong>
+                <span>All caught up!</span>
+              </div>
+            ) : (
+              <>
+                {reservations.length > 0 && (
+                  <div className="rest-pickup-section">
+                    <h3>Customer Pickups</h3>
+                    <div className="rest-pickup-list">
+                      {reservations.map((reservation) => (
+                        <div className="rest-pickup-item" key={reservation.id}>
+                          <div className="rest-pickup-info">
+                            <h4>{reservation.foodName}</h4>
+                            <p>
+                              {reservation.customerName || 'Customer'} · Qty:{' '}
+                              {reservation.quantity}
+                            </p>
+                            <p>{reservation.fulfillmentType}</p>
+                          </div>
+                          <div className="rest-pickup-actions">
+                            <span
+                              className={`rest-status-badge ${getStatusClass(reservation.status)}`}
+                            >
+                              {reservation.status}
+                            </span>
+
+                            {reservation.status === 'RESERVED' && (
+                              <button
+                                className="rest-btn-primary"
+                                onClick={() =>
+                                  markReservationReady(reservation.id)
+                                }
+                              >
+                                Mark Ready
+                              </button>
+                            )}
+
+                            {reservation.status === 'READY_FOR_PICKUP' && (
+                              <div className="rest-otp-row">
+                                <input
+                                  className="rest-otp-input"
+                                  type="text"
+                                  maxLength="6"
+                                  placeholder="OTP"
+                                  value={
+                                    otpValues[`reservation-${reservation.id}`] || ''
+                                  }
+                                  onChange={(e) =>
+                                    setOtpValues((current) => ({
+                                      ...current,
+                                      [`reservation-${reservation.id}`]:
+                                        e.target.value.replace(/\D/g, '')
+                                    }))
+                                  }
+                                />
+                                <button
+                                  className="rest-btn-primary"
+                                  onClick={() =>
+                                    verifyReservationOtp(reservation.id)
+                                  }
+                                >
+                                  Verify
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {donatedMeals.length > 0 && (
+                  <div className="rest-pickup-section">
+                    <h3>NGO Pickups</h3>
+                    <div className="rest-pickup-list">
+                      {donatedMeals.map((meal) => (
+                        <div className="rest-pickup-item" key={meal.id}>
+                          <div className="rest-pickup-info">
+                            <h4>{meal.foodName}</h4>
+                            <p>Qty: {meal.quantity} · NGO Donation</p>
+                          </div>
+                          <div className="rest-pickup-actions">
+                            <span
+                              className={`rest-status-badge ${getStatusClass(meal.status)}`}
+                            >
+                              {meal.status}
+                            </span>
+
+                            {meal.status === 'CLAIMED' && (
+                              <button
+                                className="rest-btn-primary"
+                                onClick={() => markDonatedMealReady(meal.id)}
+                              >
+                                Mark Ready
+                              </button>
+                            )}
+
+                            {meal.status === 'READY_FOR_PICKUP' && (
+                              <div className="rest-otp-row">
+                                <input
+                                  className="rest-otp-input"
+                                  type="text"
+                                  maxLength="6"
+                                  placeholder="OTP"
+                                  value={otpValues[`meal-${meal.id}`] || ''}
+                                  onChange={(e) =>
+                                    setOtpValues((current) => ({
+                                      ...current,
+                                      [`meal-${meal.id}`]: e.target.value.replace(
+                                        /\D/g,
+                                        ''
+                                      )
+                                    }))
+                                  }
+                                />
+                                <button
+                                  className="rest-btn-primary"
+                                  onClick={() => verifyDonatedMealOtp(meal.id)}
+                                >
+                                  Verify
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* Recent Food Listings */}
+          <div className="rest-panel">
+            <div className="rest-panel-header">
+              <div>
+                <h2>Recent Listings</h2>
+                <p>Total quantity: {stats.totalQuantity || 0}</p>
+              </div>
+              <button
+                className="rest-btn-secondary"
+                onClick={() => navigate('/my-food')}
+              >
+                View All
+              </button>
+            </div>
+
+            {foodItems.length === 0 ? (
+              <div className="rest-empty">
+                <div className="rest-empty-icon">+</div>
+                <strong>No food listings yet</strong>
+                <span>Add your first food item to get started</span>
+              </div>
+            ) : (
+              <div className="rest-food-list">
+                {foodItems.slice(0, 6).map((food) => (
+                  <div className="rest-food-row" key={food.id}>
+                    <div className="rest-food-row-info">
+                      <h4>{food.foodName}</h4>
+                      <p>
+                        Remaining: {food.remainingQuantity} / {food.quantity} · ₹
+                        {food.rescuePrice}
+                      </p>
+                    </div>
+                    <span
+                      className={`rest-food-status ${getFoodStatusClass(food.status)}`}
+                    >
+                      {food.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      </main>
     </div>
   )
 }

@@ -592,56 +592,110 @@
   margin-top: 20px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+  gap: 13px;
 }
 
 .customer-stat-card {
-  min-height: 108px;
-  padding: 18px;
+  min-height: 130px;
+  padding: 17px;
   box-sizing: border-box;
   display: flex;
-  align-items: center;
-  gap: 14px;
-  border: 1px solid rgba(192, 132, 252, 0.13);
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 13px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 13px;
-  background: #130b21;
+  background: linear-gradient(
+    135deg,
+    #3b1b7a,
+    #2a1458
+  );
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.customer-stat-card:nth-child(2) {
+  background: linear-gradient(
+    135deg,
+    #54208f,
+    #34145f
+  );
+}
+
+.customer-stat-card:nth-child(3) {
+  background: linear-gradient(
+    135deg,
+    #68166d,
+    #421044
+  );
+}
+
+.customer-stat-card:nth-child(4) {
+  background: linear-gradient(
+    135deg,
+    #47236f,
+    #28163f
+  );
+}
+
+.customer-stat-card::after {
+  content: "";
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  right: -45px;
+  bottom: -55px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.customer-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(216, 204, 232, 0.28);
+  box-shadow: 0 12px 30px rgba(76, 35, 126, 0.18);
 }
 
 .customer-stat-icon {
-  width: 50px;
-  height: 50px;
+  width: 39px;
+  height: 39px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: 12px;
-  background: linear-gradient(
-    135deg,
-    #6d28d9,
-    #a855f7
-  );
-  color: #ffffff;
-  font-size: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #eadcff;
+  font-size: 13px;
   font-weight: 700;
 }
 
 .customer-stat-card span {
   display: block;
-  color: #9787a4;
-  font-size: 9px;
+  color: #f0e7fa;
+  font-size: 11px;
+  font-weight: 600;
 }
 
 .customer-stat-card strong {
   display: block;
-  margin-top: 5px;
-  color: #f4edfa;
+  margin-top: 4px;
+  color: #ffffff;
   font-size: 21px;
+  font-weight: 700;
 }
 
 .customer-stat-card small {
   display: block;
   margin-top: 3px;
-  color: #66576f;
+  color: rgba(245, 237, 255, 0.72);
   font-size: 8px;
 }
 

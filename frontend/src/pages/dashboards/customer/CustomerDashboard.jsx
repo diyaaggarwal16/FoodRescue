@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 
 import { apiFetch } from '../../../utils/api'
 
-import '../../../styles/customer.css'
-
 function CustomerDashboard() {
   const [foodListings, setFoodListings] = useState([])
   const [reservations, setReservations] = useState([])
@@ -218,49 +216,7 @@ function CustomerDashboard() {
 
       <div className="customer-main">
 
-        <header className="customer-topbar">
-
-          <div className="customer-search">
-            <span>
-              ⌕
-            </span>
-
-            <input
-              type="text"
-              placeholder="Search for food, restaurants, locations..."
-            />
-          </div>
-
-          <div className="customer-topbar-right">
-
-            <button
-              type="button"
-              className="customer-icon-button"
-            >
-              ♧
-            </button>
-
-            <div className="customer-top-account">
-
-              <div className="customer-top-avatar">
-                {userName
-                  .charAt(0)
-                  .toUpperCase()}
-              </div>
-
-              <span>
-                {userName}
-              </span>
-
-              <small>
-                ⌄
-              </small>
-
-            </div>
-
-          </div>
-
-        </header>
+        
 
         <main className="customer-content">
 
@@ -281,109 +237,11 @@ function CustomerDashboard() {
               </p>
             </div>
 
-            <div className="customer-header-status">
-
-              <span className="customer-live-dot"></span>
-
-              <div>
-                <strong>
-                  Marketplace Online
-                </strong>
-
-                <small>
-                  Live food listings
-                </small>
-              </div>
-
-            </div>
+            
 
           </div>
 
-          <section className="customer-hero-card">
-
-            <div className="customer-hero-copy">
-
-              <span>
-                FOODRESCUE MARKETPLACE
-              </span>
-
-              <h2>
-                Rescue food.
-                <br />
-                <em>
-                  Create an impact.
-                </em>
-              </h2>
-
-              <p>
-                Find quality surplus meals from
-                local restaurants before they go
-                to waste.
-              </p>
-
-              <div className="customer-hero-actions">
-
-                <Link
-                  to="/food"
-                  className="customer-primary-button"
-                >
-                  Explore Food
-                  <b>
-                    →
-                  </b>
-                </Link>
-
-                <Link
-                  to="/my-reservations"
-                  className="customer-secondary-button"
-                >
-                  My Reservations
-                </Link>
-
-              </div>
-
-            </div>
-
-            <div className="customer-hero-art">
-
-              <div className="customer-hero-orbit orbit-one"></div>
-              <div className="customer-hero-orbit orbit-two"></div>
-
-              <div className="customer-hero-glow"></div>
-
-              <div className="customer-hero-card-art">
-                <span>
-                  F
-                </span>
-              </div>
-
-              <div className="customer-floating-card floating-one">
-                <small>
-                  AVAILABLE
-                </small>
-                <strong>
-                  {foodListings.length}
-                </strong>
-                <span>
-                  Food listings
-                </span>
-              </div>
-
-              <div className="customer-floating-card floating-two">
-                <small>
-                  RESCUE
-                </small>
-                <strong>
-                  {reservations.length}
-                </strong>
-                <span>
-                  Reservations
-                </span>
-              </div>
-
-            </div>
-
-          </section>
+         
 
           <section className="customer-stat-grid">
 
@@ -459,29 +317,7 @@ function CustomerDashboard() {
 
             </div>
 
-            <div className="customer-stat-card">
-
-              <div className="customer-stat-icon">
-                I
-              </div>
-
-              <div>
-                <span>
-                  Member Since
-                </span>
-
-                <strong className="customer-date-stat">
-                  {formatDate(
-                    user.createdAt
-                  )}
-                </strong>
-
-                <small>
-                  FoodRescue member
-                </small>
-              </div>
-
-            </div>
+            
 
           </section>
 
