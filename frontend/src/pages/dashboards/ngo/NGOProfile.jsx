@@ -1,283 +1,488 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { apiFetch } from '../../../utils/api'
+import '../../../styles/ngo.css'
 
 function NGOProfile() {
-  const navigate = useNavigate()
-
   const [profile, setProfile] = useState(null)
-  const [form, setForm] = useState({
-    ngoName: '',
-    address: '',
-    phone: ''
-  })
-
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [editing, setEditing] = useState(false)
   const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+
+  const [ngoName, setNgoName] = useState('')
+  const [address, setAddress] = useState('')
+  const [phone, setPhone] = useState('')
+
+  const loadProfile = async () => {
+    try {
+      setLoading(true)
+      setError('')
+
+      const response = await apiFetch(
+        '/api/ngos/my-profile'
+      )
+
+      if (!response.ok) {
+        const text = await response.text()
+        throw new Error(
+          text || 'Unable to load NGO profile'
+        )
+      }
+
+      const data = await response.json()
+
+      setProfile(data)
+      setNgoName(data.ngoName || '')
+      setAddress(data.address || '')
+      setPhone(data.phone || '')
+    } catch (err) {
+      console.error(err)
+      setError(
+        err.message || 'Unable to load NGO profile'
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const response = await apiFetch(
-          '/api/ngos/my-profile'
-        )
-
-        if (response.status === 404) {
-          setProfile(null)
-          setEditing(true)
-          return
-        }
-
-        if (!response.ok) {
-          throw new Error(
-            'Unable to load NGO profile'
-          )
-        }
-
-        const data = await response.json()
-
-        setProfile(data)
-
-        setForm({
-          ngoName: data.ngoName || '',
-          address: data.address || '',
-          phone: data.phone || ''
-        })
-      } catch (error) {
-        setMessage(
-          error.message ||
-            'Unable to load NGO profile'
-        )
-      } finally {
-        setLoading(false)
-      }
-    }
-
     loadProfile()
   }, [])
 
-  const handleChange = (event) => {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value
-    })
-  }
-
-  const handleSubmit = async (event) => {
+  const handleSave = async event => {
     event.preventDefault()
-
-    if (!form.ngoName.trim()) {
-      setMessage('NGO name is required')
-      return
-    }
-
-    if (!form.address.trim()) {
-      setMessage('Address is required')
-      return
-    }
-
-    if (!form.phone.trim()) {
-      setMessage('Phone number is required')
-      return
-    }
 
     try {
       setSaving(true)
       setMessage('')
+      setError('')
 
       const response = await apiFetch(
-        profile
-          ? '/api/ngos/profile'
-          : '/api/ngos/profile',
+        '/api/ngos/profile',
         {
-          method: profile ? 'PUT' : 'POST',
+          method: 'PUT',
           body: JSON.stringify({
-            ngoName: form.ngoName,
-            address: form.address,
-            phone: form.phone
+            ngoName,
+            address,
+            phone
           })
         }
       )
 
       const text = await response.text()
 
+      if (!response.ok) {
+        throw new Error(
+          text || 'Unable to update NGO profile'
+        )
+      }
+
       let data
 
       try {
         data = JSON.parse(text)
       } catch {
-        data = text
+        data = null
       }
 
-      if (!response.ok) {
-        throw new Error(
-          typeof data === 'string'
-            ? data
-            : 'Unable to save NGO profile'
-        )
+      if (data) {
+        setProfile(data)
+        setNgoName(data.ngoName || '')
+        setAddress(data.address || '')
+        setPhone(data.phone || '')
+      } else {
+        await loadProfile()
       }
 
-      setProfile(data)
-
-      setForm({
-        ngoName: data.ngoName || '',
-        address: data.address || '',
-        phone: data.phone || ''
-      })
+      setMessage(
+        'NGO profile updated successfully'
+      )
 
       setEditing(false)
-      setMessage(
-        profile
-          ? 'NGO profile updated successfully'
-          : 'NGO profile created successfully'
-      )
-    } catch (error) {
-      setMessage(
-        error.message ||
-          'Unable to save NGO profile'
+    } catch (err) {
+      console.error(err)
+      setError(
+        err.message ||
+          'Unable to update NGO profile'
       )
     } finally {
       setSaving(false)
     }
   }
 
+  const handleCancel = () => {
+    setNgoName(profile?.ngoName || '')
+    setAddress(profile?.address || '')
+    setPhone(profile?.phone || '')
+    setMessage('')
+    setError('')
+    setEditing(false)
+  }
+
   if (loading) {
     return (
-      <div className="dashboard-page">
-        <div className="dashboard-header">
-          <h1>NGO Profile</h1>
-          <p>Loading profile...</p>
+      <div className="ngo-profile-page">
+        <div className="ngo-profile-loading">
+          <div className="ngo-profile-spinner"></div>
+          <span>Loading NGO Profile...</span>
         </div>
       </div>
     )
   }
 
-  return (
-    <div className="dashboard-page">
-      <div className="dashboard-header">
-        <div>
-          <h1>NGO Profile</h1>
+  if (!profile) {
+    return (
+      <div className="ngo-profile-page">
+        <div className="ngo-profile-error-card">
+          <div className="ngo-profile-error-icon">
+            !
+          </div>
+
+          <h2>NGO Profile Not Found</h2>
 
           <p>
-            Manage your NGO information.
+            We could not load your NGO profile.
           </p>
+
+          <button
+            className="ngo-profile-primary-btn"
+            onClick={loadProfile}
+          >
+            Try Again
+          </button>
         </div>
       </div>
+    )
+  }
 
-      {message && (
-        <div className="my-food-message">
-          {message}
-        </div>
-      )}
+  const verification =
+    profile.verificationStatus || 'PENDING'
 
-      <div className="dashboard-card">
-        {editing ? (
-          <form
-            className="auth-form"
-            onSubmit={handleSubmit}
-          >
-            <div className="input-group">
-              <label>NGO Name</label>
+  return (
+    <div className="ngo-profile-page">
 
-              <input
-                type="text"
-                name="ngoName"
-                value={form.ngoName}
-                onChange={handleChange}
-                placeholder="Enter NGO name"
-                required
-              />
+      <main className="ngo-profile-content">
+
+        <section className="ngo-profile-hero">
+
+          <div className="ngo-profile-hero-glow ngo-glow-one"></div>
+          <div className="ngo-profile-hero-glow ngo-glow-two"></div>
+          <div className="ngo-profile-hero-glow ngo-glow-three"></div>
+
+          <div className="ngo-profile-hero-main">
+
+            <div className="ngo-profile-avatar">
+              <span>♡</span>
             </div>
 
-            <div className="input-group">
-              <label>Address</label>
+            <div className="ngo-profile-heading">
 
-              <textarea
-                name="address"
-                value={form.address}
-                onChange={handleChange}
-                placeholder="Enter NGO address"
-                rows="4"
-                required
-              />
-            </div>
+              <div className="ngo-profile-label">
+                <span className="ngo-label-icon">
+                  ✦
+                </span>
+                NGO PROFILE
+              </div>
 
-            <div className="input-group">
-              <label>Phone</label>
-
-              <input
-                type="tel"
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                placeholder="Enter phone number"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="auth-btn"
-              disabled={saving}
-            >
-              {saving
-                ? 'Saving...'
-                : profile
-                  ? 'Update Profile'
-                  : 'Create Profile'}
-            </button>
-
-            {profile && (
-              <button
-                type="button"
-                className="secondary-btn"
-                onClick={() =>
-                  setEditing(false)
-                }
-                disabled={saving}
-              >
-                Cancel
-              </button>
-            )}
-          </form>
-        ) : (
-          <div className="profile-details">
-            <h2>{profile.ngoName}</h2>
-
-            <div className="profile-info">
-              <p>
-                <strong>Address:</strong>{' '}
-                {profile.address}
-              </p>
+              <h1>
+                {profile.ngoName || 'NGO'}
+              </h1>
 
               <p>
-                <strong>Phone:</strong>{' '}
-                {profile.phone}
+                Manage your NGO information.
               </p>
 
-              <p>
-                <strong>Verification:</strong>{' '}
-                {profile.verificationStatus}
-              </p>
+              <div className="ngo-profile-meta">
+
+                <div className="ngo-meta-item">
+                  <span className="ngo-meta-icon">
+                    ⌖
+                  </span>
+
+                  <span>
+                    {profile.address || 'Address not added'}
+                  </span>
+                </div>
+
+                <div className="ngo-meta-item">
+                  <span className="ngo-meta-icon">
+                    ☎
+                  </span>
+
+                  <span>
+                    {profile.phone || 'Phone not added'}
+                  </span>
+                </div>
+
+                <div
+                  className={`ngo-verification-badge ${
+                    verification === 'VERIFIED'
+                      ? 'verified'
+                      : 'pending'
+                  }`}
+                >
+                  <span className="ngo-status-icon">
+                    ✓
+                  </span>
+
+                  {verification}
+                </div>
+
+              </div>
+
             </div>
 
-            <div className="dashboard-actions">
-              <button
-                className="add-food-btn"
-                onClick={() =>
-                  setEditing(true)
-                }
-              >
-                Edit Profile
-              </button>
+          </div>
 
-              
+          <div className="ngo-profile-hero-message">
+            <span>Making</span>
+            <span>A Hunger Free</span>
+            <span>Tomorrow</span>
+
+            <div className="ngo-message-line">
+              <span></span>
+              <b>♥</b>
+              <span></span>
             </div>
+
+            <div className="ngo-message-small-line"></div>
+          </div>
+
+        </section>
+
+        {message && (
+          <div className="ngo-profile-message success">
+            <span>✓</span>
+            {message}
           </div>
         )}
-      </div>
+
+        {error && (
+          <div className="ngo-profile-message error">
+            <span>!</span>
+            {error}
+          </div>
+        )}
+
+        <section className="ngo-profile-stats">
+
+          <div className="ngo-profile-stat stat-blue">
+            <div className="ngo-stat-icon">
+              <span>♟</span>
+            </div>
+
+            <div className="ngo-stat-content">
+              <span>Total Meals Donated</span>
+              <strong>0</strong>
+              <small>
+                Meals shared with those in need
+              </small>
+            </div>
+          </div>
+
+          <div className="ngo-profile-stat stat-purple">
+            <div className="ngo-stat-icon">
+              <span>♥</span>
+            </div>
+
+            <div className="ngo-stat-content">
+              <span>Active Requests</span>
+              <strong>0</strong>
+              <small>
+                Ongoing food requests
+              </small>
+            </div>
+          </div>
+
+          <div className="ngo-profile-stat stat-pink">
+            <div className="ngo-stat-icon">
+              <span>▣</span>
+            </div>
+
+            <div className="ngo-stat-content">
+              <span>Completed Requests</span>
+              <strong>0</strong>
+              <small>
+                Successfully fulfilled
+              </small>
+            </div>
+          </div>
+
+          <div className="ngo-profile-stat stat-violet">
+            <div className="ngo-stat-icon">
+              <span>★</span>
+            </div>
+
+            <div className="ngo-stat-content">
+              <span>Impact Score</span>
+              <strong>0</strong>
+              <small>
+                Lives positively impacted
+              </small>
+            </div>
+          </div>
+
+        </section>
+
+        <section className="ngo-profile-editor">
+
+          <div className="ngo-editor-header">
+
+            <div className="ngo-editor-icon">
+              ✎
+            </div>
+
+            <div>
+              <h2>
+                {editing
+                  ? 'Edit NGO Profile'
+                  : 'NGO Profile Details'}
+              </h2>
+
+              <p>
+                {editing
+                  ? 'Update your organization details'
+                  : 'Your organization information'}
+              </p>
+            </div>
+
+            {!editing && (
+              <button
+                className="ngo-edit-btn"
+                onClick={() => {
+                  setMessage('')
+                  setError('')
+                  setEditing(true)
+                }}
+              >
+                ✎ Edit Profile
+              </button>
+            )}
+
+          </div>
+
+          {editing ? (
+            <form
+              className="ngo-profile-form"
+              onSubmit={handleSave}
+            >
+
+              <div className="ngo-form-grid">
+
+                <div className="ngo-form-group">
+                  <label>
+                    NGO Name
+                  </label>
+
+                  <input
+                    type="text"
+                    value={ngoName}
+                    onChange={event =>
+                      setNgoName(event.target.value)
+                    }
+                    placeholder="Enter NGO name"
+                    required
+                  />
+                </div>
+
+                <div className="ngo-form-group">
+                  <label>
+                    Address
+                  </label>
+
+                  <input
+                    type="text"
+                    value={address}
+                    onChange={event =>
+                      setAddress(event.target.value)
+                    }
+                    placeholder="Enter NGO address"
+                    required
+                  />
+                </div>
+
+                <div className="ngo-form-group">
+                  <label>
+                    Phone Number
+                  </label>
+
+                  <input
+                    type="text"
+                    value={phone}
+                    onChange={event =>
+                      setPhone(event.target.value)
+                    }
+                    placeholder="Enter phone number"
+                    required
+                  />
+                </div>
+
+              </div>
+
+              <div className="ngo-form-actions">
+
+                <button
+                  type="button"
+                  className="ngo-cancel-btn"
+                  onClick={handleCancel}
+                  disabled={saving}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="ngo-save-btn"
+                  disabled={saving}
+                >
+                  {saving ? (
+                    <>
+                      <span className="ngo-btn-spinner"></span>
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <span>▣</span>
+                      Save Changes
+                    </>
+                  )}
+                </button>
+
+              </div>
+
+            </form>
+          ) : (
+            <div className="ngo-profile-details">
+
+              <div className="ngo-detail-card">
+                <span>NGO Name</span>
+                <strong>
+                  {profile.ngoName || 'Not added'}
+                </strong>
+              </div>
+
+              <div className="ngo-detail-card">
+                <span>Address</span>
+                <strong>
+                  {profile.address || 'Not added'}
+                </strong>
+              </div>
+
+              <div className="ngo-detail-card">
+                <span>Phone Number</span>
+                <strong>
+                  {profile.phone || 'Not added'}
+                </strong>
+              </div>
+
+            </div>
+          )}
+
+        </section>
+
+      </main>
+
     </div>
   )
 }
