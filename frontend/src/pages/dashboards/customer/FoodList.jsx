@@ -3,6 +3,150 @@ import { Link } from 'react-router-dom'
 
 import { apiFetch } from '../../../utils/api'
 
+const API_BASE_URL = 'http://localhost:8080'
+
+function FoodImageCarousel({ food }) {
+  const images = [
+    food.image1Url,
+    food.image2Url,
+    food.image3Url
+  ].filter(Boolean)
+
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  useEffect(() => {
+    setCurrentIndex(0)
+  }, [food.id])
+
+  useEffect(() => {
+    if (images.length <= 1) {
+      return
+    }
+
+    const timer = setInterval(() => {
+      setCurrentIndex((previousIndex) =>
+        (previousIndex + 1) % images.length
+      )
+    }, 4000)
+
+    return () => clearInterval(timer)
+  }, [food.id, images.length])
+
+  const getImageUrl = (imageUrl) => {
+    if (!imageUrl) {
+      return ''
+    }
+
+    if (
+      imageUrl.startsWith('http://') ||
+      imageUrl.startsWith('https://')
+    ) {
+      return imageUrl
+    }
+
+    return `${API_BASE_URL}${imageUrl}`
+  }
+
+  const showPrevious = () => {
+    setCurrentIndex((previousIndex) =>
+      previousIndex === 0
+        ? images.length - 1
+        : previousIndex - 1
+    )
+  }
+
+  const showNext = () => {
+    setCurrentIndex((previousIndex) =>
+      (previousIndex + 1) % images.length
+    )
+  }
+
+  if (images.length === 0) {
+    return (
+      <div className="customer-marketplace-image customer-food-image-placeholder">
+        <span>
+          FOODRESCUE
+        </span>
+
+        <small>
+          {food.foodType || 'SURPLUS'}
+        </small>
+
+        <b>
+          AVAILABLE
+        </b>
+      </div>
+    )
+  }
+
+  return (
+    <div className="customer-food-image-carousel">
+      <img
+        src={getImageUrl(images[currentIndex])}
+        alt={food.foodName || 'Food'}
+        className="customer-food-card-image"
+      />
+
+      <span className="customer-food-image-type">
+        {food.foodType || 'SURPLUS'}
+      </span>
+
+      <b className="customer-food-image-status">
+        {Number(food.remainingQuantity || 0) <= 0
+          ? 'SOLD OUT'
+          : 'AVAILABLE'}
+      </b>
+
+      {images.length > 1 && (
+        <>
+          <button
+            type="button"
+            className="customer-carousel-arrow customer-carousel-prev"
+            onClick={(event) => {
+              event.stopPropagation()
+              showPrevious()
+            }}
+            aria-label="Previous food image"
+          >
+            ‹
+          </button>
+
+          <button
+            type="button"
+            className="customer-carousel-arrow customer-carousel-next"
+            onClick={(event) => {
+              event.stopPropagation()
+              showNext()
+            }}
+            aria-label="Next food image"
+          >
+            ›
+          </button>
+
+          <div className="customer-carousel-dots">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                className={
+                  index === currentIndex
+                    ? 'customer-carousel-dot active'
+                    : 'customer-carousel-dot'
+                }
+                onClick={(event) => {
+                  event.stopPropagation()
+                  setCurrentIndex(index)
+                }}
+                aria-label={`Show image ${index + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
 function FoodList() {
   const [foodItems, setFoodItems] = useState([])
   const [loading, setLoading] = useState(true)
@@ -363,6 +507,7 @@ function FoodList() {
               <strong>
                 {userName}
               </strong>
+
               <span>
                 Customer
               </span>
@@ -447,11 +592,8 @@ function FoodList() {
               </p>
             </div>
 
-            
-
           </div>
 
-          
           <section className="customer-marketplace-toolbar">
 
             <div>
@@ -571,23 +713,9 @@ function FoodList() {
                     key={food.id}
                   >
 
-                    <div className="customer-marketplace-image">
-
-                      <span>
-                        FOODRESCUE
-                      </span>
-
-                      <small>
-                        {getFoodType(food)}
-                      </small>
-
-                      <b>
-                        {soldOut
-                          ? 'SOLD OUT'
-                          : 'AVAILABLE'}
-                      </b>
-
-                    </div>
+                    <FoodImageCarousel
+                      food={food}
+                    />
 
                     <div className="customer-marketplace-body">
 
@@ -722,6 +850,7 @@ function FoodList() {
                   <span>
                     Restaurant
                   </span>
+
                   <strong>
                     {selectedFood.restaurantName ||
                       'Restaurant'}
@@ -732,6 +861,7 @@ function FoodList() {
                   <span>
                     Available
                   </span>
+
                   <strong>
                     {selectedFood.remainingQuantity}
                   </strong>
@@ -741,6 +871,7 @@ function FoodList() {
                   <span>
                     Price
                   </span>
+
                   <strong>
                     ₹{selectedFood.rescuePrice}
                   </strong>
@@ -750,6 +881,7 @@ function FoodList() {
                   <span>
                     Pickup Before
                   </span>
+
                   <strong>
                     {formatPickupTime(
                       selectedFood.pickupDeadline
@@ -761,6 +893,7 @@ function FoodList() {
                   <span>
                     Allergens
                   </span>
+
                   <strong>
                     {selectedFood.allergens ||
                       'None'}
@@ -875,6 +1008,7 @@ function FoodList() {
                   <span>
                     Food
                   </span>
+
                   <strong>
                     {selectedFood.foodName}
                   </strong>
@@ -884,6 +1018,7 @@ function FoodList() {
                   <span>
                     Restaurant
                   </span>
+
                   <strong>
                     {selectedFood.restaurantName ||
                       'Restaurant'}
@@ -894,6 +1029,7 @@ function FoodList() {
                   <span>
                     Quantity
                   </span>
+
                   <strong>
                     {quantity}
                   </strong>
@@ -903,6 +1039,7 @@ function FoodList() {
                   <span>
                     Total
                   </span>
+
                   <strong>
                     ₹
                     {Number(quantity) *
@@ -917,6 +1054,7 @@ function FoodList() {
                   <span>
                     Pickup Before
                   </span>
+
                   <strong>
                     {formatPickupTime(
                       selectedFood.pickupDeadline
@@ -928,6 +1066,7 @@ function FoodList() {
                   <span>
                     Allergens
                   </span>
+
                   <strong>
                     {selectedFood.allergens ||
                       'None'}
@@ -938,6 +1077,7 @@ function FoodList() {
                   <span>
                     Fulfillment
                   </span>
+
                   <strong>
                     {fulfillmentType ===
                     'SELF_PICKUP'
@@ -1020,6 +1160,7 @@ function FoodList() {
                 <span>
                   Food
                 </span>
+
                 <strong>
                   {reservationSummary.foodName}
                 </strong>
@@ -1029,6 +1170,7 @@ function FoodList() {
                 <span>
                   Restaurant
                 </span>
+
                 <strong>
                   {reservationSummary.restaurantName}
                 </strong>
@@ -1038,6 +1180,7 @@ function FoodList() {
                 <span>
                   Quantity
                 </span>
+
                 <strong>
                   {reservationSummary.quantity}
                 </strong>
@@ -1047,6 +1190,7 @@ function FoodList() {
                 <span>
                   Total
                 </span>
+
                 <strong>
                   ₹{reservationSummary.totalPrice}
                 </strong>
@@ -1056,6 +1200,7 @@ function FoodList() {
                 <span>
                   Pickup Before
                 </span>
+
                 <strong>
                   {formatPickupTime(
                     reservationSummary.pickupDeadline
@@ -1067,6 +1212,7 @@ function FoodList() {
                 <span>
                   Allergens
                 </span>
+
                 <strong>
                   {reservationSummary.allergens ||
                     'None'}

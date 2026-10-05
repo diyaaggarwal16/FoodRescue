@@ -145,7 +145,8 @@ public class SecurityConfig {
         "/api/auth/login",
         "/api/auth/password-reset/request",
         "/api/auth/password-reset/verify",
-        "/api/auth/password-reset/reset"
+        "/api/auth/password-reset/reset",
+        "/uploads/**"
 ).permitAll()
                         .anyRequest().authenticated()
                 )

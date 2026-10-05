@@ -1681,3 +1681,138 @@
     grid-template-columns: 1fr;
   }
 }
+.customer-food-image-carousel {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background: #171020;
+  border-bottom: 1px solid rgba(192, 132, 252, 0.12);
+}
+
+.customer-food-card-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.customer-food-image-placeholder {
+  width: 100%;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(168, 85, 247, 0.26),
+      transparent 58%
+    ),
+    linear-gradient(
+      135deg,
+      #29143e,
+      #160b24
+    );
+}
+
+.customer-food-image-placeholder span {
+  color: rgba(224, 190, 244, 0.52);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.customer-food-image-type,
+.customer-food-image-status {
+  position: absolute;
+  top: 12px;
+  z-index: 4;
+  padding: 5px 8px;
+  border: 1px solid rgba(192, 132, 252, 0.2);
+  border-radius: 999px;
+  background: rgba(10, 5, 16, 0.72);
+  font-size: 7px;
+  font-weight: 700;
+}
+
+.customer-food-image-type {
+  right: 12px;
+  color: #bd91e3;
+}
+
+.customer-food-image-status {
+  left: 12px;
+  color: #c084fc;
+}
+
+.customer-carousel-arrow {
+  position: absolute;
+  top: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  background: rgba(9, 5, 18, 0.72);
+  color: #ffffff;
+  font-size: 27px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 5;
+  transition: 0.2s ease;
+}
+
+.customer-carousel-arrow:hover {
+  background: #7c3aed;
+  border-color: #c084fc;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.35);
+}
+
+.customer-carousel-prev {
+  left: 12px;
+}
+
+.customer-carousel-next {
+  right: 12px;
+}
+
+.customer-carousel-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transform: translateX(-50%);
+  z-index: 5;
+}
+
+.customer-carousel-dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.48);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.customer-carousel-dot.active {
+  width: 20px;
+  border-radius: 10px;
+  background: #c084fc;
+  box-shadow: 0 0 9px rgba(192, 132, 252, 0.65);
+}
+
+@media (max-width: 650px) {
+  .customer-food-image-carousel,
+  .customer-food-image-placeholder {
+    height: 200px;
+  }
+}

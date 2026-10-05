@@ -32,6 +32,12 @@ public class FoodListing {
 
     private String status;
 
+    private String image1Url;
+
+    private String image2Url;
+
+    private String image3Url;
+
     public FoodListing() {
     }
 
@@ -125,5 +131,29 @@ public class FoodListing {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getImage1Url() {
+        return image1Url;
+    }
+
+    public void setImage1Url(String image1Url) {
+        this.image1Url = image1Url;
+    }
+
+    public String getImage2Url() {
+        return image2Url;
+    }
+
+    public void setImage2Url(String image2Url) {
+        this.image2Url = image2Url;
+    }
+
+    public String getImage3Url() {
+        return image3Url;
+    }
+
+    public void setImage3Url(String image3Url) {
+        this.image3Url = image3Url;
     }
 }

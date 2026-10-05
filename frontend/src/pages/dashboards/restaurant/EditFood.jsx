@@ -60,6 +60,7 @@ function RestaurantSidebar({ navigate, location, handleLogout }) {
             <span>Restaurant</span>
           </div>
         </div>
+
         <button className="rest-logout" onClick={handleLogout}>
           <span>↪</span>
           Logout
@@ -83,6 +84,12 @@ function EditFood() {
     allergens: '',
     pickupDeadline: ''
   })
+
+  const [images, setImages] = useState([
+    { slot: 1, url: '', file: null, preview: '' },
+    { slot: 2, url: '', file: null, preview: '' },
+    { slot: 3, url: '', file: null, preview: '' }
+  ])
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -111,6 +118,23 @@ function EditFood() {
             ? String(food.pickupDeadline).slice(0, 16)
             : ''
         })
+
+        const imageUrls = [
+          food.image1Url || '',
+          food.image2Url || '',
+          food.image3Url || ''
+        ]
+
+        setImages(
+          imageUrls.map((url, index) => ({
+            slot: index + 1,
+            url,
+            file: null,
+            preview: url
+              ? `http://localhost:8080${url.startsWith('/') ? '' : '/'}${url}`
+              : ''
+          }))
+        )
       } catch (error) {
         setMessage(error.message || 'Unable to load food')
       } finally {
@@ -128,8 +152,130 @@ function EditFood() {
     })
   }
 
+  const validateImage = (file) => {
+    if (!file.type.startsWith('image/')) {
+      setMessage('Only image files are allowed.')
+      setIsSuccess(false)
+      return false
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage('Each image must be 5MB or smaller.')
+      setIsSuccess(false)
+      return false
+    }
+
+    return true
+  }
+
+  const handleImageSelect = (slot, event) => {
+    const file = event.target.files?.[0]
+
+    if (!file) {
+      return
+    }
+
+    if (!validateImage(file)) {
+      event.target.value = ''
+      return
+    }
+
+    const preview = URL.createObjectURL(file)
+
+    setImages((currentImages) =>
+      currentImages.map((image) =>
+        image.slot === slot
+          ? {
+              ...image,
+              file,
+              preview,
+              url: image.url
+            }
+          : image
+      )
+    )
+
+    setMessage('')
+    setIsSuccess(false)
+  }
+
+  const handleRemoveImage = async (slot) => {
+    const image = images.find((item) => item.slot === slot)
+
+    if (!image) {
+      return
+    }
+
+    setSaving(true)
+    setMessage('')
+    setIsSuccess(false)
+
+    try {
+      if (image.url) {
+        const response = await apiFetch(
+          `/api/food/${id}/images/${slot}`,
+          {
+            method: 'DELETE'
+          }
+        )
+
+        const text = await response.text()
+
+        if (!response.ok) {
+          throw new Error(text || 'Failed to remove image')
+        }
+      }
+
+      if (image.preview && image.file) {
+        URL.revokeObjectURL(image.preview)
+      }
+
+      setImages((currentImages) =>
+        currentImages.map((item) =>
+          item.slot === slot
+            ? {
+                ...item,
+                url: '',
+                file: null,
+                preview: ''
+              }
+            : item
+        )
+      )
+
+      setMessage('Image removed successfully.')
+      setIsSuccess(true)
+    } catch (error) {
+      setMessage(error.message || 'Unable to remove image')
+      setIsSuccess(false)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const uploadImage = async (slot, file) => {
+    const formDataToUpload = new FormData()
+
+    formDataToUpload.append(`image${slot}`, file)
+
+    const response = await apiFetch(
+      `/api/food/${id}/images`,
+      {
+        method: 'POST',
+        body: formDataToUpload
+      }
+    )
+
+    const text = await response.text()
+
+    if (!response.ok) {
+      throw new Error(text || `Failed to upload image ${slot}`)
+    }
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
+
     setSaving(true)
     setMessage('')
     setIsSuccess(false)
@@ -152,6 +298,12 @@ function EditFood() {
 
       if (!response.ok) {
         throw new Error(text || 'Failed to update food')
+      }
+
+      for (const image of images) {
+        if (image.file) {
+          await uploadImage(image.slot, image.file)
+        }
       }
 
       setIsSuccess(true)
@@ -197,6 +349,7 @@ function EditFood() {
             <h1>Edit Listing</h1>
             <p>Update your food listing details</p>
           </div>
+
           <button
             className="rest-btn-secondary"
             onClick={() => navigate('/my-food')}
@@ -216,7 +369,7 @@ function EditFood() {
           <div className="rest-form-panel">
             <div className="rest-form-header">
               <h2>Edit Food Listing</h2>
-              <p>Update the details for this food item.</p>
+              <p>Update the details and images for this food item.</p>
             </div>
 
             <form className="rest-form" onSubmit={handleSubmit}>
@@ -308,13 +461,77 @@ function EditFood() {
                 </small>
               </div>
 
+              <div className="rest-field">
+                <label>Food Images</label>
+                <small>
+                  Add up to 3 images. Each image must be 5MB or smaller.
+                </small>
+
+                <div className="rest-image-manager">
+                  {images.map((image) => (
+                    <div
+                      className="rest-image-slot"
+                      key={image.slot}
+                    >
+                      <div className="rest-image-preview">
+                        {image.preview ? (
+                          <img
+                            src={image.preview}
+                            alt={`Food ${image.slot}`}
+                          />
+                        ) : (
+                          <span>No Image</span>
+                        )}
+                      </div>
+
+                      <div className="rest-image-slot-title">
+                        Image {image.slot}
+                      </div>
+
+                      <label className="rest-image-select">
+                        {image.preview
+                          ? 'Replace Image'
+                          : 'Select Image'}
+
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(event) =>
+                            handleImageSelect(
+                              image.slot,
+                              event
+                            )
+                          }
+                          disabled={saving}
+                        />
+                      </label>
+
+                      {image.preview && (
+                        <button
+                          type="button"
+                          className="rest-image-remove"
+                          onClick={() =>
+                            handleRemoveImage(image.slot)
+                          }
+                          disabled={saving}
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="rest-form-actions">
                 <button
                   type="submit"
                   className="rest-submit-btn"
                   disabled={saving}
                 >
-                  {saving ? 'Updating...' : 'Update Food Listing'}
+                  {saving
+                    ? 'Updating...'
+                    : 'Update Food Listing'}
                 </button>
 
                 <button

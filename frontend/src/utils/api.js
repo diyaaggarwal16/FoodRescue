@@ -87,8 +87,14 @@ export async function apiFetch(
   const token = localStorage.getItem('token')
 
   const headers = {
-    'Content-Type': 'application/json',
     ...(options.headers || {})
+  }
+
+  const isFormData =
+    options.body instanceof FormData
+
+  if (!isFormData && !headers['Content-Type']) {
+    headers['Content-Type'] = 'application/json'
   }
 
   if (token) {
