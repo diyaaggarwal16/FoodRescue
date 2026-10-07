@@ -32,13 +32,13 @@ function CustomerDashboard() {
         setFoodListings(
           Array.isArray(data)
             ? data
-                .filter(
-                  (food) =>
-                    Number(
-                      food.remainingQuantity || 0
-                    ) > 0
-                )
-                .slice(0, 3)
+              .filter(
+                (food) =>
+                  Number(
+                    food.remainingQuantity || 0
+                  ) > 0
+              )
+              .slice(0, 3)
             : []
         )
       }
@@ -167,6 +167,17 @@ function CustomerDashboard() {
           </Link>
 
           <Link
+            to="/food-needs"
+            className="customer-navigation-item"
+          >
+            <span className="customer-navigation-icon">
+              ♡
+            </span>
+
+            <span>Food Needs</span>
+          </Link>
+
+          <Link
             to="/my-reservations"
             className="customer-navigation-item"
           >
@@ -216,7 +227,7 @@ function CustomerDashboard() {
 
       <div className="customer-main">
 
-        
+
 
         <main className="customer-content">
 
@@ -237,11 +248,11 @@ function CustomerDashboard() {
               </p>
             </div>
 
-            
+
 
           </div>
 
-         
+
 
           <section className="customer-stat-grid">
 
@@ -317,7 +328,7 @@ function CustomerDashboard() {
 
             </div>
 
-            
+
 
           </section>
 

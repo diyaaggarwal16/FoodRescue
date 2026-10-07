@@ -35,7 +35,7 @@ public class FoodNeedController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('NGO')")
+    @PreAuthorize("hasRole('NGO',)")
     public ResponseEntity<?> createNeed(
             @RequestBody FoodNeed foodNeed,
             @AuthenticationPrincipal Jwt jwt
@@ -91,13 +91,20 @@ public class FoodNeedController {
         }
     }
 
-    @GetMapping("/open")
-    @PreAuthorize("hasRole('NGO')")
-    public ResponseEntity<?> getOpenNeeds() {
+   @GetMapping("/open")
+@PreAuthorize("hasAnyRole('NGO', 'CUSTOMER', 'RESTAURANT', 'ADMIN')")
+public ResponseEntity<?> getOpenNeeds() {
+    try {
         return ResponseEntity.ok(
                 foodNeedService.getOpenNeeds()
         );
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Food need error: " + e.getMessage());
     }
+}
 
     private NGO getLoggedInNgo(
             Jwt jwt

@@ -38,6 +38,7 @@ import AdminDonations from './pages/dashboards/admin/AdminDonations'
 import AdminFoodNeeds from './pages/dashboards/admin/AdminFoodNeeds'
 import AdminUsers from './pages/dashboards/admin/AdminUsers'
 import AdminFoodListings from './pages/dashboards/admin/AdminFoodListings'
+import FoodNeeds from './pages/dashboards/customer/FoodNeeds'
 
 function AppContent() {
   const navigate = useNavigate()
@@ -261,6 +262,10 @@ function AppContent() {
             element={<AdminFoodListings />}
           />
         </Route>
+        <Route
+  path="/food-needs"
+  element={<FoodNeeds />}
+/>
       </Routes>
 
       {sessionExpired && (
