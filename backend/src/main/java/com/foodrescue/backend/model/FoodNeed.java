@@ -19,6 +19,9 @@ public class FoodNeed {
 
     private Integer quantityFulfilled;
 
+    @Transient
+    private Integer quantityReserved = 0;
+
     private LocalDateTime neededBy;
 
     private String location;
@@ -72,6 +75,14 @@ public class FoodNeed {
 
     public void setQuantityFulfilled(Integer quantityFulfilled) {
         this.quantityFulfilled = quantityFulfilled;
+    }
+
+    public Integer getQuantityReserved() {
+        return quantityReserved;
+    }
+
+    public void setQuantityReserved(Integer quantityReserved) {
+        this.quantityReserved = quantityReserved;
     }
 
     public LocalDateTime getNeededBy() {

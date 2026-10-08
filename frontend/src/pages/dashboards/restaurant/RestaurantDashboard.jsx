@@ -262,6 +262,14 @@ function RestaurantDashboard() {
         </button>
 
         <button
+          className={`rest-nav-item${isActive('/food-needs') ? ' active' : ''}`}
+          onClick={() => navigate('/food-needs')}
+        >
+          <span className="rest-nav-icon">♡</span>
+          NGO Food Needs
+        </button>
+
+        <button
           className={`rest-nav-item${isActive('/restaurant-profile') ? ' active' : ''}`}
           onClick={() => navigate('/restaurant-profile')}
         >

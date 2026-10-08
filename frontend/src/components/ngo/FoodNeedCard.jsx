@@ -5,7 +5,8 @@ function FoodNeedCard({
     Math.max(
       0,
       need.quantityNeeded -
-        need.quantityFulfilled
+        (need.quantityFulfilled || 0) -
+        (need.quantityReserved || 0)
     )
 
   return (

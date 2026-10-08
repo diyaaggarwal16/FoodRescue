@@ -6,7 +6,9 @@ import com.foodrescue.backend.model.FoodNeedFulfillment;
 import com.foodrescue.backend.repository.DonatedMealRepository;
 import com.foodrescue.backend.repository.FoodNeedFulfillmentRepository;
 import com.foodrescue.backend.repository.FoodNeedRepository;
+import com.foodrescue.backend.repository.FoodNeedPurchaseRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -16,18 +18,22 @@ public class FoodNeedFulfillmentService {
     private final FoodNeedRepository foodNeedRepository;
     private final DonatedMealRepository donatedMealRepository;
     private final FoodNeedFulfillmentRepository fulfillmentRepository;
+    private final FoodNeedPurchaseRepository purchaseRepository;
 
     public FoodNeedFulfillmentService(
             FoodNeedRepository foodNeedRepository,
             DonatedMealRepository donatedMealRepository,
-            FoodNeedFulfillmentRepository fulfillmentRepository
+            FoodNeedFulfillmentRepository fulfillmentRepository,
+            FoodNeedPurchaseRepository purchaseRepository
     ) {
         this.foodNeedRepository = foodNeedRepository;
         this.donatedMealRepository = donatedMealRepository;
         this.fulfillmentRepository =
                 fulfillmentRepository;
+        this.purchaseRepository = purchaseRepository;
     }
 
+    @Transactional
     public FoodNeedFulfillment fulfillNeed(
             Long foodNeedId,
             Long donatedMealId,
@@ -35,7 +41,7 @@ public class FoodNeedFulfillmentService {
     ) {
 
         FoodNeed foodNeed =
-                foodNeedRepository.findById(
+                foodNeedRepository.findByIdForUpdate(
                         foodNeedId
                 ).orElseThrow(() ->
                         new RuntimeException(
@@ -82,9 +88,14 @@ public class FoodNeedFulfillmentService {
                         ? 0
                         : foodNeed.getQuantityFulfilled();
 
-        int remainingNeed =
-                foodNeed.getQuantityNeeded()
-                        - fulfilled;
+        int pendingPurchases = purchaseRepository
+                .findByFoodNeedIdIn(java.util.List.of(foodNeedId)).stream()
+                .filter(p -> "PENDING".equals(p.getStatus()))
+                .mapToInt(com.foodrescue.backend.model.FoodNeedPurchase::getQuantity)
+                .sum();
+
+        int remainingNeed = foodNeed.getQuantityNeeded()
+                - fulfilled - pendingPurchases;
 
         if (quantity > remainingNeed) {
             throw new RuntimeException(

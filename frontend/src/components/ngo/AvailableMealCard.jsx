@@ -24,7 +24,8 @@ function AvailableMealCard({
     ? Math.max(
         0,
         selectedNeed.quantityNeeded -
-          (selectedNeed.quantityFulfilled || 0)
+          (selectedNeed.quantityFulfilled || 0) -
+          (selectedNeed.quantityReserved || 0)
       )
     : 0
 
@@ -111,7 +112,8 @@ function AvailableMealCard({
             {activeNeeds.map(need => {
               const remaining =
                 need.quantityNeeded -
-                (need.quantityFulfilled || 0)
+                (need.quantityFulfilled || 0) -
+                (need.quantityReserved || 0)
 
               return (
                 <option

@@ -10,6 +10,7 @@ function NGODashboard() {
   const [availableMeals, setAvailableMeals] = useState([])
   const [claimedMeals, setClaimedMeals] = useState([])
   const [foodNeeds, setFoodNeeds] = useState([])
+  const [purchaseRequests, setPurchaseRequests] = useState([])
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
 
@@ -33,12 +34,14 @@ function NGODashboard() {
         profileResponse,
         availableResponse,
         claimedResponse,
-        needsResponse
+        needsResponse,
+        purchasesResponse
       ] = await Promise.all([
         apiFetch('/api/ngos/my-profile'),
         apiFetch('/api/donated-meals/available'),
         apiFetch('/api/donated-meals/my-claimed'),
-        apiFetch('/api/food-needs/my')
+        apiFetch('/api/food-needs/my'),
+        apiFetch('/api/food-need-purchases/incoming')
       ])
 
       if (profileResponse.ok) {
@@ -69,6 +72,12 @@ function NGODashboard() {
         )
       } else {
         setFoodNeeds([])
+      }
+
+      if (purchasesResponse.ok) {
+        setPurchaseRequests(await purchasesResponse.json())
+      } else {
+        setPurchaseRequests([])
       }
     } catch (error) {
       console.error(error)
@@ -217,6 +226,23 @@ function NGODashboard() {
       setMessage(
         'Unable to fulfill food need'
       )
+    }
+  }
+
+  const decidePurchase = async (purchaseId, decision) => {
+    try {
+      setMessage('')
+      const response = await apiFetch(`/api/food-need-purchases/${purchaseId}/${decision}`, { method: 'PUT' })
+      const body = await response.text()
+      if (!response.ok) {
+        setMessage(body || 'Unable to update purchase request')
+        return
+      }
+      setMessage(`Purchase request ${decision === 'approve' ? 'approved' : 'rejected'}`)
+      await loadDashboard()
+    } catch (error) {
+      console.error(error)
+      setMessage('Unable to update purchase request')
     }
   }
 
@@ -799,6 +825,27 @@ function NGODashboard() {
 
         </section>
 
+        <section className="ngo-dashboard-panel full">
+          <div className="ngo-dashboard-panel-header">
+            <div><h2>Incoming Food Need Purchases</h2><p>Review purchase requests for your food needs.</p></div>
+            <span>{purchaseRequests.filter(request => request.status === 'PENDING').length} pending</span>
+          </div>
+          {purchaseRequests.length === 0 ? (
+            <div className="ngo-dashboard-no-data">No purchase requests have arrived yet.</div>
+          ) : (
+            <div className="ngo-purchase-list">
+              {purchaseRequests.slice().sort((a, b) => (b.id || 0) - (a.id || 0)).map(request => {
+                const need = foodNeeds.find(item => item.id === request.foodNeedId)
+                return <article className="ngo-purchase-row" key={request.id}>
+                  <div className="ngo-purchase-main"><strong>{need?.foodType || `Food Need #${request.foodNeedId}`}</strong><span>{request.requesterRole} · Quantity {request.quantity}</span><small>{formatDate(request.createdAt)}</small></div>
+                  <b className={`purchase-status ${String(request.status).toLowerCase()}`}>{request.status}</b>
+                  {request.status === 'PENDING' && <div className="ngo-purchase-actions"><button type="button" disabled={!isVerified} onClick={() => decidePurchase(request.id, 'approve')}>Approve</button><button type="button" disabled={!isVerified} onClick={() => decidePurchase(request.id, 'reject')}>Reject</button></div>}
+                </article>
+              })}
+            </div>
+          )}
+        </section>
+
         <section
           id="ngo-available-meals"
           className="ngo-dashboard-panel full"
@@ -925,7 +972,8 @@ function NGODashboard() {
                                 {Math.max(
                                   0,
                                   need.quantityNeeded -
-                                    need.quantityFulfilled
+                                    (need.quantityFulfilled || 0) -
+                                    (need.quantityReserved || 0)
                                 )}
                               </option>
                             )

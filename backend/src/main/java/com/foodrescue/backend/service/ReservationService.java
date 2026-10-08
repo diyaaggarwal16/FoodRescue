@@ -8,6 +8,7 @@ import com.foodrescue.backend.repository.DonatedMealRepository;
 import com.foodrescue.backend.repository.FoodListingRepository;
 import com.foodrescue.backend.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,12 +32,13 @@ public class ReservationService {
         this.pickupOtpService = pickupOtpService;
     }
 
+    @Transactional
     public Reservation createReservation(
             Reservation reservation
     ) {
 
         FoodListing foodListing =
-                foodListingRepository.findById(
+                foodListingRepository.findByIdForUpdate(
                         reservation.getFoodListingId()
                 ).orElseThrow(() ->
                         new RuntimeException(

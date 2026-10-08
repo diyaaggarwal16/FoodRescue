@@ -17,6 +17,9 @@ function Navbar({ user, onLogout }) {
             </Link><Link to="/my-reservations">
             My Reservations
           </Link>
+          <Link to = "/food-needs">
+          Food Needs
+          </Link>
           <Link to="/food">Explore Food</Link></>
         )}
 
@@ -32,6 +35,10 @@ function Navbar({ user, onLogout }) {
 
             <Link to="/add-food">
               Add Food
+            </Link>
+
+            <Link to="/food-needs">
+              Food Needs
             </Link>
 
             <Link to="/restaurant-profile">

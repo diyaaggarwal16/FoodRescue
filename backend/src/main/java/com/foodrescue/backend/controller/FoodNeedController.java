@@ -35,7 +35,7 @@ public class FoodNeedController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('NGO',)")
+    @PreAuthorize("hasRole('NGO')")
     public ResponseEntity<?> createNeed(
             @RequestBody FoodNeed foodNeed,
             @AuthenticationPrincipal Jwt jwt
