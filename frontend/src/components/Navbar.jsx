@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom'
 function Navbar({ user, onLogout }) {
   return (
     <nav className="navbar">
-      <h2>FoodRescue</h2>
+      <h2><Link to="/">FoodRescue</Link></h2>
 
       <div className="nav-links">
-        <Link to="/">Home</Link>
+       
 
         
 
@@ -14,13 +14,15 @@ function Navbar({ user, onLogout }) {
           <>
           <Link to="/customer/dashboard">
               Dashboard
-            </Link><Link to="/my-reservations">
-            My Reservations
-          </Link>
+            </Link>
+            <Link to="/food">Explore Food</Link>
           <Link to = "/food-needs">
           Food Needs
           </Link>
-          <Link to="/food">Explore Food</Link></>
+          
+          <Link to="/my-reservations">
+            My Reservations
+          </Link></>
         )}
 
         {user && user.role === 'RESTAURANT' && (
@@ -29,15 +31,16 @@ function Navbar({ user, onLogout }) {
               Dashboard
             </Link>
 
-            <Link to="/my-food">
-              My Food
-            </Link>
+            
 
             <Link to="/add-food">
               Add Food
             </Link>
+            <Link to="/my-food">
+              My Listings
+            </Link>
 
-            <Link to="/food-needs">
+            <Link to="/restaurant/food-needs">
               Food Needs
             </Link>
 

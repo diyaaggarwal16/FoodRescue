@@ -42,6 +42,13 @@ function RestaurantSidebar({ restaurantName, navigate, location, handleLogout })
           <span className="rest-nav-icon">▤</span>
           My Listings
         </button>
+        <button
+          className={`rest-nav-item${isActive('/food-needs') ? ' active' : ''}`}
+          onClick={() => navigate('/restaurant/food-needs')}
+        >
+          <span className="rest-nav-icon">♡</span>
+          NGO Food Needs
+        </button>
 
         <button
           className={`rest-nav-item${isActive('/restaurant-profile') ? ' active' : ''}`}

@@ -28,6 +28,7 @@ import EditFood from './pages/dashboards/restaurant/EditFood'
 import MyFood from './pages/dashboards/restaurant/MyFood'
 import RestaurantDashboard from './pages/dashboards/restaurant/RestaurantDashboard'
 import RestaurantProfile from './pages/dashboards/restaurant/RestaurantProfile'
+import RestaurantFoodNeeds from './pages/dashboards/restaurant/RestaurantFoodNeeds'
 
 import NGODashboard from './pages/dashboards/ngo/NGODashboard'
 import NGOProfile from './pages/dashboards/ngo/NGOProfile'
@@ -265,6 +266,10 @@ function AppContent() {
         <Route
   path="/food-needs"
   element={<FoodNeeds />}
+/>
+<Route
+  path="/restaurant/food-needs"
+  element={<RestaurantFoodNeeds />}
 />
       </Routes>
 

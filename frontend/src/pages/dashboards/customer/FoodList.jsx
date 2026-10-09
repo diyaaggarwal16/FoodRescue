@@ -478,6 +478,17 @@ function FoodList() {
               Explore Food
             </span>
           </Link>
+          <Link
+            to="/food-needs"
+            className="customer-navigation-item"
+          >
+            <span className="customer-navigation-icon">
+              ♡
+            </span>
+
+            <span>Food Needs</span>
+          </Link>
+          
 
           <Link
             to="/my-reservations"
@@ -528,49 +539,7 @@ function FoodList() {
 
       <div className="customer-main">
 
-        <header className="customer-topbar">
-
-          <div className="customer-search">
-            <span>
-              ⌕
-            </span>
-
-            <input
-              type="text"
-              placeholder="Search for food, restaurants, locations..."
-            />
-          </div>
-
-          <div className="customer-topbar-right">
-
-            <button
-              type="button"
-              className="customer-icon-button"
-            >
-              ♧
-            </button>
-
-            <div className="customer-top-account">
-
-              <div className="customer-top-avatar">
-                {userName
-                  .charAt(0)
-                  .toUpperCase()}
-              </div>
-
-              <span>
-                {userName}
-              </span>
-
-              <small>
-                ⌄
-              </small>
-
-            </div>
-
-          </div>
-
-        </header>
+        
 
         <main className="customer-content">
 

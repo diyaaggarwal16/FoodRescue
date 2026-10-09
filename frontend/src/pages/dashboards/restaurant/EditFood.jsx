@@ -5,6 +5,24 @@ import '../../../styles/restaurant.css'
 
 function RestaurantSidebar({ navigate, location, handleLogout }) {
   const isActive = (path) => location.pathname === path
+  const [restaurant, setRestaurant] = useState(null)
+  useEffect(() => {
+    const loadRestaurant = async () => {
+      try {
+        const response = await apiFetch('/api/restaurants/my-profile')
+
+        if (response.ok) {
+          const data = await response.json()
+          setRestaurant(data)
+        }
+      } catch (error) {
+        console.error('Unable to load restaurant profile:', error)
+      }
+    }
+
+    loadRestaurant()
+  }, [])
+  const restaurantName = restaurant?.restaurantName || 'Restaurant'
 
   return (
     <aside className="rest-sidebar">
@@ -54,9 +72,11 @@ function RestaurantSidebar({ navigate, location, handleLogout }) {
 
       <div className="rest-sidebar-bottom">
         <div className="rest-profile">
-          <div className="rest-avatar">R</div>
+          <div className="rest-avatar">
+            {restaurantName.charAt(0).toUpperCase()}
+          </div>
           <div>
-            <strong>Restaurant</strong>
+            <strong>{restaurantName}</strong>
             <span>Restaurant</span>
           </div>
         </div>

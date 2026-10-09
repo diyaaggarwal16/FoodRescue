@@ -12,6 +12,15 @@ function FoodNeeds() {
   const [purchaseQuantity, setPurchaseQuantity] = useState('1')
   const [purchaseBusy, setPurchaseBusy] = useState(false)
 
+  const user = JSON.parse(
+    localStorage.getItem('user') || '{}'
+  )
+
+  const userName =
+    user.fullName ||
+    user.name ||
+    user.email?.split('@')[0] ||
+    'Customer'
   const loadFoodNeeds = async () => {
     try {
       setLoading(true)
@@ -159,12 +168,34 @@ function FoodNeeds() {
         </nav>
 
         <div className="customer-sidebar-footer">
+
+          <div className="customer-account">
+
+            <div className="customer-account-avatar">
+              {userName
+                .charAt(0)
+                .toUpperCase()}
+            </div>
+
+            <div>
+              <strong>
+                {userName}
+              </strong>
+
+              <span>
+                Customer
+              </span>
+            </div>
+
+          </div>
+
           <Link
             to="/"
             className="customer-back-link"
           >
             ← Back to Website
           </Link>
+
         </div>
       </aside>
 
