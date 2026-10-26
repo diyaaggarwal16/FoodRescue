@@ -1,3 +1,4 @@
+import AdminSidebar from './AdminSidebar'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { apiFetch } from '../../../utils/api'
@@ -83,96 +84,7 @@ function AdminDonations() {
   )
 
   const renderSidebar = () => (
-    <aside className="admin-sidebar">
-
-      <div className="admin-brand">
-
-        <div className="admin-brand-icon">
-          F
-        </div>
-
-        <div>
-          <strong>FoodRescue</strong>
-          <span>Administration</span>
-        </div>
-
-      </div>
-
-      <nav className="admin-nav">
-
-        <button
-          onClick={() =>
-            navigate('/admin')
-          }
-        >
-          Dashboard
-        </button>
-
-        <button
-          onClick={() =>
-            navigate('/admin/users')
-          }
-        >
-          Users
-        </button>
-
-        <button
-          onClick={() =>
-            navigate('/admin/food-listings')
-          }
-        >
-          Food Listings
-        </button>
-
-        <button
-          onClick={() =>
-            navigate('/admin/reservations')
-          }
-        >
-          Reservations
-        </button>
-
-        <button className="active">
-          Donations
-        </button>
-
-        <button
-          onClick={() =>
-            navigate('/admin/food-needs')
-          }
-        >
-          Food Needs
-        </button>
-
-      </nav>
-
-      <div className="admin-sidebar-bottom">
-
-        <div className="admin-profile">
-
-          <div className="admin-avatar">
-            A
-          </div>
-
-          <div>
-            <strong>Administrator</strong>
-            <span>System Admin</span>
-          </div>
-
-        </div>
-
-        <button
-          className="admin-back-btn"
-          onClick={() =>
-            navigate('/')
-          }
-        >
-          Back to Website
-        </button>
-
-      </div>
-
-    </aside>
+    <AdminSidebar />
   )
 
   if (loading) {

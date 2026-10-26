@@ -1,3 +1,4 @@
+import AdminSidebar from './AdminSidebar'
 import { useEffect, useState } from 'react'
 import { apiFetch } from '../../../utils/api'
 
@@ -115,10 +116,15 @@ function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="admin-loading">
-        <div className="admin-loading-box">
-          Loading Admin Dashboard...
-        </div>
+      <div className="admin-layout">
+        <AdminSidebar />
+        <main className="admin-main">
+          <div className="admin-loading">
+            <div className="admin-loading-box">
+              Loading Admin Dashboard...
+            </div>
+          </div>
+        </main>
       </div>
     )
   }
@@ -126,108 +132,7 @@ function AdminDashboard() {
   return (
     <div className="admin-layout">
 
-      <aside className="admin-sidebar">
-
-        <div className="admin-brand">
-          <div className="admin-brand-mark">
-            F
-          </div>
-
-          <div>
-            <strong>FoodRescue</strong>
-            <span>ADMIN PANEL</span>
-          </div>
-        </div>
-
-        <div className="admin-nav-title">
-          MAIN MENU
-        </div>
-
-        <nav className="admin-nav">
-
-          <button className="admin-nav-item active">
-            <span className="nav-icon">⌂</span>
-            Dashboard
-          </button>
-
-          <button
-            className="admin-nav-item"
-            onClick={() =>
-              navigate('/admin/users')
-            }
-          >
-            <span className="nav-icon">U</span>
-            Users
-          </button>
-
-          <button
-            className="admin-nav-item"
-            onClick={() =>
-              navigate('/admin/food-listings')
-            }
-          >
-            <span className="nav-icon">F</span>
-            Food Listings
-          </button>
-
-          <button
-            className="admin-nav-item"
-            onClick={() =>
-              navigate('/admin/reservations')
-            }
-          >
-            <span className="nav-icon">R</span>
-            Reservations
-          </button>
-
-          <button
-            className="admin-nav-item"
-            onClick={() =>
-              navigate('/admin/donations')
-            }
-          >
-            <span className="nav-icon">D</span>
-            Donations
-          </button>
-
-          <button
-            className="admin-nav-item"
-            onClick={() =>
-              navigate('/admin/food-needs')
-            }
-          >
-            <span className="nav-icon">N</span>
-            Food Needs
-          </button>
-
-        </nav>
-
-        <div className="admin-sidebar-bottom">
-
-          <div className="admin-profile">
-            <div className="admin-avatar">
-              A
-            </div>
-
-            <div>
-              <strong>Administrator</strong>
-              <span>System Admin</span>
-            </div>
-          </div>
-
-          <button
-            className="admin-logout"
-            onClick={() =>
-              navigate('/')
-            }
-          >
-            <span>↪</span>
-            Back to Website
-          </button>
-
-        </div>
-
-      </aside>
+      <AdminSidebar />
 
       <main className="admin-main">
 

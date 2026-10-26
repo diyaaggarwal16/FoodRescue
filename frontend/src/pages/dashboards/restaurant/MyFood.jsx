@@ -302,7 +302,7 @@ function MyFood() {
   }
 
   return (
-    <div className="rest-layout">
+    <div className="rest-layout rest-my-food-page">
       <RestaurantSidebar
         navigate={navigate}
         location={location}

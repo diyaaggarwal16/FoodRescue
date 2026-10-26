@@ -316,7 +316,7 @@ function AddFood() {
   }
 
   return (
-    <div className="rest-layout">
+    <div className="rest-layout rest-add-food-page">
       <RestaurantSidebar
         navigate={navigate}
         location={location}
@@ -338,7 +338,7 @@ function AddFood() {
           </button>
         </header>
 
-        <div className="rest-form-page">
+        <div className="rest-form-page rest-add-food-form">
           {message && (
             <div
               className={
@@ -351,8 +351,8 @@ function AddFood() {
             </div>
           )}
 
-          <div className="rest-form-panel">
-            <div className="rest-form-header">
+          <div className="rest-form-panel rest-add-food-panel">
+            <div className="rest-form-header rest-add-food-header">
               <h2>New Food Listing</h2>
               <p>
                 Fill in the details to list surplus food
@@ -361,7 +361,7 @@ function AddFood() {
             </div>
 
             <form
-              className="rest-form"
+              className="rest-form rest-add-food-fields"
               onSubmit={handleSubmit}
             >
               <div className="rest-field">
@@ -480,31 +480,16 @@ function AddFood() {
                   </span>
                 </label>
 
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns:
-                      'repeat(3, 1fr)',
-                    gap: '14px',
-                    marginTop: '10px'
-                  }}
-                >
+                <div className="rest-add-food-image-grid">
                   {images.map((image, index) => (
                     <div
                       key={index}
-                      style={{
-                        position: 'relative',
-                        minHeight: '150px',
-                        border:
-                          '1px dashed rgba(192, 132, 252, 0.35)',
-                        borderRadius: '14px',
-                        overflow: 'hidden',
-                        background: '#120d1c'
-                      }}
+                      className={`rest-add-food-image-slot${image.preview ? ' has-image' : ''}`}
                     >
                       {image.preview ? (
                         <>
                           <img
+                            className="rest-add-food-image-preview"
                             src={image.preview}
                             alt={`Food preview ${
                               index + 1
@@ -519,64 +504,23 @@ function AddFood() {
 
                           <button
                             type="button"
+                            className="rest-add-food-image-remove"
+                            aria-label={`Remove image ${index + 1}`}
                             onClick={() =>
                               removeImage(index)
                             }
                             disabled={loading}
-                            style={{
-                              position: 'absolute',
-                              top: '8px',
-                              right: '8px',
-                              width: '30px',
-                              height: '30px',
-                              border: 'none',
-                              borderRadius: '50%',
-                              background:
-                                'rgba(10, 5, 18, 0.82)',
-                              color: '#ffffff',
-                              cursor: 'pointer',
-                              fontSize: '18px',
-                              lineHeight: '1'
-                            }}
                           >
                             ×
                           </button>
                         </>
                       ) : (
                         <label
-                          style={{
-                            width: '100%',
-                            height: '150px',
-                            display: 'flex',
-                            flexDirection:
-                              'column',
-                            alignItems: 'center',
-                            justifyContent:
-                              'center',
-                            cursor: 'pointer',
-                            color: '#c084fc',
-                            gap: '8px'
-                          }}
+                          className="rest-add-food-image-picker"
                         >
-                          <span
-                            style={{
-                              fontSize: '28px'
-                            }}
-                          >
-                            +
-                          </span>
-
-                          <span>
-                            Image {index + 1}
-                          </span>
-
-                          <small
-                            style={{
-                              opacity: 0.55
-                            }}
-                          >
-                            Click to select
-                          </small>
+                          <span className="rest-add-food-image-icon" aria-hidden="true">＋</span>
+                          <span>Add image</span>
+                          <small>JPG, PNG or WEBP · max 5 MB</small>
 
                           <input
                             type="file"
@@ -588,9 +532,6 @@ function AddFood() {
                               )
                             }
                             disabled={loading}
-                            style={{
-                              display: 'none'
-                            }}
                           />
                         </label>
                       )}

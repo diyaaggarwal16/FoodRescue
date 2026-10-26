@@ -1,3 +1,4 @@
+import AdminSidebar from './AdminSidebar'
 import { useEffect, useState } from 'react'
 import { apiFetch } from '../../../utils/api'
 
@@ -45,58 +46,7 @@ function AdminFoodListings() {
   if (loading) {
     return (
       <div className="admin-layout">
-        <aside className="admin-sidebar">
-          <div className="admin-brand">
-            <div className="admin-brand-icon">F</div>
-            <div>
-              <strong>FoodRescue</strong>
-              <span>Administration</span>
-            </div>
-          </div>
-
-          <nav className="admin-nav">
-            <button onClick={() => window.location.href = '/admin'}>
-              Dashboard
-            </button>
-
-            <button onClick={() => window.location.href = '/admin/users'}>
-              Users
-            </button>
-
-            <button className="active">
-              Food Listings
-            </button>
-
-            <button onClick={() => window.location.href = '/admin/reservations'}>
-              Reservations
-            </button>
-
-            <button onClick={() => window.location.href = '/admin/donations'}>
-              Donations
-            </button>
-
-            <button onClick={() => window.location.href = '/admin/food-needs'}>
-              Food Needs
-            </button>
-          </nav>
-
-          <div className="admin-sidebar-bottom">
-            <div className="admin-profile">
-              <div className="admin-avatar">A</div>
-              <div>
-                <strong>Administrator</strong>
-                <span>System Admin</span>
-              </div>
-            </div>
-
-            <button
-              className="admin-back-btn"
-              onClick={() => window.location.href = '/'}
-            >
-              Back to Website
-            </button>
-          </div>
-        </aside>
+        <AdminSidebar />
 
         <main className="admin-main">
           <div className="admin-topbar">
@@ -135,92 +85,7 @@ function AdminFoodListings() {
   return (
     <div className="admin-layout">
 
-      <aside className="admin-sidebar">
-
-        <div className="admin-brand">
-          <div className="admin-brand-icon">F</div>
-
-          <div>
-            <strong>FoodRescue</strong>
-            <span>Administration</span>
-          </div>
-        </div>
-
-        <nav className="admin-nav">
-
-          <button
-            onClick={() =>
-              window.location.href = '/admin'
-            }
-          >
-            <span>Dashboard</span>
-          </button>
-
-          <button
-            onClick={() =>
-              window.location.href = '/admin/users'
-            }
-          >
-            <span>Users</span>
-          </button>
-
-          <button className="active">
-            <span>Food Listings</span>
-          </button>
-
-          <button
-            onClick={() =>
-              window.location.href = '/admin/reservations'
-            }
-          >
-            <span>Reservations</span>
-          </button>
-
-          <button
-            onClick={() =>
-              window.location.href = '/admin/donations'
-            }
-          >
-            <span>Donations</span>
-          </button>
-
-          <button
-            onClick={() =>
-              window.location.href = '/admin/food-needs'
-            }
-          >
-            <span>Food Needs</span>
-          </button>
-
-        </nav>
-
-        <div className="admin-sidebar-bottom">
-
-          <div className="admin-profile">
-
-            <div className="admin-avatar">
-              A
-            </div>
-
-            <div>
-              <strong>Administrator</strong>
-              <span>System Admin</span>
-            </div>
-
-          </div>
-
-          <button
-            className="admin-back-btn"
-            onClick={() =>
-              window.location.href = '/'
-            }
-          >
-            Back to Website
-          </button>
-
-        </div>
-
-      </aside>
+      <AdminSidebar />
 
       <main className="admin-main">
 
