@@ -1215,3 +1215,158 @@
     font-size: 11px;
   }
 }
+/* FreshLoop registration choice: polished teal, navy and white theme */
+.auth-page {
+  min-height: calc(100vh - 72px);
+  padding: clamp(28px, 5vh, 56px) 20px;
+  background: linear-gradient(145deg, #eef6f8 0%, #f8fbfc 52%, #eaf5f5 100%);
+  color: #253746;
+}
+.registration-choice-card {
+  width: min(760px, calc(100% - 32px));
+  max-width: 760px;
+  padding: clamp(28px, 4vw, 48px);
+  border-radius: 22px;
+  background: rgba(255,255,255,.96);
+  border: 1px solid #e0eaee;
+  box-shadow: 0 22px 60px rgba(23,59,87,.11);
+}
+.registration-choice-card .auth-header { margin-bottom: 30px; }
+.registration-choice-card .auth-header h1 {
+  margin: 0 0 8px;
+  color: #173b57;
+  font-size: clamp(30px, 4vw, 38px);
+  letter-spacing: -.8px;
+}
+.registration-choice-card .auth-header p {
+  color: #687986;
+  font-size: 16px;
+}
+.registration-options { gap: 14px; margin-top: 28px; }
+.registration-choice-card .registration-option {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  min-height: 112px;
+  padding: 20px 23px;
+  border: 1px solid #e1eaee;
+  border-radius: 15px;
+  background: #fff;
+  color: #253746;
+  box-shadow: 0 4px 14px rgba(23,59,87,.035);
+  text-align: left;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.registration-choice-card .registration-option::before,
+.registration-choice-card .registration-option::after { display: none; }
+.registration-choice-card .registration-option:hover {
+  transform: translateY(-2px);
+  border-color: #9ed2d5;
+  background: #fbfefe;
+  box-shadow: 0 12px 26px rgba(23,59,87,.09);
+}
+.registration-choice-card .registration-option:focus-visible {
+  outline: 3px solid rgba(10,144,155,.22);
+  outline-offset: 3px;
+  border-color: #0a909b;
+  box-shadow: none;
+}
+.registration-choice-card .registration-icon {
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  background: #e7f5f5;
+  color: #087f8c;
+  font-size: 27px;
+  box-shadow: none;
+}
+.registration-choice-card .restaurant-icon { background: #eef4f7; }
+.registration-choice-card .ngo-icon { background: #e8f4ef; }
+.registration-choice-card .registration-content { gap: 6px; }
+.registration-choice-card .registration-title {
+  color: #173b57;
+  font-size: 21px;
+  font-weight: 700;
+}
+.registration-choice-card .registration-description {
+  color: #687986;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.registration-choice-card .registration-arrow {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #d6e9ea;
+  background: #f0f8f8;
+  color: #087f8c;
+  font-size: 24px;
+}
+.registration-choice-card .registration-option:hover .registration-arrow {
+  transform: translateX(3px);
+  background: #087f8c;
+  border-color: #087f8c;
+  color: white;
+  box-shadow: none;
+}
+.registration-choice-card .registration-option:hover .registration-icon {
+  background: #dff1f1;
+  box-shadow: none;
+}
+.registration-choice-card .registration-option:nth-child(2):hover .registration-icon { background: #e7f0f4; }
+.registration-choice-card .registration-option:nth-child(3):hover .registration-icon { background: #e0f0e9; }
+.registration-choice-card .auth-switch {
+  margin-top: 25px;
+  color: #687986;
+  font-size: 15px;
+}
+.registration-choice-card .auth-switch a { color: #087f8c; }
+.registration-choice-card .auth-switch a:hover { color: #066e79; }
+@media (max-width: 600px) {
+  .auth-page { padding: 24px 12px; align-items: flex-start; }
+  .registration-choice-card { width: 100%; padding: 25px 18px; border-radius: 18px; }
+  .registration-options { gap: 11px; margin-top: 23px; }
+  .registration-choice-card .registration-option { min-height: 98px; gap: 13px; padding: 16px 14px; }
+  .registration-choice-card .registration-icon { flex-basis: 46px; width: 46px; height: 46px; border-radius: 13px; font-size: 22px; }
+  .registration-choice-card .registration-title { font-size: 18px; }
+  .registration-choice-card .registration-description { font-size: 13px; }
+  .registration-choice-card .registration-arrow { flex-basis: 36px; width: 36px; height: 36px; font-size: 21px; }
+}
+
+/* Keep auth action buttons on the approved teal theme, including password reset */
+.auth-page .auth-card .auth-btn,
+.auth-page .registration-choice-card .auth-btn {
+  background: #087f8c !important;
+  border: 1px solid #087f8c !important;
+  color: #fff !important;
+  box-shadow: 0 8px 18px rgba(8,127,140,.18) !important;
+}
+.auth-page .auth-card .auth-btn:hover:not(:disabled) {
+  background: #066e79 !important;
+  border-color: #066e79 !important;
+  box-shadow: 0 10px 22px rgba(8,127,140,.22) !important;
+}
+.auth-page .auth-card .auth-btn:disabled {
+  background: #8abfc3 !important;
+  border-color: #8abfc3 !important;
+  cursor: not-allowed;
+}
+.auth-page .auth-card .auth-header h1 { color: #173b57 !important; }
+.auth-page .auth-card .input-group label { color: #536775 !important; }
+.auth-page .auth-card .auth-switch a { color: #087f8c !important; }
+.auth-page .auth-card .progress-step.active,
+.auth-page .auth-card .progress-line.active {
+  background: #087f8c !important;
+  border-color: #087f8c !important;
+}
+.auth-page .auth-card .input-group input::placeholder,
+.auth-page .auth-card .input-group textarea::placeholder { color: #8797a2 !important; opacity: 1; }
+.auth-page .auth-card .input-group input:-webkit-autofill,
+.auth-page .auth-card .input-group input:-webkit-autofill:hover,
+.auth-page .auth-card .input-group input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #253746 !important;
+  box-shadow: 0 0 0 1000px #fff inset !important;
+  transition: background-color 9999s ease-out 0s;
+}

@@ -3062,3 +3062,218 @@
 .ngo-purchase-actions button { padding: 8px 12px; border: 1px solid rgba(139, 92, 246, .35); border-radius: 8px; background: rgba(124, 58, 237, .2); color: #e9ddff; cursor: pointer; }
 .ngo-purchase-actions button:last-child { border-color: rgba(248, 113, 113, .3); background: rgba(127, 29, 29, .22); color: #fecaca; }
 .ngo-purchase-actions button:disabled { opacity: .5; cursor: not-allowed; }
+
+/* FreshLoop NGO dashboard theme */
+.ngo-dashboard-page {
+  min-height: calc(100vh - 72px);
+  background: #f5f8fa !important;
+  color: #253746 !important;
+}
+.ngo-dashboard-container { width: min(1240px, calc(100% - 56px)) !important; }
+.ngo-dashboard-hero {
+  border: 1px solid #d9e8ea !important;
+  border-radius: 18px !important;
+  background: linear-gradient(115deg, #e7f5f5, #f4f9fb) !important;
+  box-shadow: 0 10px 28px rgba(23, 59, 87, .06) !important;
+}
+.ngo-dashboard-hero-glow.blue,
+.ngo-dashboard-hero-glow.pink { background: rgba(8, 127, 140, .07) !important; }
+.ngo-dashboard-avatar {
+  background: linear-gradient(145deg, #087f8c, #49aab0) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 24px rgba(8, 127, 140, .18) !important;
+}
+.ngo-dashboard-eyebrow {
+  border-color: #c5e4e5 !important;
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+}
+.ngo-dashboard-hero-content h1 { color: #173b57 !important; }
+.ngo-dashboard-hero-content p { color: #536775 !important; }
+.ngo-dashboard-meta span {
+  border-color: #d5e0e5 !important;
+  background: #fff !important;
+  color: #536775 !important;
+}
+.ngo-dashboard-meta span.verified {
+  border-color: #bfe6d3 !important;
+  background: #eaf7f0 !important;
+  color: #18794e !important;
+}
+.ngo-dashboard-meta span.pending {
+  border-color: #f0dfbd !important;
+  background: #fff8e8 !important;
+  color: #9a6810 !important;
+}
+.ngo-dashboard-mission { color: #173b57 !important; }
+.ngo-dashboard-mission i { background: #78bfc2 !important; }
+.ngo-dashboard-mission b { color: #087f8c !important; }
+.ngo-dashboard-message {
+  border-color: #c5e4e5 !important;
+  background: #e7f5f5 !important;
+  color: #245366 !important;
+}
+
+.ngo-dashboard-stat {
+  border: 1px solid #e3eaee !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  box-shadow: 0 8px 24px rgba(23, 59, 87, .06) !important;
+}
+.ngo-dashboard-stat.blue,
+.ngo-dashboard-stat.purple,
+.ngo-dashboard-stat.pink,
+.ngo-dashboard-stat.violet { background: #fff !important; }
+.ngo-dashboard-stat-icon {
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+}
+.ngo-dashboard-stat span { color: #687986 !important; }
+.ngo-dashboard-stat strong { color: #173b57 !important; }
+.ngo-dashboard-stat small { color: #687986 !important; }
+
+.ngo-dashboard-panel,
+.ngo-dashboard-form-panel,
+.ngo-dashboard-actions {
+  border: 1px solid #e3eaee !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  box-shadow: 0 8px 24px rgba(23, 59, 87, .06) !important;
+}
+.ngo-dashboard-panel-header h2,
+.ngo-dashboard-actions h2 { color: #173b57 !important; }
+.ngo-dashboard-panel-header p,
+.ngo-dashboard-actions p { color: #687986 !important; }
+.ngo-dashboard-panel-header > span {
+  border-color: #c5e4e5 !important;
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+}
+.ngo-dashboard-list-row { border-top-color: #e8eef1 !important; }
+.ngo-dashboard-row-icon,
+.ngo-dashboard-row-icon.pink,
+.ngo-dashboard-action-icon {
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+}
+.ngo-dashboard-row-main strong,
+.ngo-dashboard-row-value strong { color: #253746 !important; }
+.ngo-dashboard-row-main span,
+.ngo-dashboard-row-value span { color: #687986 !important; }
+.ngo-dashboard-status {
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+}
+.ngo-dashboard-no-data { color: #687986 !important; }
+.ngo-dashboard-actions > button {
+  border-color: #d5e0e5 !important;
+  background: #f8fbfc !important;
+  color: #344c5b !important;
+}
+.ngo-dashboard-actions > button:hover { border-color: #8bc8cb !important; background: #f1f9f9 !important; }
+.ngo-dashboard-actions > button span,
+.ngo-dashboard-actions > button b { color: #087f8c !important; }
+
+.ngo-dashboard-warning {
+  border-color: #f0dfbd !important;
+  background: #fff8e8 !important;
+  color: #805c1d !important;
+}
+.ngo-dashboard-form label { color: #344c5b !important; }
+.ngo-dashboard-form input,
+.ngo-dashboard-form select {
+  border-color: #d5e0e5 !important;
+  background: #fff !important;
+  color: #253746 !important;
+}
+.ngo-dashboard-form input:focus,
+.ngo-dashboard-form select:focus {
+  border-color: #0a909b !important;
+  box-shadow: 0 0 0 3px rgba(10, 144, 155, .12) !important;
+}
+.ngo-dashboard-checkbox input { accent-color: #087f8c !important; }
+.ngo-dashboard-gradient-btn {
+  border-radius: 8px !important;
+  background: #087f8c !important;
+  color: #fff !important;
+  box-shadow: 0 6px 14px rgba(8, 127, 140, .16) !important;
+}
+.ngo-dashboard-gradient-btn:hover:not(:disabled) { background: #066e79 !important; }
+
+.ngo-dashboard-meal-card {
+  border: 1px solid #e3eaee !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  box-shadow: 0 6px 18px rgba(23, 59, 87, .05) !important;
+}
+.ngo-dashboard-meal-top span,
+.ngo-meal-restaurant { color: #687986 !important; }
+.ngo-dashboard-meal-top h3 { color: #173b57 !important; }
+.ngo-dashboard-meal-top b {
+  border-radius: 7px !important;
+  background: #edf5f9 !important;
+  color: #346b8a !important;
+}
+.ngo-dashboard-meal-info > div { background: #f5f8fa !important; }
+.ngo-dashboard-meal-info span { color: #687986 !important; }
+.ngo-dashboard-meal-info strong { color: #253746 !important; }
+.ngo-dashboard-allergen {
+  background: #fff8e8 !important;
+  color: #805c1d !important;
+}
+.ngo-dashboard-fulfill { border-top-color: #e3eaee !important; }
+.ngo-dashboard-fulfill label { color: #536775 !important; }
+.ngo-dashboard-fulfill select {
+  border-color: #d5e0e5 !important;
+  background: #fff !important;
+  color: #253746 !important;
+}
+.ngo-purchase-list { gap: 12px !important; }
+.ngo-purchase-row {
+  padding: 15px !important;
+  border: 1px solid #e3eaee !important;
+  border-radius: 11px !important;
+  background: #fff !important;
+}
+.ngo-purchase-main strong { color: #173b57 !important; }
+.ngo-purchase-main span,
+.ngo-purchase-main small { color: #687986 !important; font-size: 12px !important; }
+.purchase-status {
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+}
+.purchase-status.approved { background: #eaf7f0 !important; color: #18794e !important; }
+.purchase-status.rejected { background: #fff2f2 !important; color: #a33e48 !important; }
+.ngo-purchase-actions button {
+  border-color: #087f8c !important;
+  background: #087f8c !important;
+  color: #fff !important;
+}
+.ngo-purchase-actions button:last-child {
+  border-color: #e5b9bd !important;
+  background: #fff2f2 !important;
+  color: #a33e48 !important;
+}
+
+@media (max-width: 900px) {
+  .ngo-dashboard-container { width: min(100% - 36px, 720px) !important; }
+  .ngo-dashboard-stats { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .ngo-dashboard-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 650px) {
+  .ngo-dashboard-page { padding: 20px 0 42px !important; }
+  .ngo-dashboard-container { width: calc(100% - 28px) !important; }
+  .ngo-dashboard-hero { padding: 24px 20px !important; }
+  .ngo-dashboard-hero-left { align-items: flex-start !important; gap: 14px !important; }
+  .ngo-dashboard-avatar { width: 58px !important; height: 58px !important; flex-basis: 58px !important; font-size: 25px !important; }
+  .ngo-dashboard-hero-content h1 { font-size: 26px !important; }
+  .ngo-dashboard-mission { display: none !important; }
+  .ngo-dashboard-stats { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+  .ngo-dashboard-stat { min-height: 105px !important; padding: 14px !important; }
+  .ngo-dashboard-stat-icon { width: 40px !important; height: 40px !important; flex-basis: 40px !important; }
+  .ngo-dashboard-panel-header { padding: 17px 16px 13px !important; }
+  .ngo-dashboard-list { padding: 0 12px !important; }
+  .ngo-dashboard-form { grid-template-columns: 1fr !important; padding: 0 16px !important; }
+  .ngo-dashboard-meal-grid { grid-template-columns: 1fr !important; padding: 0 16px !important; }
+  .ngo-dashboard-actions { grid-template-columns: 1fr !important; }
+}

@@ -171,6 +171,23 @@ function Login({ onLogin }) {
       <div className="login-horizon"></div>
 
       <section className="login-layout">
+        <aside className="login-story">
+  <span className="login-story-eyebrow">FOOD RESCUE · LESS WASTE</span>
+
+  <h1>
+    Welcome <span>Back</span>
+  </h1>
+
+  <p>
+    Sign in to discover affordable surplus food
+    and help good meals find a new home.
+  </p>
+
+  <div className="login-story-note">
+    <span aria-hidden="true">✓</span>
+    Every rescued meal makes a difference.
+  </div>
+</aside>
         <div className="login-card">
           <div className="login-card-content">
             <div className="login-card-brand">
@@ -182,7 +199,7 @@ function Login({ onLogin }) {
             </div>
 
             <div className="login-heading">
-              <h3>Welcome Back</h3>
+              <h3>Sign in to Food Rescue</h3>
 
               <p>
                 Login to continue your FoodRescue journey.

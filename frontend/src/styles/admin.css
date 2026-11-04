@@ -3155,6 +3155,405 @@ body {
     border-left: 0;
   }
 }
+
+/* FreshLoop food listing cards */
+.admin-layout .food-listing-card {
+  border: 1px solid #e3eaee !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  color: #253746 !important;
+  box-shadow: 0 8px 24px rgba(23, 59, 87, 0.06) !important;
+}
+.admin-layout .food-listing-card:hover {
+  border-color: #b8dfe1 !important;
+}
+.admin-layout .food-listing-header {
+  border-bottom-color: #e3eaee !important;
+}
+.admin-layout .food-listing-header h3 { color: #173b57 !important; }
+.admin-layout .food-listing-header p { color: #687986 !important; }
+.admin-layout .food-listing-details {
+  gap: 10px !important;
+}
+.admin-layout .food-listing-details > div {
+  padding: 8px 10px !important;
+  border: 1px solid #e3eaee !important;
+  border-radius: 9px !important;
+  background: #f8fbfc !important;
+}
+.admin-layout .food-listing-details > div:first-child { padding-left: 10px !important; }
+.admin-layout .food-listing-details > div:last-child { padding-right: 10px !important; }
+.admin-layout .food-listing-details span,
+.admin-layout .food-listing-footer span { color: #687986 !important; }
+.admin-layout .food-listing-details strong,
+.admin-layout .food-listing-footer strong { color: #253746 !important; }
+.admin-layout .food-listing-footer {
+  border-top-color: #e3eaee !important;
+}
+.admin-layout .food-listing-footer > div {
+  border-left-color: #dce6eb !important;
+}
+.admin-layout .food-status.available {
+  border-color: #bfe6d3 !important;
+  background: #eaf7f0 !important;
+  color: #18794e !important;
+}
+.admin-layout .food-status.sold_out {
+  border-color: #c5dce9 !important;
+  background: #edf5f9 !important;
+  color: #346b8a !important;
+}
+.admin-layout .food-status.expired {
+  border-color: #f0d2d2 !important;
+  background: #fff2f2 !important;
+  color: #a33e48 !important;
+}
+
+/* Remaining purple accents on the admin dashboard */
+.admin-layout .stat-symbol,
+.admin-layout .admin-stat-icon,
+.admin-layout .verification-avatar,
+.admin-layout .admin-empty div {
+  border-color: #c5e4e5 !important;
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+  box-shadow: none !important;
+}
+.admin-layout .panel-count,
+.admin-layout .admin-count,
+.admin-layout .admin-panel-badge {
+  border-color: #c5e4e5 !important;
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+}
+.admin-layout .admin-status {
+  border-color: #c5e4e5 !important;
+  background: #e7f5f5 !important;
+  color: #173b57 !important;
+}
+.admin-layout .admin-status span {
+  background: #087f8c !important;
+  box-shadow: 0 0 8px rgba(8, 127, 140, 0.35) !important;
+}
+.admin-layout .welcome-decoration {
+  border-color: rgba(8, 127, 140, 0.14) !important;
+  background: rgba(8, 127, 140, 0.06) !important;
+  color: rgba(8, 127, 140, 0.2) !important;
+}
+
+/* FreshLoop reservation monitoring page */
+.admin-layout .admin-system-status {
+  border: 1px solid #c5e4e5 !important;
+  background: #e7f5f5 !important;
+  color: #173b57 !important;
+}
+.admin-layout .admin-system-status span {
+  background: #087f8c !important;
+  box-shadow: 0 0 8px rgba(8, 127, 140, 0.35) !important;
+}
+.admin-layout .reservation-hero {
+  border: 1px solid #d9e8ea !important;
+  border-radius: 16px !important;
+  background: linear-gradient(115deg, #e7f5f5, #f4f9fb) !important;
+  box-shadow: none !important;
+}
+.admin-layout .reservation-hero-icon {
+  border-color: #c5e4e5 !important;
+  background: #087f8c !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+.admin-layout .reservation-eyebrow { color: #087f8c !important; }
+.admin-layout .reservation-hero h2 { color: #173b57 !important; }
+.admin-layout .reservation-hero p { color: #536775 !important; }
+.admin-layout .reservation-hero-decoration { color: rgba(8, 127, 140, 0.12) !important; }
+
+.admin-layout .reservation-stat-card,
+.admin-layout .reservation-panel,
+.admin-layout .reservation-card {
+  border: 1px solid #e3eaee !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  color: #253746 !important;
+  box-shadow: 0 8px 24px rgba(23, 59, 87, 0.06) !important;
+}
+.admin-layout .reservation-stat-card:hover,
+.admin-layout .reservation-card:hover {
+  border-color: #b8dfe1 !important;
+  box-shadow: 0 10px 26px rgba(23, 59, 87, 0.08) !important;
+}
+.admin-layout .reservation-stat-card span,
+.admin-layout .reservation-stat-card small,
+.admin-layout .reservation-panel-header p,
+.admin-layout .reservation-info span,
+.admin-layout .reservation-status-column > span:first-child,
+.admin-layout .reservation-date span { color: #687986 !important; }
+.admin-layout .reservation-stat-card strong,
+.admin-layout .reservation-panel-header h2,
+.admin-layout .reservation-title-row h3,
+.admin-layout .reservation-customer-info strong,
+.admin-layout .reservation-info strong { color: #173b57 !important; }
+.admin-layout .reservation-stat-icon.purple {
+  border: 1px solid #c5e4e5 !important;
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+  box-shadow: none !important;
+}
+.admin-layout .reservation-stat-icon.green {
+  border-color: #bfe6d3 !important;
+  background: #eaf7f0 !important;
+  color: #18794e !important;
+}
+.admin-layout .reservation-stat-icon.blue {
+  border-color: #c5dce9 !important;
+  background: #edf5f9 !important;
+  color: #346b8a !important;
+}
+.admin-layout .reservation-stat-icon.red {
+  border-color: #f0d2d2 !important;
+  background: #fff2f2 !important;
+  color: #a33e48 !important;
+}
+.admin-layout .reservation-panel-header { border-bottom-color: #e3eaee !important; }
+.admin-layout .reservation-count {
+  border-color: #c5e4e5 !important;
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+}
+.admin-layout .reservation-food-icon {
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+}
+.admin-layout .reservation-customer-info p,
+.admin-layout .reservation-detail { color: #687986 !important; }
+.admin-layout .reservation-info,
+.admin-layout .reservation-status-column { border-color: #e3eaee !important; }
+.admin-layout .reservation-date strong { color: #536775 !important; }
+.admin-layout .reservation-empty {
+  border-color: #d5e0e5 !important;
+  color: #253746 !important;
+}
+.admin-layout .reservation-empty > div {
+  border: 1px solid #c5e4e5 !important;
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+}
+.admin-layout .reservation-empty h3 { color: #173b57 !important; }
+.admin-layout .reservation-empty p { color: #687986 !important; }
+
+/* FreshLoop donations page */
+.admin-layout .donation-hero,
+.admin-layout .need-hero {
+  border: 1px solid #d9e8ea !important;
+  border-radius: 16px !important;
+  background: linear-gradient(115deg, #e7f5f5, #f4f9fb) !important;
+  box-shadow: none !important;
+}
+.admin-layout .donation-hero-icon,
+.admin-layout .need-hero-icon {
+  border: 1px solid #c5e4e5 !important;
+  background: #087f8c !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+.admin-layout .donation-eyebrow,
+.admin-layout .need-eyebrow { color: #087f8c !important; }
+.admin-layout .donation-hero h2,
+.admin-layout .need-hero h2 { color: #173b57 !important; }
+.admin-layout .donation-hero p,
+.admin-layout .need-hero p { color: #536775 !important; }
+.admin-layout .donation-hero-decoration,
+.admin-layout .need-hero-decoration { color: rgba(8, 127, 140, 0.12) !important; }
+
+.admin-layout .donation-stat-card,
+.admin-layout .donation-panel,
+.admin-layout .donation-card,
+.admin-layout .need-stat-card,
+.admin-layout .need-panel,
+.admin-layout .need-card {
+  border: 1px solid #e3eaee !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  color: #253746 !important;
+  box-shadow: 0 8px 24px rgba(23, 59, 87, 0.06) !important;
+}
+.admin-layout .donation-stat-card:hover,
+.admin-layout .donation-card:hover,
+.admin-layout .need-stat-card:hover,
+.admin-layout .need-card:hover {
+  border-color: #b8dfe1 !important;
+  box-shadow: 0 10px 26px rgba(23, 59, 87, 0.08) !important;
+}
+.admin-layout .donation-stat-card span,
+.admin-layout .donation-stat-card small,
+.admin-layout .need-stat-card span,
+.admin-layout .need-stat-card small,
+.admin-layout .donation-panel-header p,
+.admin-layout .need-panel-header p,
+.admin-layout .donation-info > span:first-child,
+.admin-layout .need-info > span { color: #687986 !important; }
+.admin-layout .donation-stat-card strong,
+.admin-layout .need-stat-card strong,
+.admin-layout .donation-panel-header h2,
+.admin-layout .need-panel-header h2,
+.admin-layout .donation-title-row h3,
+.admin-layout .need-title-row h3,
+.admin-layout .donation-info > strong,
+.admin-layout .need-info > strong { color: #173b57 !important; }
+
+.admin-layout .donation-stat-icon.purple,
+.admin-layout .need-stat-icon.purple {
+  border: 1px solid #c5e4e5 !important;
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+  box-shadow: none !important;
+}
+.admin-layout .donation-stat-icon.blue,
+.admin-layout .need-stat-icon.blue {
+  border-color: #c5dce9 !important;
+  background: #edf5f9 !important;
+  color: #346b8a !important;
+}
+.admin-layout .donation-stat-icon.green,
+.admin-layout .need-stat-icon.green {
+  border-color: #bfe6d3 !important;
+  background: #eaf7f0 !important;
+  color: #18794e !important;
+}
+.admin-layout .donation-stat-icon.orange,
+.admin-layout .need-stat-icon.orange {
+  border-color: #f0dfbd !important;
+  background: #fff8e8 !important;
+  color: #9a6810 !important;
+}
+.admin-layout .donation-panel-header,
+.admin-layout .need-panel-header { border-bottom-color: #e3eaee !important; }
+.admin-layout .donation-count,
+.admin-layout .need-count {
+  border-color: #c5e4e5 !important;
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+}
+.admin-layout .donation-food-icon,
+.admin-layout .need-food-icon,
+.admin-layout .donation-empty-icon,
+.admin-layout .need-empty-icon {
+  border-color: #c5e4e5 !important;
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+  box-shadow: none !important;
+}
+.admin-layout .donation-card-main p,
+.admin-layout .donation-muted,
+.admin-layout .need-card-main p,
+.admin-layout .need-description { color: #687986 !important; }
+.admin-layout .donation-card-main strong { color: #173b57 !important; }
+.admin-layout .donation-info,
+.admin-layout .need-info { border-color: #e3eaee !important; }
+.admin-layout .donation-date,
+.admin-layout .need-date { color: #536775 !important; }
+.admin-layout .donation-empty,
+.admin-layout .need-empty {
+  border-color: #d5e0e5 !important;
+  color: #253746 !important;
+}
+.admin-layout .donation-empty h3,
+.admin-layout .need-empty h3 { color: #173b57 !important; }
+.admin-layout .donation-empty p,
+.admin-layout .need-empty p { color: #687986 !important; }
+
+.admin-layout .donation-badge.available,
+.admin-layout .donation-badge.claimed,
+.admin-layout .need-badge.open {
+  border-color: #bfe6d3 !important;
+  background: #eaf7f0 !important;
+  color: #18794e !important;
+}
+.admin-layout .donation-badge.collected,
+.admin-layout .need-badge.fulfilled {
+  border-color: #c5dce9 !important;
+  background: #edf5f9 !important;
+  color: #346b8a !important;
+}
+.admin-layout .need-badge.partially_fulfilled {
+  border-color: #f0dfbd !important;
+  background: #fff8e8 !important;
+  color: #9a6810 !important;
+}
+.admin-layout .donation-badge.cancelled,
+.admin-layout .need-badge.cancelled {
+  border-color: #f0d2d2 !important;
+  background: #fff2f2 !important;
+  color: #a33e48 !important;
+}
+
+/* Improve readability on the All Users page */
+.admin-layout .panel-header h2 {
+  color: #173b57 !important;
+  font-size: 22px !important;
+  line-height: 1.3 !important;
+}
+.admin-layout .panel-header p {
+  color: #60727e !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+.admin-layout .panel-count {
+  min-width: 34px !important;
+  height: 34px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+}
+.admin-layout .verification-list { gap: 12px !important; }
+.admin-layout .verification-item {
+  min-height: 78px;
+  gap: 14px !important;
+  padding: 14px 16px !important;
+  border: 1px solid #e3eaee !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+}
+.admin-layout .verification-item:hover { border-color: #b8dfe1 !important; }
+.admin-layout .verification-avatar {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 11px !important;
+  font-size: 14px !important;
+}
+.admin-layout .verification-info { gap: 2px; }
+.admin-layout .verification-info strong {
+  color: #173b57 !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  line-height: 1.4 !important;
+}
+.admin-layout .verification-info span {
+  color: #536775 !important;
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+.admin-layout .verification-info small {
+  color: #7a8b96 !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+}
+.admin-layout .user-role-badge {
+  padding: 7px 11px !important;
+  border: 1px solid #c5e4e5 !important;
+  border-radius: 8px !important;
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.35px !important;
+}
+
+@media (max-width: 560px) {
+  .admin-layout .verification-item { padding: 12px !important; }
+  .admin-layout .verification-info strong { font-size: 15px !important; }
+  .admin-layout .verification-info span { font-size: 12px !important; }
+  .admin-layout .user-role-badge { font-size: 11px !important; padding: 6px 8px !important; }
+}
 .need-hero {
   position: relative;
   overflow: hidden;
@@ -3750,5 +4149,198 @@ body {
     width: 100%;
     min-height: calc(100vh - 72px);
     margin-left: 0;
+  }
+}
+
+/* FreshLoop corporate admin theme */
+.admin-layout {
+  min-height: calc(100vh - 72px);
+  background: #f5f8fa !important;
+  color: #253746 !important;
+}
+
+.admin-sidebar {
+  position: fixed !important;
+  top: 72px !important;
+  bottom: 0 !important;
+  width: 246px !important;
+  min-height: calc(100vh - 72px) !important;
+  padding: 26px 16px 18px !important;
+  background: #173b57 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 4px 0 18px rgba(23, 59, 87, 0.08);
+}
+
+.admin-brand { padding: 4px 9px 25px !important; }
+.admin-brand-mark {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 12px !important;
+  background: #087f8c !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+.admin-brand strong { color: #fff !important; }
+.admin-brand span,
+.admin-nav-title { color: #b8ceda !important; }
+
+.admin-nav-item {
+  min-height: 43px !important;
+  margin: 3px 0 !important;
+  padding: 0 12px !important;
+  border: 1px solid transparent !important;
+  border-radius: 9px !important;
+  background: transparent !important;
+  color: #d7e3e9 !important;
+  box-shadow: none !important;
+}
+.admin-nav-item:hover {
+  border-color: transparent !important;
+  background: rgba(255, 255, 255, 0.09) !important;
+  color: #fff !important;
+}
+.admin-nav-item.active {
+  border-color: transparent !important;
+  background: #087f8c !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+.admin-nav-item .nav-icon {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.09) !important;
+  color: #d7e3e9 !important;
+}
+.admin-nav-item.active .nav-icon {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #fff !important;
+}
+.admin-profile strong { color: #fff !important; }
+.admin-profile span { color: #b8ceda !important; }
+.admin-avatar { background: #087f8c !important; color: #fff !important; }
+.admin-logout {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: #d7e3e9 !important;
+}
+.admin-logout:hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+  color: #fff !important;
+}
+
+.admin-main {
+  width: calc(100% - 246px) !important;
+  min-height: calc(100vh - 72px) !important;
+  margin-left: 246px !important;
+  padding: 28px clamp(20px, 3vw, 44px) 52px !important;
+  background: #f5f8fa !important;
+  color: #253746 !important;
+}
+.admin-topbar { border-bottom-color: #e3eaee !important; }
+.admin-topbar h1,
+.admin-dashboard h1,
+.admin-page-header h1,
+.admin-panel h2,
+.admin-panel-header h2 { color: #173b57 !important; }
+.admin-topbar p,
+.admin-panel-header p { color: #687986 !important; }
+
+.admin-welcome {
+  border: 1px solid #d9e8ea !important;
+  border-radius: 16px !important;
+  background: linear-gradient(115deg, #e7f5f5, #f4f9fb) !important;
+  box-shadow: none !important;
+}
+.admin-welcome h2 { color: #173b57 !important; }
+.admin-welcome p { color: #536775 !important; }
+.admin-welcome span,
+.admin-eyebrow { color: #087f8c !important; }
+
+.admin-stat,
+.admin-stat-card,
+.admin-panel,
+.admin-list-item,
+.admin-dashboard .dashboard-stats .stat-card,
+.admin-table-wrap {
+  border: 1px solid #e3eaee !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  color: #253746 !important;
+  box-shadow: 0 8px 24px rgba(23, 59, 87, 0.06) !important;
+}
+.admin-stat strong,
+.admin-stat-card strong,
+.admin-dashboard .dashboard-stats .stat-card strong { color: #173b57 !important; }
+.admin-stat span,
+.admin-stat-card span,
+.admin-dashboard .dashboard-stats .stat-card span,
+.admin-list-item p { color: #687986 !important; }
+.admin-list-item h3 { color: #253746 !important; }
+.admin-list-item span,
+.admin-count {
+  border-color: #c5e4e5 !important;
+  background: #e7f5f5 !important;
+  color: #087f8c !important;
+}
+.admin-panel-header { border-bottom-color: #e3eaee !important; }
+.admin-table th,
+.admin-table thead th {
+  background: #f7fafb !important;
+  color: #60727e !important;
+}
+.admin-table td { border-color: #e3eaee !important; color: #253746 !important; }
+
+.admin-main .auth-btn,
+.admin-main .admin-action-btn {
+  border-color: #087f8c !important;
+  border-radius: 8px !important;
+  background: #087f8c !important;
+  color: #fff !important;
+  box-shadow: 0 5px 12px rgba(8, 127, 140, 0.14) !important;
+}
+.admin-main .auth-btn:hover,
+.admin-main .admin-action-btn:hover {
+  border-color: #066e79 !important;
+  background: #066e79 !important;
+}
+.admin-main input,
+.admin-main select,
+.admin-main textarea {
+  border-color: #d5e0e5 !important;
+  background: #fff !important;
+  color: #253746 !important;
+}
+.admin-main input:focus,
+.admin-main select:focus,
+.admin-main textarea:focus {
+  border-color: #0a909b !important;
+  outline-color: rgba(10, 144, 155, 0.15) !important;
+}
+
+@media (max-width: 900px) {
+  .admin-sidebar { width: 210px !important; }
+  .admin-main {
+    width: calc(100% - 210px) !important;
+    margin-left: 210px !important;
+    padding-right: 20px !important;
+    padding-left: 20px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .admin-sidebar {
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    padding: 14px 16px 12px !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  }
+  .admin-main {
+    width: 100% !important;
+    min-height: 0 !important;
+    margin-left: 0 !important;
+    padding: 20px 16px 38px !important;
   }
 }
