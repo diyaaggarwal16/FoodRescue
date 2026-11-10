@@ -145,9 +145,6 @@
   margin: 0;
 }
 
-/* ========================================
-   REGISTRATION ACCOUNT SELECTION
-   ======================================== */
 
 .registration-choice-card {
   width: min(760px, calc(100% - 32px));
@@ -185,8 +182,6 @@
     box-shadow 0.25s ease;
 }
 
-/* Soft inner purple glow */
-
 .registration-option::before {
   content: '';
 
@@ -205,8 +200,6 @@
 
   pointer-events: none;
 }
-
-/* Top subtle shine */
 
 .registration-option::after {
   content: '';
@@ -228,8 +221,6 @@
   opacity: 0.35;
 }
 
-/* Hover */
-
 .registration-option:hover {
   transform: translateY(-3px);
 
@@ -246,13 +237,10 @@
   opacity: 1;
 }
 
-/* Active */
 
 .registration-option:active {
   transform: translateY(-1px);
 }
-
-/* Keyboard focus */
 
 .registration-option:focus-visible {
   outline: none;
@@ -264,7 +252,6 @@
     0 0 30px rgba(189, 117, 255, 0.2);
 }
 
-/* Heading */
 
 .registration-option h2 {
   position: relative;
@@ -278,8 +265,6 @@
 
   color: #f7efff;
 }
-
-/* Description */
 
 .registration-option p {
   position: relative;
@@ -295,10 +280,6 @@
   color: #d4c9df;
 }
 
-/* ========================================
-   CUSTOMER
-   ======================================== */
-
 .registration-option:nth-child(1) {
   border-color: rgba(178, 108, 255, 0.32);
 }
@@ -311,9 +292,6 @@
     0 0 30px rgba(181, 108, 255, 0.18);
 }
 
-/* ========================================
-   RESTAURANT
-   ======================================== */
 
 .registration-option:nth-child(2) {
   border-color: rgba(185, 145, 235, 0.27);
@@ -327,9 +305,6 @@
     0 0 30px rgba(197, 154, 255, 0.14);
 }
 
-/* ========================================
-   NGO
-   ======================================== */
 
 .registration-option:nth-child(3) {
   border-color: rgba(122, 205, 176, 0.22);
@@ -343,17 +318,9 @@
     0 0 28px rgba(122, 218, 184, 0.1);
 }
 
-/* ========================================
-   LOGIN LINK
-   ======================================== */
-
 .registration-choice-card .auth-switch {
   margin-top: 30px;
 }
-
-/* ========================================
-   MOBILE
-   ======================================== */
 
 @media (max-width: 600px) {
   .registration-choice-card {
@@ -380,9 +347,6 @@
     line-height: 1.5;
   }
 }
-/* ========================================
-   REGISTRATION ICONS + ARROWS
-   ======================================== */
 
 .registration-option {
   display: flex;
@@ -483,20 +447,14 @@
   box-shadow:
     0 0 24px rgba(173, 91, 255, 0.15);
 }
-
-/* Restaurant hover */
-
 .registration-option:nth-child(2):hover .registration-icon {
   background: rgba(196, 132, 70, 0.35);
 }
-
-/* NGO hover */
 
 .registration-option:nth-child(3):hover .registration-icon {
   background: rgba(70, 170, 135, 0.32);
 }
 
-/* Mobile */
 
 @media (max-width: 600px) {
   .registration-option {
@@ -1215,7 +1173,6 @@
     font-size: 11px;
   }
 }
-/* FreshLoop registration choice: polished teal, navy and white theme */
 .auth-page {
   min-height: calc(100vh - 72px);
   padding: clamp(28px, 5vh, 56px) 20px;
@@ -1335,7 +1292,6 @@
   .registration-choice-card .registration-arrow { flex-basis: 36px; width: 36px; height: 36px; font-size: 21px; }
 }
 
-/* Keep auth action buttons on the approved teal theme, including password reset */
 .auth-page .auth-card .auth-btn,
 .auth-page .registration-choice-card .auth-btn {
   background: #087f8c !important;

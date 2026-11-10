@@ -588,6 +588,7 @@ textarea:focus {
 }
 
 @media (max-width: 900px) {
+
   .admin-sidebar,
   .customer-sidebar,
   .rest-sidebar {
@@ -603,6 +604,7 @@ textarea:focus {
 }
 
 @media (max-width: 650px) {
+
   .admin-sidebar,
   .customer-sidebar,
   .rest-sidebar {
@@ -694,6 +696,7 @@ textarea:focus {
     justify-content: center;
   }
 }
+
 /* Replace remaining admin purple accents */
 .admin-layout .stat-symbol,
 .admin-layout .admin-stat-icon,
@@ -729,6 +732,7 @@ textarea:focus {
   background: rgba(8, 127, 140, 0.06) !important;
   color: rgba(8, 127, 140, 0.2) !important;
 }
+
 /* FoodRescue polished login page */
 .login-scene {
   min-height: calc(100vh - 72px) !important;
@@ -803,7 +807,7 @@ textarea:focus {
   color: #087f8c;
 }
 
-.login-story > p {
+.login-story>p {
   max-width: 440px;
   margin: 22px 0 0;
   color: #536775;
@@ -903,7 +907,7 @@ textarea:focus {
   color: #066e79 !important;
 }
 
-.login-input > span {
+.login-input>span {
   color: #087f8c !important;
 }
 
@@ -980,7 +984,7 @@ textarea:focus {
     font-size: clamp(38px, 9vw, 54px);
   }
 
-  .login-story > p {
+  .login-story>p {
     margin-top: 12px;
     font-size: 14px;
   }
@@ -1001,4 +1005,28 @@ textarea:focus {
     flex-direction: column;
     gap: 10px;
   }
+}
+
+.foodrescue-stats .foodrescue-stat-icon.stat-green,
+.foodrescue-stats .foodrescue-stat-icon.stat-purple,
+.foodrescue-stats .foodrescue-stat-icon.stat-blue,
+.foodrescue-stats .foodrescue-stat-icon.stat-pink {
+  background-color: #087f8c !important;
+  background-image: none !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+.login-message.error {
+  border: 1px solid #f0caca !important;
+  border-radius: 9px !important;
+  background: #fff1f0 !important;
+  color: #9f2d2d !important;
+}
+
+.login-message.success {
+  border: 1px solid #c5e4e5 !important;
+  border-radius: 9px !important;
+  background: #e7f5f5 !important;
+  color: #17636b !important;
 }
